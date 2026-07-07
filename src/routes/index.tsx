@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav } from "@/components/landing/Nav";
 import { CinematicHero } from "@/components/landing/CinematicHero";
+import { CinematicMediaSection } from "@/components/landing/CinematicMediaSection";
 import { ScrollProductStory } from "@/components/landing/ScrollProductStory";
 import { Process } from "@/components/landing/Process";
 import { CaseStudy } from "@/components/landing/CaseStudy";
@@ -18,14 +19,24 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "NextAura AI - AI-powered websites, chatbots & MVPs" },
-      { name: "description", content: "We help businesses turn ideas into intelligent digital products with AI, automation, and modern software development." },
+      {
+        name: "description",
+        content:
+          "We help businesses turn ideas into intelligent digital products with AI, automation, and modern software development.",
+      },
       { property: "og:title", content: "NextAura AI - AI software studio" },
-      { property: "og:description", content: "We build AI-powered websites, chatbots, and MVPs for businesses and startups." },
+      {
+        property: "og:description",
+        content: "We build AI-powered websites, chatbots, and MVPs for businesses and startups.",
+      },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
+      },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "shortcut icon", href: "/favicon.ico" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
@@ -49,10 +60,12 @@ function LandingPage() {
     <main className="relative min-h-screen overflow-x-hidden pb-24 md:pb-0">
       <Nav onStartProject={() => setProjectModalOpen(true)} />
       <CinematicHero onStartProject={() => setProjectModalOpen(true)} />
+      <CinematicMediaSection variant="process" />
       <ScrollProductStory />
       <Process />
       <CaseStudy onStartProject={() => setProjectModalOpen(true)} />
       <WhyChoose />
+      <CinematicMediaSection variant="trust" />
       <EarlyWork />
       <Team />
       <Contact onStartProject={() => setProjectModalOpen(true)} />
