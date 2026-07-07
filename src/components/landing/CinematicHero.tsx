@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { AICoreVisual } from "@/components/landing/AICoreVisual";
 import { AnimatedCounter } from "@/components/landing/AnimatedCounter";
+import { HeroVideo } from "@/components/landing/HeroVideo";
 import { useLanguage } from "@/i18n/translations";
 
 type CinematicHeroProps = {
@@ -19,14 +19,9 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
       <div className="cinematic-beam cinematic-beam-b" />
 
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-5 sm:px-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <motion.div
-          initial={{ opacity: 0, x: dir === "rtl" ? -40 : 40, scale: 0.96 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="order-2 flex justify-center lg:order-1"
-        >
-          <AICoreVisual interactive />
-        </motion.div>
+        <div className="order-2 flex justify-center lg:order-1">
+          <HeroVideo />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 34 }}
