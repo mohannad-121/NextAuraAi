@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useLayoutEffect, useRef } from "react";
+import { CinematicDepthJourney } from "@/components/landing/CinematicDepthJourney";
 import { CinematicHero } from "@/components/landing/CinematicHero";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
@@ -307,26 +308,7 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
         </div>
       </div>
 
-      <div
-        aria-hidden="true"
-        className="relative min-h-[100svh] overflow-hidden bg-[radial-gradient(circle_at_62%_20%,rgb(124_58_237_/_0.15),transparent_34%),radial-gradient(circle_at_24%_70%,rgb(34_211_238_/_0.055),transparent_24%),linear-gradient(180deg,#151117_0%,#0b0e15_72%,#050817_100%)]"
-      >
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#171217] to-transparent" />
-        <div className="absolute left-[12%] top-[28%] h-px w-[38%] -rotate-[9deg] bg-gradient-to-r from-transparent via-violet-300/20 to-transparent" />
-        <div className="absolute right-[10%] top-[58%] h-px w-[31%] rotate-[13deg] bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent" />
-        {undergroundDust.slice(0, 12).map((particle, index) => (
-          <span
-            key={`continuation-${index}`}
-            className="absolute rounded-full bg-slate-200/25 shadow-[0_0_7px_rgb(139_92_246_/_0.22)]"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              width: particle.size,
-              height: particle.size,
-            }}
-          />
-        ))}
-      </div>
+      <CinematicDepthJourney onStartProject={onStartProject} />
     </section>
   );
 }
