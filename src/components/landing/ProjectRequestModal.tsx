@@ -1,7 +1,25 @@
-import { FormEvent, MouseEvent, ReactNode, useMemo, useState } from "react";
+import {
+  FormEvent,
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Check, ChevronLeft, ChevronRight, Globe, LayoutDashboard, Send, X } from "lucide-react";
-import { useLanguage } from "@/i18n/translations";
+import {
+  Bot,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Globe,
+  LayoutDashboard,
+  Send,
+  X,
+} from "lucide-react";
+import { translations, useLanguage } from "@/i18n/translations";
 
 const WHATSAPP_NUMBER = "962799195498";
 
@@ -23,6 +41,7 @@ const emptyForm = {
 };
 
 type ProjectForm = typeof emptyForm;
+type ProjectTranslation = (typeof translations)["en"];
 
 type ProjectRequestModalProps = {
   open: boolean;
@@ -30,14 +49,19 @@ type ProjectRequestModalProps = {
 };
 
 export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps) {
-  const { tr } = useLanguage();
+  const { tr, dir } = useLanguage();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<ProjectForm>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const hasData = useMemo(
-    () => Object.entries(form).some(([, value]) => (Array.isArray(value) ? value.length > 0 : value.trim().length > 0)),
+    () =>
+      Object.entries(form).some(([, value]) =>
+        Array.isArray(value) ? value.length > 0 : value.trim().length > 0,
+      ),
     [form],
   );
 
@@ -51,7 +75,12 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
   };
 
   const toggleFeature = (feature: string) => {
-    setField("features", form.features.includes(feature) ? form.features.filter((item) => item !== feature) : [...form.features, feature]);
+    setField(
+      "features",
+      form.features.includes(feature)
+        ? form.features.filter((item) => item !== feature)
+        : [...form.features, feature],
+    );
   };
 
   const validate = () => {
@@ -86,7 +115,11 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
 
   const openWhatsApp = () => {
     if (!validate()) return;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage())}`, "_blank", "noreferrer");
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage())}`,
+      "_blank",
+      "noreferrer",
+    );
   };
 
   const submit = (event: FormEvent) => {
@@ -97,10 +130,40 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
     openWhatsApp();
   };
 
-  const requestClose = () => {
+  const requestClose = useCallback(() => {
     if (hasData && !success && !window.confirm(tr.modal.confirmClose)) return;
     onClose();
-  };
+  }, [hasData, onClose, success, tr.modal.confirmClose]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") requestClose();
+      if (event.key === "Tab") {
+        const nodes = dialogRef.current?.querySelectorAll<HTMLElement>(
+          "button:not([disabled]), a[href], input, select, textarea",
+        );
+        if (!nodes?.length) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        }
+        if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    window.setTimeout(() => closeRef.current?.focus(), 20);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open, requestClose]);
 
   const closeFromBackdrop = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) requestClose();
@@ -125,7 +188,8 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
           onMouseDown={closeFromBackdrop}
         >
           <motion.div
-            dir="rtl"
+            ref={dialogRef}
+            dir={dir}
             role="dialog"
             aria-modal="true"
             aria-labelledby="project-request-title"
@@ -138,20 +202,38 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="text-xs uppercase tracking-[0.3em]" style={{ color: "var(--cyan)" }}>NextAura AI</div>
-                <h2 id="project-request-title" className="mt-2 text-2xl font-bold sm:text-4xl">{tr.modal.title}</h2>
+                <div
+                  className="text-xs uppercase tracking-[0.3em]"
+                  style={{ color: "var(--cyan)" }}
+                >
+                  NextAura AI
+                </div>
+                <h2 id="project-request-title" className="mt-2 text-2xl font-bold sm:text-4xl">
+                  {tr.modal.title}
+                </h2>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
                   {tr.modal.subtitle}
                 </p>
               </div>
-              <button type="button" onClick={requestClose} aria-label={tr.modal.actions.close} className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border/70 bg-card/70 text-muted-foreground transition-colors hover:text-foreground">
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={requestClose}
+                aria-label={tr.modal.actions.close}
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border/70 bg-card/70 text-muted-foreground transition-colors hover:text-foreground"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-2 text-xs text-muted-foreground sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0 sm:pb-0">
               {tr.modal.steps.map((label: string, index: number) => (
-                <button key={label} type="button" onClick={() => setStep(index + 1)} className={`min-h-10 min-w-[8.5rem] rounded-full border px-3 py-2 transition-colors sm:min-w-0 ${step === index + 1 ? "border-cyan/70 text-foreground shadow-[0_0_24px_rgb(56_189_248_/_0.26)]" : "border-border/60"}`}>
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setStep(index + 1)}
+                  className={`min-h-10 min-w-[8.5rem] rounded-full border px-3 py-2 transition-colors sm:min-w-0 ${step === index + 1 ? "border-cyan/70 text-foreground shadow-[0_0_24px_rgb(56_189_248_/_0.26)]" : "border-border/60"}`}
+                >
                   {label}
                 </button>
               ))}
@@ -161,30 +243,69 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
               <div className="mt-8 rounded-2xl border border-cyan/60 bg-card/70 p-6 text-center">
                 <Check className="mx-auto h-10 w-10" style={{ color: "var(--cyan)" }} />
                 <p className="mt-4 text-lg font-semibold">{tr.modal.success}</p>
-                <button type="button" onClick={resetAndClose} className="btn-primary mt-6 min-h-12 rounded-full px-6 text-sm">{tr.modal.actions.close}</button>
+                <button
+                  type="button"
+                  onClick={resetAndClose}
+                  className="btn-primary mt-6 min-h-12 rounded-full px-6 text-sm"
+                >
+                  {tr.modal.actions.close}
+                </button>
               </div>
             ) : (
               <form onSubmit={submit} className="mt-6 sm:mt-8">
-                {step === 1 ? <ClientInfo form={form} setField={setField} errors={errors} tr={tr} /> : null}
-                {step === 2 ? <ProjectDetails form={form} setField={setField} toggleFeature={toggleFeature} errors={errors} tr={tr} /> : null}
-                {step === 3 ? <PackageStep form={form} setField={setField} error={errors.selectedPackage} tr={tr} /> : null}
+                {step === 1 ? (
+                  <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
+                ) : null}
+                {step === 2 ? (
+                  <ProjectDetails
+                    form={form}
+                    setField={setField}
+                    toggleFeature={toggleFeature}
+                    errors={errors}
+                    tr={tr}
+                  />
+                ) : null}
+                {step === 3 ? (
+                  <PackageStep
+                    form={form}
+                    setField={setField}
+                    error={errors.selectedPackage}
+                    tr={tr}
+                  />
+                ) : null}
                 {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
 
                 <div className="mt-7 flex flex-col-reverse gap-3 sm:mt-8 sm:flex-row sm:items-center sm:justify-between">
-                  <button type="button" onClick={() => setStep(Math.max(1, step - 1))} disabled={step === 1} className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-40">
+                  <button
+                    type="button"
+                    onClick={() => setStep(Math.max(1, step - 1))}
+                    disabled={step === 1}
+                    className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+                  >
                     <ChevronRight className="h-4 w-4" /> {tr.modal.actions.previous}
                   </button>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     {step < 4 ? (
-                      <button type="button" onClick={() => setStep(Math.min(4, step + 1))} className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm">
+                      <button
+                        type="button"
+                        onClick={() => setStep(Math.min(4, step + 1))}
+                        className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm"
+                      >
                         {tr.modal.actions.next} <ChevronLeft className="h-4 w-4" />
                       </button>
                     ) : (
                       <>
-                        <button type="button" onClick={openWhatsApp} className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm">
+                        <button
+                          type="button"
+                          onClick={openWhatsApp}
+                          className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm"
+                        >
                           {tr.modal.actions.whatsapp} <Send className="h-4 w-4" />
                         </button>
-                        <button type="submit" className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm">
+                        <button
+                          type="submit"
+                          className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm"
+                        >
                           {tr.modal.actions.submit} <Send className="h-4 w-4" />
                         </button>
                       </>
@@ -200,35 +321,106 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
   );
 }
 
-function ClientInfo({ form, setField, errors, tr }: { form: ProjectForm; setField: (field: keyof ProjectForm, value: string | string[]) => void; errors: Record<string, string>; tr: any }) {
+function ClientInfo({
+  form,
+  setField,
+  errors,
+  tr,
+}: {
+  form: ProjectForm;
+  setField: (field: keyof ProjectForm, value: string | string[]) => void;
+  errors: Record<string, string>;
+  tr: ProjectTranslation;
+}) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <Field label={tr.modal.labels.fullName} error={errors.fullName}><input value={form.fullName} onChange={(e) => setField("fullName", e.target.value)} placeholder={tr.modal.placeholders.fullName} className="form-input" /></Field>
-      <Field label={tr.modal.labels.phone} error={errors.phone}><input value={form.phone} onChange={(e) => setField("phone", e.target.value)} placeholder={tr.modal.placeholders.phone} className="form-input" /></Field>
-      <Field label={tr.modal.labels.email}><input value={form.email} onChange={(e) => setField("email", e.target.value)} type="email" className="form-input" /></Field>
-      <Field label={tr.modal.labels.businessName}><input value={form.businessName} onChange={(e) => setField("businessName", e.target.value)} placeholder={tr.modal.placeholders.businessName} className="form-input" /></Field>
+      <Field label={tr.modal.labels.fullName} error={errors.fullName}>
+        <input
+          value={form.fullName}
+          onChange={(e) => setField("fullName", e.target.value)}
+          placeholder={tr.modal.placeholders.fullName}
+          className="form-input"
+        />
+      </Field>
+      <Field label={tr.modal.labels.phone} error={errors.phone}>
+        <input
+          value={form.phone}
+          onChange={(e) => setField("phone", e.target.value)}
+          placeholder={tr.modal.placeholders.phone}
+          className="form-input"
+        />
+      </Field>
+      <Field label={tr.modal.labels.email}>
+        <input
+          value={form.email}
+          onChange={(e) => setField("email", e.target.value)}
+          type="email"
+          className="form-input"
+        />
+      </Field>
+      <Field label={tr.modal.labels.businessName}>
+        <input
+          value={form.businessName}
+          onChange={(e) => setField("businessName", e.target.value)}
+          placeholder={tr.modal.placeholders.businessName}
+          className="form-input"
+        />
+      </Field>
     </div>
   );
 }
 
-function ProjectDetails({ form, setField, toggleFeature, errors, tr }: { form: ProjectForm; setField: (field: keyof ProjectForm, value: string | string[]) => void; toggleFeature: (feature: string) => void; errors: Record<string, string>; tr: any }) {
+function ProjectDetails({
+  form,
+  setField,
+  toggleFeature,
+  errors,
+  tr,
+}: {
+  form: ProjectForm;
+  setField: (field: keyof ProjectForm, value: string | string[]) => void;
+  toggleFeature: (feature: string) => void;
+  errors: Record<string, string>;
+  tr: ProjectTranslation;
+}) {
   return (
     <div className="space-y-5">
       <Field label={tr.modal.labels.projectType} error={errors.projectType}>
-        <select value={form.projectType} onChange={(e) => setField("projectType", e.target.value)} className="form-input">
+        <select
+          value={form.projectType}
+          onChange={(e) => setField("projectType", e.target.value)}
+          className="form-input"
+        >
           <option value="">{tr.modal.select.projectType}</option>
-          {tr.modal.projectTypes.map((type: string) => <option key={type} value={type}>{type}</option>)}
+          {tr.modal.projectTypes.map((type: string) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
         </select>
       </Field>
       <Field label={tr.modal.labels.projectIdea} error={errors.projectIdea}>
-        <textarea value={form.projectIdea} onChange={(e) => setField("projectIdea", e.target.value)} placeholder={tr.modal.placeholders.projectIdea} className="form-input min-h-32 resize-y" />
+        <textarea
+          value={form.projectIdea}
+          onChange={(e) => setField("projectIdea", e.target.value)}
+          placeholder={tr.modal.placeholders.projectIdea}
+          className="form-input min-h-32 resize-y"
+        />
       </Field>
       <div>
         <div className="mb-3 text-sm font-semibold">{tr.modal.labels.features}</div>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {tr.modal.features.map((feature: string) => (
-            <label key={feature} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-border/60 bg-card/40 p-3 text-sm text-muted-foreground transition-colors hover:text-foreground">
-              <input type="checkbox" checked={form.features.includes(feature)} onChange={() => toggleFeature(feature)} className="accent-sky-400" />
+            <label
+              key={feature}
+              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-border/60 bg-card/40 p-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <input
+                type="checkbox"
+                checked={form.features.includes(feature)}
+                onChange={() => toggleFeature(feature)}
+                className="accent-sky-400"
+              />
               <span>{feature}</span>
             </label>
           ))}
@@ -238,55 +430,145 @@ function ProjectDetails({ form, setField, toggleFeature, errors, tr }: { form: P
   );
 }
 
-function PackageStep({ form, setField, error, tr }: { form: ProjectForm; setField: (field: keyof ProjectForm, value: string | string[]) => void; error?: string; tr: any }) {
+function PackageStep({
+  form,
+  setField,
+  error,
+  tr,
+}: {
+  form: ProjectForm;
+  setField: (field: keyof ProjectForm, value: string | string[]) => void;
+  error?: string;
+  tr: ProjectTranslation;
+}) {
   return (
     <div className="space-y-5">
       <div>
         <div className="mb-3 text-sm font-semibold">{tr.modal.labels.package}</div>
         {error ? <p className="mb-3 text-xs text-red-300">{error}</p> : null}
         <div className="grid gap-3 lg:grid-cols-3 lg:gap-4">
-          {tr.modal.packages.map((pkg: any, index: number) => {
+          {tr.modal.packages.map((pkg, index: number) => {
             const Icon = packageIcons[index];
             return (
-            <button key={pkg.title} type="button" onClick={() => setField("selectedPackage", pkg.title)} className={`rounded-2xl border bg-card/50 p-4 text-right transition-all hover:-translate-y-1 sm:p-5 ${form.selectedPackage === pkg.title ? "border-cyan/80 shadow-[0_0_32px_rgb(56_189_248_/_0.3)]" : "border-border/60"}`}>
-              <div className="flex items-start justify-between gap-3">
-                <Icon className="h-6 w-6" style={{ color: "var(--cyan)" }} />
-                {pkg.badge ? <span className="rounded-full bg-primary/30 px-3 py-1 text-xs text-foreground">{pkg.badge}</span> : null}
-              </div>
-              <h3 className="mt-4 text-lg font-bold">{pkg.title}</h3>
-              <div className="mt-1 text-sm font-semibold text-gradient">{pkg.price}</div>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{pkg.desc}</p>
-              <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                {pkg.features.map((feature) => <li key={feature} className="flex items-center gap-2"><Check className="h-4 w-4" style={{ color: "var(--cyan)" }} /><span>{feature}</span></li>)}
-              </ul>
-            </button>
-          )})}
+              <button
+                key={pkg.title}
+                type="button"
+                onClick={() => setField("selectedPackage", pkg.title)}
+                className={`rounded-2xl border bg-card/50 p-4 text-right transition-all hover:-translate-y-1 sm:p-5 ${form.selectedPackage === pkg.title ? "border-cyan/80 shadow-[0_0_32px_rgb(56_189_248_/_0.3)]" : "border-border/60"}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <Icon className="h-6 w-6" style={{ color: "var(--cyan)" }} />
+                  {pkg.badge ? (
+                    <span className="rounded-full bg-primary/30 px-3 py-1 text-xs text-foreground">
+                      {pkg.badge}
+                    </span>
+                  ) : null}
+                </div>
+                <h3 className="mt-4 text-lg font-bold">{pkg.title}</h3>
+                <div className="mt-1 text-sm font-semibold text-gradient">{pkg.price}</div>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{pkg.desc}</p>
+                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+                  {pkg.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2">
+                      <Check className="h-4 w-4" style={{ color: "var(--cyan)" }} />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </button>
+            );
+          })}
         </div>
         <p className="mt-4 rounded-xl border border-border/60 bg-card/40 p-4 text-sm leading-7 text-muted-foreground">
           {tr.modal.pricingNote}
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={tr.modal.labels.timeline}><select value={form.timeline} onChange={(e) => setField("timeline", e.target.value)} className="form-input"><option value="">{tr.modal.select.timeline}</option>{tr.modal.timelines.map((timeline: string) => <option key={timeline} value={timeline}>{timeline}</option>)}</select></Field>
-        <Field label={tr.modal.labels.contactMethod}><select value={form.contactMethod} onChange={(e) => setField("contactMethod", e.target.value)} className="form-input"><option value="">{tr.modal.select.contactMethod}</option>{contactMethods.map((method) => <option key={method} value={method}>{method}</option>)}</select></Field>
+        <Field label={tr.modal.labels.timeline}>
+          <select
+            value={form.timeline}
+            onChange={(e) => setField("timeline", e.target.value)}
+            className="form-input"
+          >
+            <option value="">{tr.modal.select.timeline}</option>
+            {tr.modal.timelines.map((timeline: string) => (
+              <option key={timeline} value={timeline}>
+                {timeline}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label={tr.modal.labels.contactMethod}>
+          <select
+            value={form.contactMethod}
+            onChange={(e) => setField("contactMethod", e.target.value)}
+            className="form-input"
+          >
+            <option value="">{tr.modal.select.contactMethod}</option>
+            {contactMethods.map((method) => (
+              <option key={method} value={method}>
+                {method}
+              </option>
+            ))}
+          </select>
+        </Field>
       </div>
     </div>
   );
 }
 
-function ReviewStep({ form, setField, tr }: { form: ProjectForm; setField: (field: keyof ProjectForm, value: string | string[]) => void; tr: any }) {
+function ReviewStep({
+  form,
+  setField,
+  tr,
+}: {
+  form: ProjectForm;
+  setField: (field: keyof ProjectForm, value: string | string[]) => void;
+  tr: ProjectTranslation;
+}) {
   return (
     <div className="space-y-5">
-      <Field label={tr.modal.labels.notes}><textarea value={form.notes} onChange={(e) => setField("notes", e.target.value)} placeholder={tr.modal.placeholders.notes} className="form-input min-h-28 resize-y" /></Field>
+      <Field label={tr.modal.labels.notes}>
+        <textarea
+          value={form.notes}
+          onChange={(e) => setField("notes", e.target.value)}
+          placeholder={tr.modal.placeholders.notes}
+          className="form-input min-h-28 resize-y"
+        />
+      </Field>
       <div className="rounded-2xl border border-border/60 bg-card/50 p-5">
         <h3 className="text-lg font-bold">{tr.modal.labels.review}</h3>
         <dl className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-          <Review label={tr.modal.labels.fullName} value={form.fullName} fallback={tr.modal.reviewFallback} />
-          <Review label={tr.modal.labels.phone} value={form.phone} fallback={tr.modal.reviewFallback} />
-          <Review label={tr.modal.labels.projectType} value={form.projectType} fallback={tr.modal.reviewFallback} />
-          <Review label={tr.modal.labels.package} value={form.selectedPackage} fallback={tr.modal.reviewFallback} />
-          <Review label={tr.modal.labels.timeline} value={form.timeline} fallback={tr.modal.reviewFallback} />
-          <Review label={tr.modal.labels.contactMethod} value={form.contactMethod} fallback={tr.modal.reviewFallback} />
+          <Review
+            label={tr.modal.labels.fullName}
+            value={form.fullName}
+            fallback={tr.modal.reviewFallback}
+          />
+          <Review
+            label={tr.modal.labels.phone}
+            value={form.phone}
+            fallback={tr.modal.reviewFallback}
+          />
+          <Review
+            label={tr.modal.labels.projectType}
+            value={form.projectType}
+            fallback={tr.modal.reviewFallback}
+          />
+          <Review
+            label={tr.modal.labels.package}
+            value={form.selectedPackage}
+            fallback={tr.modal.reviewFallback}
+          />
+          <Review
+            label={tr.modal.labels.timeline}
+            value={form.timeline}
+            fallback={tr.modal.reviewFallback}
+          />
+          <Review
+            label={tr.modal.labels.contactMethod}
+            value={form.contactMethod}
+            fallback={tr.modal.reviewFallback}
+          />
         </dl>
       </div>
     </div>

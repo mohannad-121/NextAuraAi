@@ -13,8 +13,10 @@ type ChatbotCopy = {
 
 export const chatbotCopy: Record<SupportedLanguage, ChatbotCopy> = {
   en: {
-    welcome: "Hi! I'm the NextAura Assistant. You can ask me about our services, team, pricing, FitCoach AI, or how to start your project.",
-    fallback: "I can answer based on the information currently available on our website. If you want more details, please contact us directly.",
+    welcome:
+      "Hi! I'm the NextAura Assistant. You can ask me about our services, team, pricing, FitCoach AI, or how to start your project.",
+    fallback:
+      "I can answer based on the information currently available on our website. If you want more details, please contact us directly.",
     suggestions: [
       "What does NextAura AI do?",
       "Who is Mohannad?",
@@ -27,11 +29,17 @@ export const chatbotCopy: Record<SupportedLanguage, ChatbotCopy> = {
       "Do you build admin dashboards?",
       "Can you build AI chatbots?",
     ],
-    placeholders: { input: "Ask about services, pricing, team...", typing: "NextAura Assistant is typing", send: "Send" },
+    placeholders: {
+      input: "Ask about services, pricing, team...",
+      typing: "NextAura Assistant is typing",
+      send: "Send",
+    },
   },
   ar: {
-    welcome: "مرحبا! أنا مساعد NextAura. يمكنك سؤالي عن خدماتنا، فريقنا، الأسعار، مشروع FitCoach AI، أو كيفية بدء مشروعك.",
-    fallback: "أستطيع الإجابة بناء على المعلومات الموجودة حاليا في الموقع. إذا كنت تريد تفاصيل أكثر، تواصل معنا مباشرة.",
+    welcome:
+      "مرحبا! أنا مساعد NextAura. يمكنك سؤالي عن خدماتنا، فريقنا، الأسعار، مشروع FitCoach AI، أو كيفية بدء مشروعك.",
+    fallback:
+      "أستطيع الإجابة بناء على المعلومات الموجودة حاليا في الموقع. إذا كنت تريد تفاصيل أكثر، تواصل معنا مباشرة.",
     suggestions: [
       "شو بتعمل NextAura AI؟",
       "مين مهند؟",
@@ -44,11 +52,17 @@ export const chatbotCopy: Record<SupportedLanguage, ChatbotCopy> = {
       "هل بتعملوا Admin Dashboard؟",
       "هل بتبنوا شات بوتات؟",
     ],
-    placeholders: { input: "اسأل عن الخدمات، الأسعار، الفريق...", typing: "مساعد NextAura يكتب", send: "إرسال" },
+    placeholders: {
+      input: "اسأل عن الخدمات، الأسعار، الفريق...",
+      typing: "مساعد NextAura يكتب",
+      send: "إرسال",
+    },
   },
   es: {
-    welcome: "¡Hola! Soy el asistente de NextAura. Puedes preguntarme sobre nuestros servicios, equipo, precios, FitCoach AI o cómo empezar tu proyecto.",
-    fallback: "Puedo responder según la información disponible actualmente en el sitio web. Si deseas más detalles, contáctanos directamente.",
+    welcome:
+      "¡Hola! Soy el asistente de NextAura. Puedes preguntarme sobre nuestros servicios, equipo, precios, FitCoach AI o cómo empezar tu proyecto.",
+    fallback:
+      "Puedo responder según la información disponible actualmente en el sitio web. Si deseas más detalles, contáctanos directamente.",
     suggestions: [
       "¿Qué hace NextAura AI?",
       "¿Quién es Mohannad?",
@@ -60,11 +74,16 @@ export const chatbotCopy: Record<SupportedLanguage, ChatbotCopy> = {
       "¿Incluyen panel de administración?",
       "¿Construyen chatbots con IA?",
     ],
-    placeholders: { input: "Pregunta sobre servicios, precios, equipo...", typing: "NextAura Assistant está escribiendo", send: "Enviar" },
+    placeholders: {
+      input: "Pregunta sobre servicios, precios, equipo...",
+      typing: "NextAura Assistant está escribiendo",
+      send: "Enviar",
+    },
   },
 };
 
-const includesAny = (text: string, keywords: string[]) => keywords.some((keyword) => text.includes(keyword));
+const includesAny = (text: string, keywords: string[]) =>
+  keywords.some((keyword) => text.includes(keyword));
 
 function normalize(input: string) {
   return input
@@ -83,10 +102,7 @@ function list(items: string[], language: SupportedLanguage) {
 
 function companyResponse(language: SupportedLanguage) {
   const company = siteKnowledge.company;
-  const lines = [
-    localize(company.description, language),
-    localize(company.mission, language),
-  ];
+  const lines = [localize(company.description, language), localize(company.mission, language)];
   return lines.join("\n\n");
 }
 
@@ -96,7 +112,9 @@ function servicesResponse(language: SupportedLanguage) {
     ar: "نقدم أربع خدمات رئيسية:",
     es: "Ofrecemos cuatro áreas principales:",
   }[language];
-  const services = siteKnowledge.services.map((service) => `${localize(service.name, language)}: ${localize(service.description, language)}`);
+  const services = siteKnowledge.services.map(
+    (service) => `${localize(service.name, language)}: ${localize(service.description, language)}`,
+  );
   return `${intro}\n${list(services, language)}`;
 }
 
@@ -106,7 +124,10 @@ function pricingResponse(language: SupportedLanguage) {
     ar: "نطاقات الأسعار التقديرية الحالية هي:",
     es: "Nuestros rangos estimados actuales son:",
   }[language];
-  const packages = siteKnowledge.pricing.packages.map((pkg) => `${localize(pkg.name, language)} (${pkg.price}): ${localize(pkg.description, language)}`);
+  const packages = siteKnowledge.pricing.packages.map(
+    (pkg) =>
+      `${localize(pkg.name, language)} (${pkg.price}): ${localize(pkg.description, language)}`,
+  );
   return `${intro}\n${list(packages, language)}\n\n${localize(siteKnowledge.pricing.disclaimer, language)}`;
 }
 
@@ -117,7 +138,10 @@ function packageResponse(language: SupportedLanguage) {
     ar: "باقة الموقع الأساسي تشمل:",
     es: "El paquete de sitio web básico incluye:",
   }[language];
-  return `${heading}\n${list(pkg.includes.map((item) => localize(item, language)), language)}\n\n${pkg.price} - ${localize(pkg.description, language)}`;
+  return `${heading}\n${list(
+    pkg.includes.map((item) => localize(item, language)),
+    language,
+  )}\n\n${pkg.price} - ${localize(pkg.description, language)}`;
 }
 
 function fitCoachResponse(language: SupportedLanguage) {
@@ -127,7 +151,10 @@ function fitCoachResponse(language: SupportedLanguage) {
     ar: "أهم الأجزاء تشمل:",
     es: "Partes clave:",
   }[language];
-  return `${localize(caseStudy.summary, language)}\n\n${featuresIntro}\n${list(caseStudy.features.map((feature) => localize(feature, language)), language)}`;
+  return `${localize(caseStudy.summary, language)}\n\n${featuresIntro}\n${list(
+    caseStudy.features.map((feature) => localize(feature, language)),
+    language,
+  )}`;
 }
 
 function memberResponse(id: "mohannad" | "moayad", language: SupportedLanguage) {
@@ -138,7 +165,10 @@ function memberResponse(id: "mohannad" | "moayad", language: SupportedLanguage) 
     ar: "المسؤوليات:",
     es: "Responsabilidades:",
   }[language];
-  return `${member.name} - ${member.role}\n${localize(member.bio, language)}\n\n${responsibilitiesIntro}\n${list(member.responsibilities.map((item) => localize(item, language)), language)}`;
+  return `${member.name} - ${member.role}\n${localize(member.bio, language)}\n\n${responsibilitiesIntro}\n${list(
+    member.responsibilities.map((item) => localize(item, language)),
+    language,
+  )}`;
 }
 
 function teamResponse(language: SupportedLanguage) {
@@ -149,14 +179,6 @@ function teamResponse(language: SupportedLanguage) {
   }[language];
   const members = siteKnowledge.team.map((member) => `${member.name}: ${member.role}`);
   return `${intro}\n${list(members, language)}`;
-}
-
-function farahResponse(language: SupportedLanguage) {
-  return {
-    en: "The current website information only lists Mohannad and Moayad as the founders. I do not have verified website information about Farah.",
-    ar: "المعلومات الحالية في الموقع تعرض مهند ومؤيد فقط كمؤسسين. لا توجد لدي معلومات مؤكدة في الموقع عن فرح.",
-    es: "La información actual del sitio solo muestra a Mohannad y Moayad como fundadores. No tengo información verificada del sitio sobre Farah.",
-  }[language];
 }
 
 function startProjectResponse(language: SupportedLanguage) {
@@ -174,7 +196,10 @@ function processResponse(language: SupportedLanguage) {
     ar: "تدفق العمل عندنا:",
     es: "Nuestro flujo de proyecto:",
   }[language];
-  return `${heading}\n${list(siteKnowledge.process.map((step) => localize(step, language)), language)}`;
+  return `${heading}\n${list(
+    siteKnowledge.process.map((step) => localize(step, language)),
+    language,
+  )}`;
 }
 
 function contactResponse(language: SupportedLanguage) {
@@ -208,7 +233,10 @@ function earlyWorkResponse(language: SupportedLanguage) {
     ar: "الأعمال الأولية والنماذج الحالية:",
     es: "Trabajos iniciales y demos actuales:",
   }[language];
-  return `${heading}\n${list(siteKnowledge.earlyWork.map((item) => localize(item, language)), language)}`;
+  return `${heading}\n${list(
+    siteKnowledge.earlyWork.map((item) => localize(item, language)),
+    language,
+  )}`;
 }
 
 export function getChatbotResponse(message: string, language: SupportedLanguage) {
@@ -216,23 +244,144 @@ export function getChatbotResponse(message: string, language: SupportedLanguage)
 
   if (!text) return chatbotCopy[language].fallback;
 
-  if (includesAny(text, ["farah", "فرح"])) return farahResponse(language);
-  if (includesAny(text, ["mohannad", "muhannad", "مهند"])) return memberResponse("mohannad", language);
-  if (includesAny(text, ["moayad", "moayed", "مؤيد", "مويد"])) return memberResponse("moayad", language);
-  if (includesAny(text, ["fitcoach", "fit coach", "fitness", "لياقة", "فيت", "entrenador", "fitness"])) return fitCoachResponse(language);
-  if (includesAny(text, ["price", "pricing", "cost", "budget", "package", "prices", "اسعار", "أسعار", "سعر", "تكلفة", "باقة", "precios", "precio", "cuanto", "cuánto", "paquete"])) {
-    if (includesAny(text, ["basic", "اساسي", "أساسي", "basico", "básico"])) return packageResponse(language);
+  if (includesAny(text, ["mohannad", "muhannad", "مهند"]))
+    return memberResponse("mohannad", language);
+  if (includesAny(text, ["moayad", "moayed", "مؤيد", "مويد"]))
+    return memberResponse("moayad", language);
+  if (
+    includesAny(text, ["fitcoach", "fit coach", "fitness", "لياقة", "فيت", "entrenador", "fitness"])
+  )
+    return fitCoachResponse(language);
+  if (
+    includesAny(text, [
+      "price",
+      "pricing",
+      "cost",
+      "budget",
+      "package",
+      "prices",
+      "اسعار",
+      "أسعار",
+      "سعر",
+      "تكلفة",
+      "باقة",
+      "precios",
+      "precio",
+      "cuanto",
+      "cuánto",
+      "paquete",
+    ])
+  ) {
+    if (includesAny(text, ["basic", "اساسي", "أساسي", "basico", "básico"]))
+      return packageResponse(language);
     return pricingResponse(language);
   }
-  if (includesAny(text, ["admin", "dashboard", "لوحة", "تحكم", "panel", "administracion", "administración"])) return adminResponse(language);
-  if (includesAny(text, ["chatbot", "chat bot", "assistant", "شات", "بوت", "asistente"])) return chatbotServiceResponse(language);
-  if (includesAny(text, ["service", "offer", "build", "خدمات", "بتعمل", "بتقدمو", "تبن", "servicios", "ofrecen", "hace", "construyen"])) return servicesResponse(language);
-  if (includesAny(text, ["start", "begin", "project", "ابدأ", "ابدا", "مشروعي", "مشروع", "empiezo", "empezar", "proyecto"])) return startProjectResponse(language);
-  if (includesAny(text, ["contact", "whatsapp", "phone", "email", "تواصل", "واتساب", "هاتف", "ايميل", "contacto", "telefono", "teléfono"])) return contactResponse(language);
-  if (includesAny(text, ["process", "flow", "steps", "كيف", "مراحل", "proceso", "flujo", "pasos"])) return processResponse(language);
-  if (includesAny(text, ["team", "founder", "founders", "owner", "فريق", "مؤسس", "مؤسسين", "equipo", "fundador", "fundadores"])) return teamResponse(language);
-  if (includesAny(text, ["demo", "work", "example", "examples", "اعمال", "أعمال", "نماذج", "ejemplos", "trabajos", "demos"])) return earlyWorkResponse(language);
-  if (includesAny(text, ["nextaura", "company", "about", "شركة", "عنكم", "compania", "compañia", "empresa"])) return companyResponse(language);
+  if (
+    includesAny(text, [
+      "admin",
+      "dashboard",
+      "لوحة",
+      "تحكم",
+      "panel",
+      "administracion",
+      "administración",
+    ])
+  )
+    return adminResponse(language);
+  if (includesAny(text, ["chatbot", "chat bot", "assistant", "شات", "بوت", "asistente"]))
+    return chatbotServiceResponse(language);
+  if (
+    includesAny(text, [
+      "service",
+      "offer",
+      "build",
+      "خدمات",
+      "بتعمل",
+      "بتقدمو",
+      "تبن",
+      "servicios",
+      "ofrecen",
+      "hace",
+      "construyen",
+    ])
+  )
+    return servicesResponse(language);
+  if (
+    includesAny(text, [
+      "start",
+      "begin",
+      "project",
+      "ابدأ",
+      "ابدا",
+      "مشروعي",
+      "مشروع",
+      "empiezo",
+      "empezar",
+      "proyecto",
+    ])
+  )
+    return startProjectResponse(language);
+  if (
+    includesAny(text, [
+      "contact",
+      "whatsapp",
+      "phone",
+      "email",
+      "تواصل",
+      "واتساب",
+      "هاتف",
+      "ايميل",
+      "contacto",
+      "telefono",
+      "teléfono",
+    ])
+  )
+    return contactResponse(language);
+  if (includesAny(text, ["process", "flow", "steps", "كيف", "مراحل", "proceso", "flujo", "pasos"]))
+    return processResponse(language);
+  if (
+    includesAny(text, [
+      "team",
+      "founder",
+      "founders",
+      "owner",
+      "فريق",
+      "مؤسس",
+      "مؤسسين",
+      "equipo",
+      "fundador",
+      "fundadores",
+    ])
+  )
+    return teamResponse(language);
+  if (
+    includesAny(text, [
+      "demo",
+      "work",
+      "example",
+      "examples",
+      "اعمال",
+      "أعمال",
+      "نماذج",
+      "ejemplos",
+      "trabajos",
+      "demos",
+    ])
+  )
+    return earlyWorkResponse(language);
+  if (
+    includesAny(text, [
+      "nextaura",
+      "company",
+      "about",
+      "شركة",
+      "عنكم",
+      "compania",
+      "compañia",
+      "empresa",
+    ])
+  )
+    return companyResponse(language);
 
   return chatbotCopy[language].fallback;
 }

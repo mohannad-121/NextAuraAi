@@ -73,20 +73,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NextAura AI - AI-powered websites, chatbots & MVPs" },
+      { title: "NextAura AI | Websites, AI Solutions & Business Automation" },
       {
         name: "description",
         content:
-          "AI-powered websites, chatbots, MVPs, dashboards, booking systems, and automation tools for businesses and startups.",
+          "NextAura AI builds premium websites, AI assistants, automation systems, CRM platforms, MVPs, and custom digital products for businesses in Jordan, the UAE, and beyond.",
       },
       { name: "author", content: "NextAura AI" },
-      { property: "og:title", content: "NextAura AI - AI software studio" },
+      {
+        property: "og:title",
+        content: "NextAura AI | Websites, AI Solutions & Business Automation",
+      },
       {
         property: "og:description",
-        content: "We build AI-powered websites, chatbots, MVPs, dashboards, and automation tools.",
+        content:
+          "Websites, AI solutions, business automation, CRM platforms, MVPs, and custom software.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "/images/cinematic/nextaura-ai-hero.webp" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#020617" },
     ],
     links: [
       {
@@ -96,6 +102,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "shortcut icon", href: "/favicon.ico" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      {
+        rel: "preload",
+        href: "/images/cinematic/nextaura-ai-hero.webp",
+        as: "image",
+        type: "image/webp",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -105,10 +117,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "NextAura AI",
+    description:
+      "Websites, AI assistants, automation systems, CRM platforms, MVPs, and custom digital products.",
+    email: "info@next-aura-ai.com",
+    areaServed: ["Jordan", "United Arab Emirates"],
+    sameAs: ["https://linkedin.com/company/nextaura-ai"],
+  };
+
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body>
         {children}

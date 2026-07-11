@@ -35,7 +35,10 @@ export function Hero3DVisual() {
         mouseY.set(0);
       }}
     >
-      <div className="absolute inset-0 rounded-full opacity-40 blur-3xl" style={{ background: "var(--gradient-primary)" }} />
+      <div
+        className="absolute inset-0 rounded-full opacity-40 blur-3xl"
+        style={{ background: "var(--gradient-primary)" }}
+      />
       <div className="absolute inset-8 rounded-full border border-primary/20 bg-primary/5 blur-sm" />
       <motion.div
         className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 transform-gpu preserve-3d sm:h-72 sm:w-72"
@@ -51,11 +54,35 @@ export function Hero3DVisual() {
         </div>
       </motion.div>
 
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-60" viewBox="0 0 520 500" aria-hidden="true">
-        <path d="M110 145 C190 60 330 70 410 135" fill="none" stroke="url(#heroLine)" strokeWidth="1.5" />
-        <path d="M105 355 C210 435 335 430 425 345" fill="none" stroke="url(#heroLine)" strokeWidth="1.5" />
-        <path d="M96 145 C70 250 82 315 112 356" fill="none" stroke="url(#heroLine)" strokeWidth="1.5" />
-        <path d="M415 135 C452 230 456 285 424 346" fill="none" stroke="url(#heroLine)" strokeWidth="1.5" />
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
+        viewBox="0 0 520 500"
+        aria-hidden="true"
+      >
+        <path
+          d="M110 145 C190 60 330 70 410 135"
+          fill="none"
+          stroke="url(#heroLine)"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M105 355 C210 435 335 430 425 345"
+          fill="none"
+          stroke="url(#heroLine)"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M96 145 C70 250 82 315 112 356"
+          fill="none"
+          stroke="url(#heroLine)"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M415 135 C452 230 456 285 424 346"
+          fill="none"
+          stroke="url(#heroLine)"
+          strokeWidth="1.5"
+        />
         <defs>
           <linearGradient id="heroLine" x1="0" x2="1">
             <stop stopColor="#8B5CF6" />
@@ -72,7 +99,12 @@ export function Hero3DVisual() {
             className="absolute rounded-2xl border border-border/60 bg-card/72 px-3 py-2 shadow-2xl backdrop-blur-xl sm:px-4 sm:py-3"
             style={{ left: node.x, top: node.y }}
             animate={{ y: [0, -12, 0], rotate: [-1.5, 1.5, -1.5] }}
-            transition={{ duration: 4.5 + index * 0.35, repeat: Infinity, ease: "easeInOut", delay: index * 0.25 }}
+            transition={{
+              duration: 4.5 + index * 0.35,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: index * 0.25,
+            }}
           >
             <div className="flex items-center gap-2 text-xs font-semibold sm:text-sm">
               <Icon className="h-4 w-4 text-cyan" />
@@ -105,7 +137,13 @@ export function Hero3DVisual() {
             <span className="font-semibold text-gradient">82%</span>
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-background/70">
-            <motion.div className="h-full rounded-full" style={{ background: "var(--gradient-primary)" }} initial={{ width: "20%" }} animate={{ width: "82%" }} transition={{ duration: 1.4, delay: 0.8 }} />
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: "var(--gradient-primary)" }}
+              initial={{ width: "20%" }}
+              animate={{ width: "82%" }}
+              transition={{ duration: 1.4, delay: 0.8 }}
+            />
           </div>
         </div>
       </motion.div>

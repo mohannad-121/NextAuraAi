@@ -14,7 +14,10 @@ export function CaseStudy({ onStartProject }: CaseStudyProps) {
 
   return (
     <section id="work" className="mixed-section relative overflow-hidden py-16 md:py-28">
-      <div className="absolute inset-x-0 top-24 h-80 rounded-full opacity-20 blur-3xl" style={{ background: "var(--gradient-primary)" }} />
+      <div
+        className="absolute inset-x-0 top-24 h-80 rounded-full opacity-20 blur-3xl"
+        style={{ background: "var(--gradient-primary)" }}
+      />
       <div className="mx-auto max-w-[88rem] px-5 sm:px-6 xl:px-8">
         <PremiumSectionTitle
           eyebrow={tr.caseStudy.eyebrow}
@@ -33,12 +36,20 @@ export function CaseStudy({ onStartProject }: CaseStudyProps) {
           <div className={`min-w-0 ${dir === "rtl" ? "text-right" : "text-left"}`}>
             <div className="grid gap-5">
               <div className="rounded-3xl border border-border/60 bg-card/45 p-6 backdrop-blur-xl sm:p-7">
-                <div className="text-base font-semibold text-foreground">{tr.caseStudy.problem}</div>
-                <p className="mt-3 text-base leading-8 text-muted-foreground">{tr.caseStudy.problemText}</p>
+                <div className="text-base font-semibold text-foreground">
+                  {tr.caseStudy.problem}
+                </div>
+                <p className="mt-3 text-base leading-8 text-muted-foreground">
+                  {tr.caseStudy.problemText}
+                </p>
               </div>
               <div className="rounded-3xl border border-primary/30 bg-primary/10 p-6 backdrop-blur-xl sm:p-7">
-                <div className="text-base font-semibold text-foreground">{tr.caseStudy.solution}</div>
-                <p className="mt-3 text-base leading-8 text-muted-foreground">{tr.caseStudy.solutionText}</p>
+                <div className="text-base font-semibold text-foreground">
+                  {tr.caseStudy.solution}
+                </div>
+                <p className="mt-3 text-base leading-8 text-muted-foreground">
+                  {tr.caseStudy.solutionText}
+                </p>
               </div>
             </div>
 
@@ -68,7 +79,11 @@ export function CaseStudy({ onStartProject }: CaseStudyProps) {
                 {tr.caseStudy.viewProject}
                 <ExternalLink className="h-4 w-4" />
               </a>
-              <button type="button" onClick={onStartProject} className="btn-ghost inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm">
+              <button
+                type="button"
+                onClick={onStartProject}
+                className="btn-ghost inline-flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm"
+              >
                 {tr.caseStudy.request}
               </button>
             </div>

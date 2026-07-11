@@ -15,7 +15,11 @@ export function MobileCTA({ onStartProject }: MobileCTAProps) {
           <div className="text-sm font-semibold">{tr.mobileCta.ready}</div>
           <div className="truncate text-xs text-muted-foreground">{tr.mobileCta.idea}</div>
         </div>
-        <button type="button" onClick={onStartProject} className="btn-primary inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm">
+        <button
+          type="button"
+          onClick={onStartProject}
+          className="btn-primary inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm"
+        >
           <Rocket className="h-4 w-4" />
           {tr.mobileCta.start}
         </button>

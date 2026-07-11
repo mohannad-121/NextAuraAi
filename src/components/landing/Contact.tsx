@@ -1,67 +1,136 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Linkedin, Mail, MessageCircle, Rocket } from "lucide-react";
+import { ArrowUpRight, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
+import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
-import { BrandLogo } from "@/components/landing/BrandLogo";
+import { BrandSymbol } from "@/components/landing/BrandSymbol";
 
-type ContactProps = {
-  onStartProject: () => void;
-};
+type ContactProps = { onStartProject: () => void };
 
 export function Contact({ onStartProject }: ContactProps) {
-  const { tr, dir } = useLanguage();
-  const channels = [
-    { icon: MessageCircle, label: "WhatsApp", value: tr.contact.channels.whatsapp, href: "https://wa.me/962799195498" },
-    { icon: Mail, label: "Email", value: tr.contact.channels.email, href: "mailto:hello@nextaura.ai" },
-    { icon: Linkedin, label: "LinkedIn", value: tr.contact.channels.linkedin, href: "https://linkedin.com/company/nextaura-ai" },
+  const { language, dir } = useLanguage();
+  const page = homepageContent[language];
+  const copy = page.cta;
+  const nav = page.nav;
+  const footer = page.footer;
+  const navigation = [
+    [nav.home, "#home"],
+    [nav.about, "#about"],
+    [nav.services, "#services"],
+    [nav.projects, "#projects"],
+    [nav.contact, "#contact"],
   ];
+  const services = page.services.items.slice(0, 6).map((item) => item.title);
 
   return (
-    <section id="contact" className="relative py-12 pb-32 md:py-24">
-      <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative overflow-hidden rounded-3xl glass glow-border p-5 text-center sm:p-10 md:p-14">
-          <div className="absolute -top-32 left-1/2 h-80 w-[700px] -translate-x-1/2 rounded-full blur-3xl opacity-40" style={{ background: "var(--gradient-primary)" }} />
-          <div className="relative">
-            <div className="text-xs uppercase tracking-[0.3em]" style={{ color: "var(--cyan)" }}>{tr.contact.eyebrow}</div>
-            <h2 className="mt-4 text-3xl font-bold sm:text-5xl md:text-6xl">
-              {tr.contact.titleA}<span className="text-gradient">{tr.contact.titleB}</span>
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl leading-7 text-muted-foreground">{tr.contact.subtitle}</p>
-            <button type="button" onClick={onStartProject} className="btn-primary mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-7 text-sm sm:w-auto">
-              <Rocket className="h-4 w-4" />
-              {tr.nav.start}
-            </button>
-            <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-4">
-              {channels.map((c, i) => (
-                <motion.a key={c.label} href={c.href} target="_blank" rel="noreferrer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -4 }} className={`group flex min-h-20 items-center justify-between rounded-2xl glass p-4 transition-colors hover:border-cyan/50 ${dir === "rtl" ? "text-right" : "text-left"}`}>
-                  <div className="flex items-center gap-3">
-                    <div className="grid h-11 w-11 place-items-center rounded-xl" style={{ background: "var(--gradient-primary)" }}>
-                      <c.icon className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold">{c.label}</div>
-                      <div className="text-xs text-muted-foreground">{c.value}</div>
-                    </div>
-                  </div>
-                  <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </motion.a>
-              ))}
+    <section
+      id="contact"
+      className="relative overflow-hidden bg-[#030611] pt-24 sm:pt-28 lg:pt-40"
+      dir={dir}
+    >
+      <div className="absolute inset-0 grid-fade opacity-25" />
+      <div className="relative mx-auto max-w-[96rem] px-5 sm:px-8 lg:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 38 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative overflow-hidden rounded-[2rem] border border-white/10 px-6 py-14 sm:px-10 sm:py-20 lg:px-16 lg:py-24"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.25),transparent_36%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.2),transparent_38%),linear-gradient(135deg,#070b1b,#040712)]" />
+          <div className="absolute inset-0 hero-noise opacity-40" />
+          <div className="relative grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div>
+              <div className="section-eyebrow">{copy.eyebrow}</div>
+              <h2 className="mt-5 max-w-5xl text-balance text-4xl font-semibold leading-[0.98] sm:text-6xl lg:text-8xl">
+                {copy.title}
+              </h2>
+              <p className="mt-7 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+                {copy.body}
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={onStartProject}
+                  className="premium-button premium-button-primary justify-center"
+                >
+                  {copy.start}
+                  <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
+                </button>
+                <a
+                  href="https://wa.me/962799195498"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="premium-button premium-button-secondary justify-center"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  {copy.whatsapp}
+                </a>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              <ContactLink
+                icon={Mail}
+                label="Email"
+                value="info@next-aura-ai.com"
+                href="mailto:info@next-aura-ai.com"
+              />
+              <ContactLink
+                icon={MessageCircle}
+                label="WhatsApp"
+                value="+962 7 9919 5498"
+                href="https://wa.me/962799195498"
+              />
+              <div className="flex items-center gap-4 border-t border-white/10 py-4 text-slate-300">
+                <MapPin className="h-5 w-5 text-cyan-300" />
+                <span>{footer.location}</span>
+              </div>
             </div>
           </div>
         </motion.div>
 
-        <footer className="mt-12 grid gap-8 border-t border-border/50 pt-8 text-sm text-muted-foreground md:grid-cols-[1.3fr_0.7fr_0.7fr_0.7fr]">
-          <div>
-            <BrandLogo className="w-[10rem] sm:w-[11.5rem]" />
-            <p className="mt-4 max-w-sm leading-6">{tr.contact.footerText}</p>
+        <footer className="relative pb-28 pt-16 md:pb-10 lg:pt-24">
+          <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-2 lg:grid-cols-[1.3fr_0.7fr_1fr_0.9fr]">
+            <div>
+              <BrandSymbol className="!rounded-2xl !bg-black/70 !p-2" imageClassName="w-20" />
+              <p className="mt-6 max-w-sm text-sm leading-7 text-slate-400">{footer.description}</p>
+              <a
+                href="https://linkedin.com/company/nextaura-ai"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="NextAura AI on LinkedIn"
+                className="mt-6 grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition hover:border-cyan-300/50 hover:text-cyan-200"
+              >
+                <Linkedin className="h-4 w-4" />
+              </a>
+            </div>
+            <FooterColumn title={footer.navigation} items={navigation} />
+            <div>
+              <h3 className="text-sm font-semibold text-white">{footer.services}</h3>
+              <ul className="mt-5 space-y-3 text-sm text-slate-400">
+                {services.map((service) => (
+                  <li key={service}>{service}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-white">{footer.contact}</h3>
+              <div className="mt-5 space-y-3 text-sm text-slate-400">
+                <a className="block hover:text-white" href="mailto:info@next-aura-ai.com">
+                  info@next-aura-ai.com
+                </a>
+                <a className="block hover:text-white" href="https://wa.me/962799195498">
+                  +962 7 9919 5498
+                </a>
+                <p>{footer.location}</p>
+              </div>
+            </div>
           </div>
-          <FooterGroup title={tr.contact.quickLinks} items={[tr.nav.services, tr.nav.work, tr.nav.team, tr.nav.contact]} />
-          <FooterGroup title={tr.nav.services} items={tr.services.items.map((item: any) => item.title)} />
-          <div>
-            <div className="font-semibold text-foreground">{tr.contact.contact}</div>
-            <div className="mt-3 space-y-2">
-              <div>hello@nextaura.ai</div>
-              <div>{tr.contact.location}</div>
-              <div>© {new Date().getFullYear()} NextAura AI</div>
+          <div className="flex flex-col gap-4 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+            <span>© {new Date().getFullYear()} NextAura AI</span>
+            <div className="flex flex-wrap gap-5">
+              <span>{footer.privacy}</span>
+              <span>{footer.terms}</span>
+              <span>{footer.built}</span>
             </div>
           </div>
         </footer>
@@ -70,13 +139,49 @@ export function Contact({ onStartProject }: ContactProps) {
   );
 }
 
-function FooterGroup({ title, items }: { title: string; items: string[] }) {
+function ContactLink({
+  icon: Icon,
+  label,
+  value,
+  href,
+}: {
+  icon: typeof Mail;
+  label: string;
+  value: string;
+  href: string;
+}) {
+  return (
+    <a
+      href={href}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel={href.startsWith("http") ? "noreferrer" : undefined}
+      className="group flex items-center justify-between gap-4 border-t border-white/10 py-4 text-slate-300"
+    >
+      <span className="flex items-center gap-4">
+        <Icon className="h-5 w-5 text-cyan-300" />
+        <span>
+          <span className="block text-xs uppercase tracking-[0.14em] text-slate-500">{label}</span>
+          <span className="mt-1 block text-sm">{value}</span>
+        </span>
+      </span>
+      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
+    </a>
+  );
+}
+
+function FooterColumn({ title, items }: { title: string; items: string[][] }) {
   return (
     <div>
-      <div className="font-semibold text-foreground">{title}</div>
-      <div className="mt-3 space-y-2">
-        {items.map((item) => <div key={item}>{item}</div>)}
-      </div>
+      <h3 className="text-sm font-semibold text-white">{title}</h3>
+      <ul className="mt-5 space-y-3 text-sm text-slate-400">
+        {items.map(([label, href]) => (
+          <li key={href}>
+            <a href={href} className="transition hover:text-white">
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

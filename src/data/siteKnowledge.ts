@@ -21,9 +21,9 @@ export const siteKnowledge = {
   company: {
     name: "NextAura AI",
     description: {
-      en: "We build AI-powered websites, chatbots, MVPs, dashboards, booking systems, and automation tools for businesses and startups.",
-      ar: "نبني مواقع وشات بوتات ومنتجات MVP ولوحات تحكم وأنظمة حجز وأدوات أتمتة مدعومة بالذكاء الاصطناعي للشركات والستارتups.",
-      es: "Creamos sitios web, chatbots, MVPs, paneles, sistemas de reservas y automatizaciones con IA para empresas y startups.",
+      en: "We build premium websites, AI assistants, automation systems, CRM platforms, MVPs, and custom digital products for businesses.",
+      ar: "نبني مواقع مميزة ومساعدين بالذكاء الاصطناعي وأنظمة أتمتة ومنصات CRM ومنتجات MVP وحلولًا رقمية مخصصة للأعمال.",
+      es: "Creamos sitios premium, asistentes IA, automatizaciones, plataformas CRM, MVPs y productos digitales a medida.",
     },
     mission: {
       en: "We help businesses turn rough ideas into practical, intelligent digital products.",
@@ -41,7 +41,11 @@ export const siteKnowledge = {
       },
     },
     {
-      name: { en: "Websites & Web Apps", ar: "مواقع وتطبيقات ويب", es: "Sitios web y aplicaciones web" },
+      name: {
+        en: "Websites & Web Apps",
+        ar: "مواقع وتطبيقات ويب",
+        es: "Sitios web y aplicaciones web",
+      },
       description: {
         en: "Modern landing pages, business websites, dashboards, booking flows, and full-stack web applications.",
         ar: "صفحات هبوط ومواقع أعمال ولوحات تحكم وأنظمة حجز وتطبيقات ويب متكاملة.",
@@ -49,7 +53,11 @@ export const siteKnowledge = {
       },
     },
     {
-      name: { en: "AI MVP Development", ar: "تطوير MVP بالذكاء الاصطناعي", es: "Desarrollo de MVP con IA" },
+      name: {
+        en: "AI MVP Development",
+        ar: "تطوير MVP بالذكاء الاصطناعي",
+        es: "Desarrollo de MVP con IA",
+      },
       description: {
         en: "Usable AI-powered prototypes and early products that can be tested, shown, or launched.",
         ar: "نماذج ومنتجات أولية مدعومة بالذكاء الاصطناعي قابلة للتجربة أو العرض أو الإطلاق.",
@@ -62,6 +70,50 @@ export const siteKnowledge = {
         en: "Automation for repeated workflows, forms, reports, CRM flows, notifications, and internal processes.",
         ar: "أتمتة للمهام المتكررة، النماذج، التقارير، تدفقات CRM، الإشعارات، والعمليات الداخلية.",
         es: "Automatización de tareas repetidas, formularios, reportes, flujos CRM, notificaciones y procesos internos.",
+      },
+    },
+    {
+      name: {
+        en: "CRM & Business Platforms",
+        ar: "CRM ومنصات الأعمال",
+        es: "CRM y plataformas empresariales",
+      },
+      description: {
+        en: "Custom dashboards, client-management systems, booking platforms, memberships, and administrative tools.",
+        ar: "لوحات تحكم وأنظمة إدارة عملاء وحجز وعضويات وأدوات إدارية مخصصة.",
+        es: "Paneles, gestión de clientes, reservas, membresías y herramientas administrativas a medida.",
+      },
+    },
+    {
+      name: { en: "AI Integration", ar: "تكامل الذكاء الاصطناعي", es: "Integración de IA" },
+      description: {
+        en: "Purposeful AI models, retrieval systems, recommendations, and API integrations.",
+        ar: "نماذج ذكاء اصطناعي وأنظمة استرجاع وتوصيات وتكاملات API هادفة.",
+        es: "Modelos IA, recuperación de información, recomendaciones e integraciones API con propósito.",
+      },
+    },
+    {
+      name: {
+        en: "UI/UX & Product Design",
+        ar: "تصميم UI/UX والمنتجات",
+        es: "UI/UX y diseño de producto",
+      },
+      description: {
+        en: "Research, wireframes, interface systems, responsive prototypes, and complete product experiences.",
+        ar: "بحث وخرائط واجهات وأنظمة تصميم ونماذج متجاوبة وتجارب منتج متكاملة.",
+        es: "Investigación, wireframes, sistemas de interfaz, prototipos responsive y experiencias completas.",
+      },
+    },
+    {
+      name: {
+        en: "Custom Software Development",
+        ar: "تطوير برمجيات مخصصة",
+        es: "Software a medida",
+      },
+      description: {
+        en: "Tailored software designed around specific operational, team, or customer needs.",
+        ar: "برمجيات مصممة حول احتياجات تشغيلية أو احتياجات الفريق والعملاء.",
+        es: "Software adaptado a necesidades operativas, del equipo o del cliente.",
       },
     },
   ],
@@ -152,7 +204,11 @@ export const siteKnowledge = {
         ],
       },
       {
-        name: { en: "Business Website + Admin", ar: "موقع بزنس مع لوحة تحكم", es: "Sitio empresarial + Admin" },
+        name: {
+          en: "Business Website + Admin",
+          ar: "موقع بزنس مع لوحة تحكم",
+          es: "Sitio empresarial + Admin",
+        },
         price: "400 - 700 JOD",
         description: {
           en: "For businesses that need products, offers, gallery, booking, or a simple admin dashboard.",
@@ -162,7 +218,11 @@ export const siteKnowledge = {
         includes: [
           { en: "Everything in Basic", ar: "كل ميزات الموقع الأساسي", es: "Todo lo del básico" },
           { en: "Admin dashboard", ar: "لوحة تحكم", es: "Panel de administración" },
-          { en: "Booking or request flow", ar: "نظام حجز أو طلبات", es: "Flujo de reservas o solicitudes" },
+          {
+            en: "Booking or request flow",
+            ar: "نظام حجز أو طلبات",
+            es: "Flujo de reservas o solicitudes",
+          },
         ],
       },
       {
@@ -182,16 +242,36 @@ export const siteKnowledge = {
     ] satisfies PackageKnowledge[],
   },
   process: [
-    { en: "Discover: we understand your business, idea, goals, and users.", ar: "اكتشاف: نفهم عملك وفكرتك وأهدافك والمستخدمين.", es: "Descubrir: entendemos tu negocio, idea, objetivos y usuarios." },
-    { en: "Design: we create the structure, user experience, and product flow.", ar: "تصميم: نصمم الهيكل وتجربة المستخدم وتدفق المنتج.", es: "Diseño: creamos estructura, experiencia de usuario y flujo." },
-    { en: "Build: we develop the website, dashboard, chatbot, or MVP.", ar: "بناء: نطور الموقع أو لوحة التحكم أو الشات بوت أو MVP.", es: "Construcción: desarrollamos el sitio, panel, chatbot o MVP." },
-    { en: "Launch: we deploy, test, improve, and prepare for real users.", ar: "إطلاق: ننشر ونختبر ونحسن ونجهز للمستخدمين الحقيقيين.", es: "Lanzamiento: desplegamos, probamos, mejoramos y preparamos para usuarios reales." },
+    {
+      en: "Discover: we understand your business, idea, goals, and users.",
+      ar: "اكتشاف: نفهم عملك وفكرتك وأهدافك والمستخدمين.",
+      es: "Descubrir: entendemos tu negocio, idea, objetivos y usuarios.",
+    },
+    {
+      en: "Design: we create the structure, user experience, and product flow.",
+      ar: "تصميم: نصمم الهيكل وتجربة المستخدم وتدفق المنتج.",
+      es: "Diseño: creamos estructura, experiencia de usuario y flujo.",
+    },
+    {
+      en: "Build: we develop the website, dashboard, chatbot, or MVP.",
+      ar: "بناء: نطور الموقع أو لوحة التحكم أو الشات بوت أو MVP.",
+      es: "Construcción: desarrollamos el sitio, panel, chatbot o MVP.",
+    },
+    {
+      en: "Launch: we deploy, test, improve, and prepare for real users.",
+      ar: "إطلاق: ننشر ونختبر ونحسن ونجهز للمستخدمين الحقيقيين.",
+      es: "Lanzamiento: desplegamos, probamos, mejoramos y preparamos para usuarios reales.",
+    },
   ],
   contact: {
     whatsapp: "+962 7 9919 5498",
-    email: "hello@nextaura.ai",
+    email: "info@next-aura-ai.com",
     linkedin: "NextAura AI LinkedIn",
-    location: { en: "Amman / Remote", ar: "عمّان / عن بعد", es: "Amman / Remoto" },
+    location: {
+      en: "Jordan • UAE / Dubai presence",
+      ar: "الأردن • حضور في الإمارات / دبي",
+      es: "Jordania • Presencia en EAU / Dubái",
+    },
   },
 } as const;
 
