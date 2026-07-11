@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav } from "@/components/landing/Nav";
-import { CinematicHero } from "@/components/landing/CinematicHero";
+import { HeroUndergroundJourney } from "@/components/landing/HeroUndergroundJourney";
 import { TrustBar } from "@/components/landing/TrustBar";
 import { ServicesUniverse } from "@/components/landing/ServicesUniverse";
 import { AboutSection } from "@/components/landing/AboutSection";
@@ -78,7 +78,7 @@ function LandingPage() {
   return (
     <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
       <Nav onStartProject={() => setProjectModalOpen(true)} />
-      <CinematicHero onStartProject={() => setProjectModalOpen(true)} />
+      <HeroUndergroundJourney onStartProject={() => setProjectModalOpen(true)} />
       <TrustBar />
       <ServicesUniverse onStartProject={() => setProjectModalOpen(true)} />
       <AboutSection />
