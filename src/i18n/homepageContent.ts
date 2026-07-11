@@ -32,6 +32,9 @@ const en = {
     trust: "Based in Jordan • Serving Jordan, UAE and beyond",
     scroll: "Explore",
   },
+  underground: {
+    foundation: "Digital Foundation",
+  },
   trust: [
     { value: "2", label: "Founders" },
     { value: "6+", label: "Digital services" },
@@ -378,6 +381,9 @@ const ar: Widen<typeof en> = {
     trust: "من الأردن • نخدم الأردن والإمارات وما بعدهما",
     scroll: "استكشف",
   },
+  underground: {
+    foundation: "الأساس الرقمي",
+  },
   trust: [
     { value: "2", label: "مؤسسون" },
     { value: "+6", label: "خدمات رقمية" },
@@ -627,6 +633,9 @@ const es: Widen<typeof en> = {
     secondary: "Explorar nuestro trabajo",
     trust: "Desde Jordania • Para Jordania, EAU y más allá",
     scroll: "Explorar",
+  },
+  underground: {
+    foundation: "Fundamento digital",
   },
   trust: [
     { value: "2", label: "Fundadores" },
