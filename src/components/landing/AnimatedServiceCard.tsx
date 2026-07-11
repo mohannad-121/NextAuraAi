@@ -12,7 +12,15 @@ type AnimatedServiceCardProps = {
   index: number;
 };
 
-export function AnimatedServiceCard({ title, desc, features, bestFor, bestForLabel, icon: Icon, index }: AnimatedServiceCardProps) {
+export function AnimatedServiceCard({
+  title,
+  desc,
+  features,
+  bestFor,
+  bestForLabel,
+  icon: Icon,
+  index,
+}: AnimatedServiceCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 48, rotateX: 8 }}
@@ -22,7 +30,10 @@ export function AnimatedServiceCard({ title, desc, features, bestFor, bestForLab
       whileHover={{ y: -10, rotateX: 2, rotateY: index % 2 ? -3 : 3 }}
       className="group relative min-w-[86%] snap-center overflow-hidden rounded-2xl glass glow-border p-5 transform-gpu perspective-card sm:min-w-0 sm:p-6"
     >
-      <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-50" style={{ background: "var(--gradient-primary)" }} />
+      <div
+        className="absolute -right-12 -top-12 h-36 w-36 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-50"
+        style={{ background: "var(--gradient-primary)" }}
+      />
       <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan/70 to-transparent opacity-60" />
       <motion.div
         className="mb-5 grid h-14 w-14 place-items-center rounded-2xl"
@@ -43,7 +54,8 @@ export function AnimatedServiceCard({ title, desc, features, bestFor, bestForLab
         ))}
       </ul>
       <div className="mt-5 rounded-xl border border-border/60 bg-background/45 p-3 text-xs text-muted-foreground">
-        <span className="font-semibold text-foreground">{bestForLabel} </span>{bestFor}
+        <span className="font-semibold text-foreground">{bestForLabel} </span>
+        {bestFor}
       </div>
     </motion.div>
   );

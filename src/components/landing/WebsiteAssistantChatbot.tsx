@@ -47,7 +47,10 @@ export function WebsiteAssistantChatbot() {
 
     window.setTimeout(() => {
       const response = getChatbotResponse(trimmed, currentLanguage);
-      setMessages((current) => [...current, { id: nextId.current++, role: "assistant", content: response }]);
+      setMessages((current) => [
+        ...current,
+        { id: nextId.current++, role: "assistant", content: response },
+      ]);
       setLoading(false);
     }, 420);
   };
@@ -78,11 +81,16 @@ export function WebsiteAssistantChatbot() {
           >
             <header className="flex items-center justify-between border-b border-primary/20 bg-card/60 px-4 py-3">
               <div className="flex min-w-0 items-center gap-3">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl shadow-[0_0_30px_oklch(0.68_0.22_28_/_0.28)]" style={{ background: "var(--gradient-primary)" }}>
+                <span
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl shadow-[0_0_30px_oklch(0.68_0.22_28_/_0.28)]"
+                  style={{ background: "var(--gradient-primary)" }}
+                >
                   <Bot className="h-5 w-5 text-background" />
                 </span>
                 <div className="min-w-0">
-                  <h2 className="truncate font-display text-base font-bold text-foreground">NextAura Assistant</h2>
+                  <h2 className="truncate font-display text-base font-bold text-foreground">
+                    NextAura Assistant
+                  </h2>
                   <p className="truncate text-xs text-muted-foreground">
                     {currentLanguage === "ar"
                       ? "اسأل عن خدماتنا، مشاريعنا، الأسعار، والفريق"
@@ -104,7 +112,10 @@ export function WebsiteAssistantChatbot() {
 
             <div ref={viewportRef} className="flex-1 space-y-3 overflow-y-auto px-3 py-4 sm:px-4">
               {messages.map((message) => (
-                <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  key={message.id}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                >
                   <div
                     className={`max-w-[84%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                       message.role === "user"

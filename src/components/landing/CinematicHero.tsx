@@ -1,69 +1,116 @@
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { AnimatedCounter } from "@/components/landing/AnimatedCounter";
-import { HeroVideo } from "@/components/landing/HeroVideo";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown, ArrowUpRight, Sparkles } from "lucide-react";
+import { useRef } from "react";
 import { useLanguage } from "@/i18n/translations";
+import { homepageContent } from "@/i18n/homepageContent";
 
-type CinematicHeroProps = {
-  onStartProject: () => void;
-};
+type CinematicHeroProps = { onStartProject: () => void };
 
 export function CinematicHero({ onStartProject }: CinematicHeroProps) {
-  const { tr, dir } = useLanguage();
+  const { language, dir } = useLanguage();
+  const copy = homepageContent[language].hero;
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.12]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -46]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.82], [1, 0]);
 
   return (
-    <section id="home" className="relative overflow-hidden pt-24 pb-12 sm:pt-28 sm:pb-16 md:min-h-screen md:pt-32">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_28%,rgb(124_58_237_/_0.24),transparent_34%),radial-gradient(circle_at_82%_18%,rgb(56_189_248_/_0.18),transparent_32%),linear-gradient(180deg,#070A16,#020617)]" />
-      <div className="absolute inset-0 grid-bg opacity-35" />
-      <div className="cinematic-beam cinematic-beam-a" />
-      <div className="cinematic-beam cinematic-beam-b" />
+    <section
+      ref={ref}
+      id="home"
+      className="relative flex min-h-[760px] items-end overflow-hidden pb-24 pt-32 sm:min-h-[820px] lg:min-h-[100svh] lg:items-center lg:pb-20 lg:pt-28"
+    >
+      <motion.video
+        src="/videos/hero-video.mp4"
+        poster="/images/cinematic/nextaura-ai-hero.webp"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-[68%_center]"
+        style={{ y: imageY, scale: imageScale }}
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,#02040d_5%,rgb(2_4_13_/_0.94)_32%,rgb(2_4_13_/_0.48)_66%,rgb(2_4_13_/_0.15)),linear-gradient(180deg,rgb(2_4_13_/_0.4),transparent_28%,#020617_100%)] rtl:bg-[linear-gradient(270deg,#02040d_5%,rgb(2_4_13_/_0.94)_32%,rgb(2_4_13_/_0.48)_66%,rgb(2_4_13_/_0.15)),linear-gradient(180deg,rgb(2_4_13_/_0.4),transparent_28%,#020617_100%)]" />
+      <div className="absolute inset-0 hero-noise opacity-40" />
+      <div className="absolute inset-0 neural-field opacity-55" aria-hidden="true" />
 
-      <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-5 sm:px-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="order-2 flex justify-center lg:order-1">
-          <HeroVideo />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 34 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-          className={`order-1 lg:order-2 ${dir === "rtl" ? "text-right" : "text-left"}`}
-        >
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/7 px-4 py-2 text-xs text-white/75 backdrop-blur-xl">
-            <Sparkles className="h-3.5 w-3.5 text-cyan" />
-            {tr.hero.badge}
-          </div>
-
-          <h1 className="text-[2.6rem] font-bold leading-[1.03] sm:text-6xl lg:text-7xl">
-            <span className="text-gradient">{tr.hero.titleA}</span>{tr.hero.titleB}
-          </h1>
-          <p className={`mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg ${dir === "rtl" ? "mr-0" : ""}`}>
-            {tr.hero.subtitle}
-          </p>
-
-          <div className={`mt-7 grid gap-3 sm:flex ${dir === "rtl" ? "sm:justify-start" : "sm:justify-start"}`}>
-            <button type="button" onClick={onStartProject} className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-7 py-3 text-sm">
-              {tr.nav.start} <ArrowRight className={`h-4 w-4 ${dir === "rtl" ? "rotate-180" : ""}`} />
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative mx-auto w-full max-w-[96rem] px-5 sm:px-8 lg:px-12"
+        dir={dir}
+      >
+        <div className="max-w-[52rem]">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.7 }}
+            className="section-eyebrow inline-flex items-center gap-2"
+          >
+            <Sparkles className="h-3.5 w-3.5" /> {copy.eyebrow}
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 34 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-6 max-w-[50rem] text-balance text-[clamp(3rem,7.2vw,7.8rem)] font-semibold leading-[0.9] tracking-[-0.055em] text-white"
+          >
+            {copy.lead}
+            <span className="text-gradient">{copy.accent}</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.75 }}
+            className="mt-7 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg lg:text-xl lg:leading-9"
+          >
+            {copy.body}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.65 }}
+            className="mt-8 flex flex-col gap-3 sm:flex-row"
+          >
+            <button
+              type="button"
+              onClick={onStartProject}
+              className="premium-button premium-button-primary justify-center sm:justify-start"
+            >
+              <span>{copy.primary}</span>
+              <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
             </button>
-            <a href="#services" className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-7 py-3 text-sm">
-              {tr.hero.viewWork}
+            <a
+              href="#projects"
+              className="premium-button premium-button-secondary justify-center sm:justify-start"
+            >
+              {copy.secondary}
             </a>
-          </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="mt-8 flex items-center gap-3 text-sm text-slate-400"
+          >
+            <span className="h-px w-10 bg-gradient-to-r from-violet-500 to-cyan-400" />
+            <span>{copy.trust}</span>
+          </motion.div>
+        </div>
+      </motion.div>
 
-          <div className="mt-8 grid grid-cols-3 gap-3">
-            <div className="rounded-2xl border border-border/60 bg-card/35 p-3 backdrop-blur sm:p-4">
-              <div className="font-display text-xl font-bold text-gradient sm:text-2xl"><AnimatedCounter to={82} suffix="%" /></div>
-              <div className="mt-1 text-[0.8rem] text-muted-foreground">{tr.hero.readiness}</div>
-            </div>
-            {tr.hero.stats.slice(0, 2).map(([k, v]: [string, string]) => (
-              <div key={v} className="rounded-2xl border border-border/60 bg-card/35 p-3 backdrop-blur sm:p-4">
-                <div className="font-display text-xl font-bold text-gradient sm:text-2xl">{k}</div>
-                <div className="mt-1 text-[0.8rem] text-muted-foreground">{v}</div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
+      <a
+        href="#services"
+        aria-label={copy.scroll}
+        className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-[0.65rem] uppercase tracking-[0.28em] text-slate-500 lg:flex"
+      >
+        {copy.scroll}
+        <ArrowDown className="h-4 w-4 animate-bounce" />
+      </a>
+      <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#020617]" />
     </section>
   );
 }

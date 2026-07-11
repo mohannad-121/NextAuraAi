@@ -1,30 +1,42 @@
 import { motion } from "framer-motion";
-import { BrainCircuit, Gauge, Puzzle, Target } from "lucide-react";
+import { Bot, Boxes, Braces, MessageSquareMore, Route, TrendingUp } from "lucide-react";
+import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
+import { SectionHeading } from "@/components/landing/SectionHeading";
 
-const icons = [BrainCircuit, Puzzle, Gauge, Target];
+const icons = [Route, Braces, Bot, Boxes, MessageSquareMore, TrendingUp];
 
 export function WhyChoose() {
-  const { tr } = useLanguage();
+  const { language, dir } = useLanguage();
+  const copy = homepageContent[language].benefits;
   return (
-    <section className="section-light relative py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs uppercase tracking-[0.3em]" style={{ color: "var(--cyan)" }}>{tr.why.eyebrow}</div>
-          <h2 className="mt-4 text-3xl font-bold sm:text-4xl md:text-5xl">
-            {tr.why.titleA}<span className="text-gradient">{tr.why.titleB}</span>
-          </h2>
-        </div>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-10 lg:grid-cols-4">
-          {tr.why.items.map((reason: any, index: number) => {
+    <section className="relative overflow-hidden bg-[#071022] py-24 sm:py-28 lg:py-36" dir={dir}>
+      <div className="absolute inset-0 grid-fade opacity-25" />
+      <div className="relative mx-auto max-w-[96rem] px-5 sm:px-8 lg:px-12">
+        <SectionHeading
+          eyebrow={copy.eyebrow}
+          title={copy.title}
+          align="center"
+          className="max-w-4xl"
+        />
+        <div className="mt-14 grid border-y border-white/10 md:grid-cols-2 lg:grid-cols-3">
+          {copy.items.map((item, index) => {
             const Icon = icons[index];
             return (
-            <motion.div key={reason.title} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }} className="light-card rounded-2xl p-5 md:p-6">
-              <Icon className="h-7 w-7" style={{ color: "var(--cyan)" }} />
-              <h3 className="mt-5 text-lg font-semibold">{reason.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{reason.text}</p>
-            </motion.div>
-          )})}
+              <motion.article
+                key={item.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+                className={`group relative min-h-[260px] p-7 sm:p-9 ${index % 3 !== 2 ? "lg:border-e lg:border-white/10" : ""} ${index < 3 ? "border-b border-white/10" : "max-lg:border-b max-lg:border-white/10"}`}
+              >
+                <Icon className="h-7 w-7 text-cyan-300 transition-transform duration-500 group-hover:-translate-y-1" />
+                <h3 className="mt-12 text-2xl font-semibold text-white">{item.title}</h3>
+                <p className="mt-4 max-w-md text-sm leading-7 text-slate-400">{item.description}</p>
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -2,12 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav } from "@/components/landing/Nav";
 import { CinematicHero } from "@/components/landing/CinematicHero";
-import { CinematicMediaSection } from "@/components/landing/CinematicMediaSection";
-import { ScrollProductStory } from "@/components/landing/ScrollProductStory";
+import { TrustBar } from "@/components/landing/TrustBar";
+import { ServicesUniverse } from "@/components/landing/ServicesUniverse";
+import { AboutSection } from "@/components/landing/AboutSection";
+import { IndustriesSection } from "@/components/landing/IndustriesSection";
 import { Process } from "@/components/landing/Process";
-import { CaseStudy } from "@/components/landing/CaseStudy";
+import { FeaturedProject } from "@/components/landing/FeaturedProject";
+import { SelectedWork } from "@/components/landing/SelectedWork";
 import { WhyChoose } from "@/components/landing/WhyChoose";
-import { EarlyWork } from "@/components/landing/EarlyWork";
+import { QualityStatement } from "@/components/landing/QualityStatement";
+import { ValuesSection } from "@/components/landing/ValuesSection";
+import { InsightsGrid } from "@/components/landing/InsightsGrid";
+import { MediaReels } from "@/components/landing/MediaReels";
 import { Team } from "@/components/landing/Team";
 import { Contact } from "@/components/landing/Contact";
 import { ProjectRequestModal } from "@/components/landing/ProjectRequestModal";
@@ -18,17 +24,30 @@ import { LanguageProvider } from "@/i18n/translations";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NextAura AI - AI-powered websites, chatbots & MVPs" },
+      { title: "NextAura AI | Websites, AI Solutions & Business Automation" },
       {
         name: "description",
         content:
-          "We help businesses turn ideas into intelligent digital products with AI, automation, and modern software development.",
+          "NextAura AI builds premium websites, AI assistants, automation systems, CRM platforms, MVPs, and custom digital products for businesses in Jordan, the UAE, and beyond.",
       },
-      { property: "og:title", content: "NextAura AI - AI software studio" },
+      {
+        property: "og:title",
+        content: "NextAura AI | Websites, AI Solutions & Business Automation",
+      },
       {
         property: "og:description",
-        content: "We build AI-powered websites, chatbots, and MVPs for businesses and startups.",
+        content:
+          "Premium websites, AI assistants, automation systems, CRM platforms, MVPs, and custom digital products.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "/images/cinematic/nextaura-ai-hero.webp" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "NextAura AI | Intelligent Digital Products" },
+      {
+        name: "twitter:description",
+        content: "Websites, AI solutions, automation, CRM platforms, MVPs, and custom software.",
+      },
+      { name: "twitter:image", content: "/images/cinematic/nextaura-ai-hero.webp" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -57,17 +76,22 @@ function LandingPage() {
   const [projectModalOpen, setProjectModalOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pb-24 md:pb-0">
+    <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
       <Nav onStartProject={() => setProjectModalOpen(true)} />
       <CinematicHero onStartProject={() => setProjectModalOpen(true)} />
-      <CinematicMediaSection variant="process" />
-      <ScrollProductStory />
-      <Process />
-      <CaseStudy onStartProject={() => setProjectModalOpen(true)} />
-      <WhyChoose />
-      <CinematicMediaSection variant="trust" />
-      <EarlyWork />
+      <TrustBar />
+      <ServicesUniverse onStartProject={() => setProjectModalOpen(true)} />
+      <AboutSection />
+      <IndustriesSection />
       <Team />
+      <Process />
+      <FeaturedProject />
+      <SelectedWork onStartProject={() => setProjectModalOpen(true)} />
+      <WhyChoose />
+      <QualityStatement />
+      <ValuesSection />
+      <InsightsGrid />
+      <MediaReels />
       <Contact onStartProject={() => setProjectModalOpen(true)} />
       <MobileCTA onStartProject={() => setProjectModalOpen(true)} />
       <WebsiteAssistantChatbot />

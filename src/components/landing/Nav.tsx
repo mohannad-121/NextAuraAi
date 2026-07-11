@@ -1,46 +1,170 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { LanguageSwitcher, useLanguage } from "@/i18n/translations";
+import { homepageContent } from "@/i18n/homepageContent";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
 
-type NavProps = {
-  onStartProject: () => void;
-};
+type NavProps = { onStartProject: () => void };
+
+const ids = ["home", "services", "about", "projects", "process", "team", "insights", "contact"];
 
 export function Nav({ onStartProject }: NavProps) {
-  const { tr } = useLanguage();
-  const links = [
-    { href: "#home", label: tr.nav.home },
-    { href: "#services", label: tr.nav.services },
-    { href: "#work", label: tr.nav.work },
-    { href: "#team", label: tr.nav.team },
-    { href: "#contact", label: tr.nav.contact },
-  ];
+  const { language, dir } = useLanguage();
+  const copy = homepageContent[language].nav;
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("home");
+
+  const links = useMemo(
+    () => [
+      { id: "home", label: copy.home },
+      { id: "services", label: copy.services },
+      { id: "about", label: copy.about },
+      { id: "projects", label: copy.projects },
+      { id: "process", label: copy.process },
+      { id: "team", label: copy.team },
+      { id: "insights", label: copy.insights },
+      { id: "contact", label: copy.contact },
+    ],
+    [copy],
+  );
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: "-18% 0px -68%", threshold: [0.05, 0.2, 0.5] },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const startProject = () => {
+    setOpen(false);
+    onStartProject();
+  };
+
   return (
     <motion.header
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -28, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-5"
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-x-0 top-0 z-[70] px-3 sm:px-5"
     >
-      <div className="mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-2xl glass px-3 py-2.5 sm:mt-4 sm:px-5 sm:py-3">
-        <a href="#home" className="flex min-h-11 items-center">
-          <BrandSymbol imageClassName="w-14 sm:w-[4.5rem] md:w-[4.75rem]" />
+      <div
+        className={`mx-auto mt-3 flex max-w-[96rem] items-center justify-between rounded-2xl px-3 py-2.5 transition-all duration-500 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#050817]/80 shadow-[0_20px_70px_rgb(0_0_0_/_0.45)] backdrop-blur-2xl" : "border border-transparent bg-transparent"}`}
+      >
+        <a
+          href="#home"
+          aria-label="NextAura AI home"
+          className="relative z-10 inline-flex min-h-11 items-center"
+        >
+          <BrandSymbol className="!rounded-xl !bg-black/45 !p-1.5" imageClassName="w-11 sm:w-12" />
         </a>
-        <nav className="hidden gap-7 text-sm text-muted-foreground md:flex">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="transition-colors hover:text-foreground">
-              {l.label}
+
+        <nav aria-label="Primary navigation" className="hidden items-center gap-1 xl:flex">
+          {links.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              className={`relative rounded-full px-3 py-2 text-[0.78rem] font-medium transition-colors ${active === link.id ? "text-white" : "text-slate-400 hover:text-white"}`}
+            >
+              {link.label}
+              <span
+                className={`absolute inset-x-3 -bottom-0.5 h-px origin-center bg-gradient-to-r from-violet-500 to-cyan-400 transition-transform ${active === link.id ? "scale-x-100" : "scale-x-0"}`}
+              />
             </a>
           ))}
         </nav>
-        <div className="hidden sm:block">
-          <LanguageSwitcher />
+
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:block">
+            <LanguageSwitcher />
+          </div>
+          <button
+            type="button"
+            onClick={startProject}
+            className="nav-desktop-cta premium-button premium-button-primary min-h-11 px-5"
+          >
+            {copy.start}
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? copy.close : copy.menu}
+            className="grid h-11 w-11 place-items-center rounded-full border border-white/12 bg-white/5 text-white xl:hidden"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
-        <button type="button" onClick={onStartProject} className="btn-primary inline-flex min-h-10 items-center rounded-full px-4 text-sm">
-          <span className="sm:hidden">{tr.nav.startShort}</span>
-          <span className="hidden sm:inline">{tr.nav.start}</span>
-        </button>
       </div>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            id="mobile-navigation"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-x-3 top-[4.9rem] overflow-hidden rounded-3xl border border-white/10 bg-[#050817]/96 p-5 shadow-2xl backdrop-blur-2xl sm:inset-x-5"
+            dir={dir}
+          >
+            <nav aria-label="Mobile navigation" className="grid gap-1">
+              {links.map((link, index) => (
+                <motion.a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  onClick={() => setOpen(false)}
+                  initial={{ opacity: 0, x: dir === "rtl" ? 16 : -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.025 }}
+                  className={`flex min-h-12 items-center justify-between border-b border-white/6 px-2 text-lg ${active === link.id ? "text-cyan-300" : "text-white"}`}
+                >
+                  <span>{link.label}</span>
+                  <span className="font-mono text-[0.65rem] text-slate-600">0{index + 1}</span>
+                </motion.a>
+              ))}
+            </nav>
+            <div className="mt-5 flex items-center gap-3 sm:hidden">
+              <LanguageSwitcher />
+            </div>
+            <button
+              type="button"
+              onClick={startProject}
+              className="premium-button premium-button-primary mt-5 w-full justify-center"
+            >
+              {copy.start}
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </motion.header>
   );
 }

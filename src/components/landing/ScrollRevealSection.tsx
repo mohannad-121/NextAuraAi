@@ -7,7 +7,11 @@ type ScrollRevealSectionProps = {
   delay?: number;
 };
 
-export function ScrollRevealSection({ children, className = "", delay = 0 }: ScrollRevealSectionProps) {
+export function ScrollRevealSection({
+  children,
+  className = "",
+  delay = 0,
+}: ScrollRevealSectionProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 42, filter: "blur(10px)" }}

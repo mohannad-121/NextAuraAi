@@ -10,8 +10,10 @@ export function NeuralOrb() {
   return (
     <div className="relative h-[300px] w-[300px] max-w-full sm:h-[420px] sm:w-[420px]">
       {/* glow */}
-      <div className="absolute inset-0 rounded-full blur-3xl opacity-60"
-           style={{ background: "var(--gradient-glow)" }} />
+      <div
+        className="absolute inset-0 rounded-full blur-3xl opacity-60"
+        style={{ background: "var(--gradient-glow)" }}
+      />
 
       {/* rotating ring */}
       <motion.div
@@ -26,12 +28,15 @@ export function NeuralOrb() {
               .map((m) => (
                 <line
                   key={`${n.i}-${m.i}`}
-                  x1={n.x} y1={n.y} x2={m.x} y2={m.y}
+                  x1={n.x}
+                  y1={n.y}
+                  x2={m.x}
+                  y2={m.y}
                   stroke="url(#g)"
                   strokeWidth="0.6"
                   opacity="0.4"
                 />
-              ))
+              )),
           )}
           <defs>
             <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -65,7 +70,8 @@ export function NeuralOrb() {
         className="absolute left-1/2 top-1/2 h-[4.5rem] w-[4.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-24 sm:w-24"
         style={{
           background: "var(--gradient-primary)",
-          boxShadow: "0 0 80px rgb(56 189 248 / 0.52), 0 0 50px rgb(124 58 237 / 0.4), inset 0 0 30px rgb(224 242 254 / 0.22)",
+          boxShadow:
+            "0 0 80px rgb(56 189 248 / 0.52), 0 0 50px rgb(124 58 237 / 0.4), inset 0 0 30px rgb(224 242 254 / 0.22)",
         }}
       />
     </div>

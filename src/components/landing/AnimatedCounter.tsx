@@ -23,7 +23,8 @@ export function AnimatedCounter({ to, suffix = "" }: AnimatedCounterProps) {
 
   return (
     <motion.span ref={ref}>
-      {display}{suffix}
+      {display}
+      {suffix}
     </motion.span>
   );
 }

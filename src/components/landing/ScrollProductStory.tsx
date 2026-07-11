@@ -1,5 +1,12 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Bot, BrainCircuit, ChartNoAxesCombined, Code2, MonitorSmartphone, Workflow } from "lucide-react";
+import {
+  Bot,
+  BrainCircuit,
+  ChartNoAxesCombined,
+  Code2,
+  MonitorSmartphone,
+  Workflow,
+} from "lucide-react";
 import { useRef } from "react";
 import { AICoreVisual } from "@/components/landing/AICoreVisual";
 import { ProductModule } from "@/components/landing/ProductModule";
@@ -10,7 +17,8 @@ const storyCopy = {
   en: {
     eyebrow: "Product reveal",
     title: "From idea to product",
-    subtitle: "One AI core, six product layers. As we build, each capability separates from the core and becomes a usable digital product.",
+    subtitle:
+      "One AI core, six product layers. As we build, each capability separates from the core and becomes a usable digital product.",
     modules: [
       ["AI Chatbot", "A guided assistant for support, FAQs, and lead capture."],
       ["Website Platform", "A fast, premium website or web platform around your business."],
@@ -23,7 +31,8 @@ const storyCopy = {
   ar: {
     eyebrow: "كشف المنتج",
     title: "من الفكرة إلى المنتج",
-    subtitle: "نواة ذكاء واحدة، وست طبقات منتج. مع البناء، تنفصل كل قدرة من النواة وتتحول إلى منتج رقمي قابل للاستخدام.",
+    subtitle:
+      "نواة ذكاء واحدة، وست طبقات منتج. مع البناء، تنفصل كل قدرة من النواة وتتحول إلى منتج رقمي قابل للاستخدام.",
     modules: [
       ["AI Chatbot", "مساعد ذكي للدعم، الأسئلة الشائعة، وجمع العملاء المحتملين."],
       ["Website Platform", "موقع أو منصة ويب سريعة وفاخرة حول أهداف عملك."],
@@ -36,7 +45,8 @@ const storyCopy = {
   es: {
     eyebrow: "Reveal de producto",
     title: "De la idea al producto",
-    subtitle: "Un núcleo de IA, seis capas de producto. Cada capacidad se separa del núcleo y se convierte en un producto digital usable.",
+    subtitle:
+      "Un núcleo de IA, seis capas de producto. Cada capacidad se separa del núcleo y se convierte en un producto digital usable.",
     modules: [
       ["AI Chatbot", "Un asistente guiado para soporte, FAQs y captación de leads."],
       ["Website Platform", "Un sitio o plataforma web rápida y premium para tu negocio."],
@@ -61,7 +71,11 @@ export function ScrollProductStory() {
   const connectorHeight = useTransform(scrollYProgress, [0.12, 0.92], ["8%", "88%"]);
 
   return (
-    <section id="services" ref={ref} className="section-light relative overflow-hidden py-16 md:py-28">
+    <section
+      id="services"
+      ref={ref}
+      className="section-light relative overflow-hidden py-16 md:py-28"
+    >
       <div className="absolute inset-0 grid-bg opacity-25" />
       <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
         <PremiumSectionTitle
@@ -73,13 +87,19 @@ export function ScrollProductStory() {
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
           <div className="relative lg:sticky lg:top-28">
-            <motion.div style={{ scale: sceneScale, y: sceneY }} className="mx-auto flex justify-center">
+            <motion.div
+              style={{ scale: sceneScale, y: sceneY }}
+              className="mx-auto flex justify-center"
+            >
               <AICoreVisual progress={scrollYProgress} size="story" />
             </motion.div>
           </div>
 
           <div className="relative space-y-5 lg:space-y-6">
-            <motion.div className={`absolute top-8 hidden w-px bg-gradient-to-b from-cyan via-primary to-accent opacity-70 lg:block ${dir === "rtl" ? "right-[-1.5rem]" : "left-[-1.5rem]"}`} style={{ height: connectorHeight }} />
+            <motion.div
+              className={`absolute top-8 hidden w-px bg-gradient-to-b from-cyan via-primary to-accent opacity-70 lg:block ${dir === "rtl" ? "right-[-1.5rem]" : "left-[-1.5rem]"}`}
+              style={{ height: connectorHeight }}
+            />
             {text.modules.map(([title, description], index) => {
               const Icon = icons[index];
               return (

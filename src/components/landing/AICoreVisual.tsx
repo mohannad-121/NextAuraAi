@@ -21,7 +21,12 @@ export function AICoreVisual({ progress, size = "hero", interactive = false }: A
   const innerScale = useTransform(p, [0, 0.5, 1], [0.88, 1.04, 0.96]);
   const shellOpacity = useTransform(p, [0, 0.45, 1], [0.55, 0.85, 0.4]);
 
-  const dimensions = size === "compact" ? "h-56 w-56" : size === "story" ? "h-72 w-72 sm:h-96 sm:w-96" : "h-80 w-80 sm:h-[30rem] sm:w-[30rem]";
+  const dimensions =
+    size === "compact"
+      ? "h-56 w-56"
+      : size === "story"
+        ? "h-72 w-72 sm:h-96 sm:w-96"
+        : "h-80 w-80 sm:h-[30rem] sm:w-[30rem]";
 
   return (
     <div
@@ -37,7 +42,10 @@ export function AICoreVisual({ progress, size = "hero", interactive = false }: A
         mouseY.set(0);
       }}
     >
-      <div className="absolute inset-0 rounded-full opacity-35 blur-3xl" style={{ background: "var(--gradient-primary)" }} />
+      <div
+        className="absolute inset-0 rounded-full opacity-35 blur-3xl"
+        style={{ background: "var(--gradient-primary)" }}
+      />
       <div className="absolute inset-8 rounded-full border border-primary/15 bg-primary/5 shadow-[inset_0_0_60px_rgb(56_189_248_/_0.08)]" />
       <motion.div
         className="absolute inset-[13%] transform-gpu preserve-3d"
@@ -48,9 +56,18 @@ export function AICoreVisual({ progress, size = "hero", interactive = false }: A
           scale: innerScale,
         }}
       >
-        <motion.div className="absolute inset-0 rounded-[2.25rem] border border-cyan/35 bg-card/50 shadow-[0_0_95px_rgb(56_189_248_/_0.24),0_0_62px_rgb(124_58_237_/_0.18),inset_0_0_36px_rgb(255_255_255_/_0.04)] backdrop-blur-2xl" style={{ opacity: shellOpacity }} />
-        <motion.div className="absolute inset-x-4 top-4 h-[calc(50%-1rem)] rounded-t-[1.7rem] border border-primary/35 bg-background/70" style={{ y: useTransform(openGap, (v) => -v) }} />
-        <motion.div className="absolute inset-x-4 bottom-4 h-[calc(50%-1rem)] rounded-b-[1.7rem] border border-accent/35 bg-background/70" style={{ y: openGap }} />
+        <motion.div
+          className="absolute inset-0 rounded-[2.25rem] border border-cyan/35 bg-card/50 shadow-[0_0_95px_rgb(56_189_248_/_0.24),0_0_62px_rgb(124_58_237_/_0.18),inset_0_0_36px_rgb(255_255_255_/_0.04)] backdrop-blur-2xl"
+          style={{ opacity: shellOpacity }}
+        />
+        <motion.div
+          className="absolute inset-x-4 top-4 h-[calc(50%-1rem)] rounded-t-[1.7rem] border border-primary/35 bg-background/70"
+          style={{ y: useTransform(openGap, (v) => -v) }}
+        />
+        <motion.div
+          className="absolute inset-x-4 bottom-4 h-[calc(50%-1rem)] rounded-b-[1.7rem] border border-accent/35 bg-background/70"
+          style={{ y: openGap }}
+        />
         <motion.div
           className="absolute left-1/2 top-1/2 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-cyan/55 bg-background/90 shadow-[0_0_60px_rgb(56_189_248_/_0.36)] sm:h-28 sm:w-28"
           animate={{ rotate: 360 }}
@@ -58,19 +75,69 @@ export function AICoreVisual({ progress, size = "hero", interactive = false }: A
         >
           <BrainCircuit className="h-11 w-11 text-cyan sm:h-12 sm:w-12" />
         </motion.div>
-        <motion.div className="absolute left-[18%] top-[18%] grid h-12 w-12 place-items-center rounded-2xl border border-border/70 bg-card/70" style={{ x: useTransform(openGap, (v) => -v * 1.1), y: useTransform(openGap, (v) => -v * 0.7) }}>
+        <motion.div
+          className="absolute left-[18%] top-[18%] grid h-12 w-12 place-items-center rounded-2xl border border-border/70 bg-card/70"
+          style={{
+            x: useTransform(openGap, (v) => -v * 1.1),
+            y: useTransform(openGap, (v) => -v * 0.7),
+          }}
+        >
           <Cpu className="h-5 w-5 text-cyan" />
         </motion.div>
-        <motion.div className="absolute bottom-[18%] right-[18%] grid h-12 w-12 place-items-center rounded-2xl border border-border/70 bg-card/70" style={{ x: useTransform(openGap, (v) => v * 1.1), y: useTransform(openGap, (v) => v * 0.7) }}>
+        <motion.div
+          className="absolute bottom-[18%] right-[18%] grid h-12 w-12 place-items-center rounded-2xl border border-border/70 bg-card/70"
+          style={{
+            x: useTransform(openGap, (v) => v * 1.1),
+            y: useTransform(openGap, (v) => v * 0.7),
+          }}
+        >
           <Network className="h-5 w-5 text-cyan" />
         </motion.div>
       </motion.div>
 
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-70" viewBox="0 0 400 400" aria-hidden="true">
-        <motion.circle cx="200" cy="200" r="132" fill="none" stroke="url(#aiCoreStroke)" strokeWidth="1.2" strokeDasharray="9 14" animate={{ rotate: 360 }} style={{ transformOrigin: "center" }} transition={{ duration: 34, repeat: Infinity, ease: "linear" }} />
-        <motion.circle cx="200" cy="200" r="94" fill="none" stroke="url(#aiCoreStroke)" strokeWidth="1" strokeDasharray="5 12" animate={{ rotate: -360 }} style={{ transformOrigin: "center" }} transition={{ duration: 28, repeat: Infinity, ease: "linear" }} />
-        <path d="M82 204 C126 112 276 96 322 190" fill="none" stroke="url(#aiCoreStroke)" strokeWidth="1.2" opacity="0.65" />
-        <path d="M96 260 C150 328 272 326 326 236" fill="none" stroke="url(#aiCoreStroke)" strokeWidth="1.2" opacity="0.45" />
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-70"
+        viewBox="0 0 400 400"
+        aria-hidden="true"
+      >
+        <motion.circle
+          cx="200"
+          cy="200"
+          r="132"
+          fill="none"
+          stroke="url(#aiCoreStroke)"
+          strokeWidth="1.2"
+          strokeDasharray="9 14"
+          animate={{ rotate: 360 }}
+          style={{ transformOrigin: "center" }}
+          transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.circle
+          cx="200"
+          cy="200"
+          r="94"
+          fill="none"
+          stroke="url(#aiCoreStroke)"
+          strokeWidth="1"
+          strokeDasharray="5 12"
+          animate={{ rotate: -360 }}
+          style={{ transformOrigin: "center" }}
+          transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+        />
+        <path
+          d="M82 204 C126 112 276 96 322 190"
+          fill="none"
+          stroke="url(#aiCoreStroke)"
+          strokeWidth="1.2"
+          opacity="0.65"
+        />
+        <path
+          d="M96 260 C150 328 272 326 326 236"
+          fill="none"
+          stroke="url(#aiCoreStroke)"
+          strokeWidth="1.2"
+          opacity="0.45"
+        />
         <defs>
           <linearGradient id="aiCoreStroke" x1="0" x2="1">
             <stop stopColor="#8B5CF6" />
