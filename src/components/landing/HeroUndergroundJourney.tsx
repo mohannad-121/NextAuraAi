@@ -64,6 +64,7 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
       const topSoil = select("[data-soil-top]");
       const compactSoil = select("[data-soil-compact]");
       const stones = select("[data-soil-stone]");
+      const foregroundRock = select("[data-soil-foreground]");
       const foundationLabel = select("[data-foundation-label]");
       const deepParticles = select("[data-underground-dust]");
 
@@ -176,6 +177,11 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
             .to(surfaceEdge, { yPercent: -145, duration: 0.4 }, 0.47)
             .to(topSoil, { yPercent: -76, duration: 0.44 }, 0.48)
             .to(compactSoil, { yPercent: -38, duration: 0.46 }, 0.5)
+            .to(
+              foregroundRock,
+              { yPercent: -175, scale: 1.08, duration: 0.43, stagger: 0.015 },
+              0.49,
+            )
             .to(
               stones,
               {
@@ -327,6 +333,21 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
               style={{
                 clipPath:
                   "polygon(0 38%, 6% 8%, 13% 30%, 21% 0, 30% 34%, 39% 12%, 48% 42%, 58% 5%, 68% 31%, 78% 10%, 88% 40%, 95% 14%, 100% 32%, 100% 100%, 0 100%)",
+              }}
+            />
+
+            <div
+              data-soil-foreground
+              className="absolute -left-[11%] top-[2%] h-[52%] w-[34%] origin-bottom bg-[linear-gradient(138deg,#281923,#100d13)] opacity-95 shadow-[24px_12px_55px_rgb(0_0_0_/_0.42)]"
+              style={{
+                clipPath: "polygon(0 0, 61% 5%, 92% 25%, 74% 44%, 100% 71%, 69% 100%, 0 85%)",
+              }}
+            />
+            <div
+              data-soil-foreground
+              className="absolute -right-[13%] top-[4%] h-[58%] w-[38%] origin-bottom bg-[linear-gradient(222deg,#211722,#0e0d13)] opacity-95 shadow-[-24px_14px_58px_rgb(0_0_0_/_0.44)]"
+              style={{
+                clipPath: "polygon(28% 0, 100% 4%, 100% 91%, 30% 100%, 0 73%, 24% 49%, 5% 23%)",
               }}
             />
 

@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef, type CSSProperties } from "react";
 import { DepthIndicator } from "@/components/landing/DepthIndicator";
 import {
   EnergyCore,
+  EnvironmentalPlanes,
   NeuralCoreVisualization,
   ParticleLayer,
   ServiceCard,
@@ -53,6 +54,7 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
       data-depth-section="foundation"
       className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_74%_14%,rgb(124_58_237_/_0.18),transparent_30%),radial-gradient(circle_at_18%_48%,rgb(115_75_53_/_0.2),transparent_35%),linear-gradient(180deg,#151117_0%,#0c0e15_52%,#070a13_100%)] px-5 pb-28 pt-32 sm:px-8 lg:px-12 lg:pb-40 lg:pt-44"
     >
+      <EnvironmentalPlanes tone="foundation" />
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-55 [background-image:radial-gradient(circle_at_15%_22%,rgb(255_255_255_/_0.04)_0_1px,transparent_2px),radial-gradient(circle_at_80%_60%,rgb(167_139_250_/_0.06)_0_1px,transparent_2px)] [background-size:47px_43px,68px_61px]"
@@ -79,14 +81,14 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
         tone="earth"
       />
 
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHeading copy={copy} />
-        <div className="mt-24 space-y-24 lg:mt-36 lg:space-y-36">
+        <div className="mt-24 space-y-[24svh] lg:mt-36 lg:space-y-36">
           {copy.groups.map((group, groupIndex) => (
             <div
               key={groupIndex}
               data-foundation-group
-              className={`grid min-h-[48svh] content-center gap-[24svh] md:gap-5 ${group.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 lg:px-[8%]"}`}
+              className={`grid min-h-[48svh] content-center gap-[44svh] md:gap-5 ${group.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 lg:px-[8%]"}`}
             >
               {group.map((service) => {
                 const index = serviceIndex++;
@@ -129,6 +131,7 @@ function AutomationSection({ copy }: { copy: ReturnType<typeof getCopy>["automat
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(circle_at_72%_30%,rgb(37_99_235_/_0.16),transparent_32%),radial-gradient(circle_at_16%_70%,rgb(124_58_237_/_0.18),transparent_35%),linear-gradient(180deg,#050816,#050713_70%,#040611)]"
         />
+        <EnvironmentalPlanes tone="automation" />
         <div
           data-network-grid
           aria-hidden="true"
@@ -148,7 +151,7 @@ function AutomationSection({ copy }: { copy: ReturnType<typeof getCopy>["automat
           tone="digital"
         />
 
-        <div className="relative mx-auto grid w-full max-w-7xl gap-10 xl:grid-cols-[0.72fr_1.28fr] xl:items-center xl:gap-14">
+        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-10 xl:grid-cols-[0.72fr_1.28fr] xl:items-center xl:gap-14">
           <div>
             <SectionHeading copy={copy} />
             <div className="mt-8 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200/65">
@@ -200,6 +203,7 @@ function IntelligenceSection({ copy }: { copy: ReturnType<typeof getCopy>["intel
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(circle_at_68%_44%,rgb(34_211_238_/_0.12),transparent_27%),radial-gradient(circle_at_36%_48%,rgb(109_40_217_/_0.22),transparent_36%),linear-gradient(180deg,#040611,#030510_72%,#02040c)]"
         />
+        <EnvironmentalPlanes tone="intelligence" />
         <div
           data-neural-field
           aria-hidden="true"
@@ -215,7 +219,7 @@ function IntelligenceSection({ copy }: { copy: ReturnType<typeof getCopy>["intel
           tone="neural"
         />
 
-        <div className="relative mx-auto grid w-full max-w-7xl gap-8 xl:grid-cols-[1fr_0.9fr] xl:items-center xl:gap-14">
+        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 xl:grid-cols-[1fr_0.9fr] xl:items-center xl:gap-14">
           <div>
             <SectionHeading copy={copy} />
             <div className="relative mt-8 min-h-[38rem] sm:min-h-[14rem]">
@@ -269,6 +273,7 @@ function CoreSection({
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(circle_at_50%_47%,rgb(37_99_235_/_0.18),transparent_20%),radial-gradient(circle_at_50%_50%,rgb(124_58_237_/_0.16),transparent_42%),linear-gradient(180deg,#02040c,#030511_70%,#040617)]"
         />
+        <EnvironmentalPlanes tone="core" />
         <div
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-44 bg-[linear-gradient(180deg,#02040c_0%,rgb(2_4_12_/_0.72)_48%,transparent_100%)]"
@@ -278,7 +283,7 @@ function CoreSection({
           mobileCount={DEPTH_JOURNEY_CONFIG.particles.mobile}
           tone="core"
         />
-        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-2 lg:grid-cols-[1fr_1.08fr] lg:gap-12">
+        <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-2 lg:grid-cols-[1fr_1.08fr] lg:gap-12">
           <div
             data-core-copy
             className="relative z-20 order-2 max-w-[40rem] pb-6 text-center lg:order-1 lg:text-start rtl:lg:max-w-[43rem]"
@@ -715,6 +720,30 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
 
           if (!reduceMotion) {
             select("[data-depth-section]").forEach((section) => {
+              section.querySelectorAll<HTMLElement>("[data-depth-plane]").forEach((plane) => {
+                const planeName = plane.dataset.depthPlane as
+                  "background" | "midground" | "foreground";
+                const baseDistance = DEPTH_JOURNEY_CONFIG.motion.planeParallax[planeName];
+                const distance = simplified
+                  ? baseDistance * DEPTH_JOURNEY_CONFIG.motion.planeParallax.mobileScale
+                  : baseDistance;
+                const planeTween = gsap.fromTo(
+                  plane,
+                  { y: distance * 0.35 },
+                  {
+                    y: -distance,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: section,
+                      start: "top bottom",
+                      end: "bottom top",
+                      scrub: 0.8,
+                    },
+                  },
+                );
+                cleanups.push(() => planeTween.kill());
+              });
+
               const particles = section.querySelectorAll("[data-depth-particle]");
               const tween = gsap.to(particles, {
                 y: simplified
