@@ -38,7 +38,7 @@ export type CinematicJourneyContent = {
 
 const en: CinematicJourneyContent = {
   depth: {
-    label: "Journey depth",
+    label: "Creative journey depth",
     progress: "Journey progress",
     stages: [
       { label: "Surface", depth: "0 m" },
@@ -194,7 +194,7 @@ const en: CinematicJourneyContent = {
 
 const ar: CinematicJourneyContent = {
   depth: {
-    label: "عمق الرحلة",
+    label: "العمق الإبداعي للرحلة",
     progress: "تقدم الرحلة",
     stages: [
       { label: "السطح", depth: "0 م" },
@@ -335,7 +335,7 @@ const ar: CinematicJourneyContent = {
 
 const es: CinematicJourneyContent = {
   depth: {
-    label: "Profundidad del viaje",
+    label: "Profundidad creativa del viaje",
     progress: "Progreso del viaje",
     stages: [
       { label: "Superficie", depth: "0 m" },

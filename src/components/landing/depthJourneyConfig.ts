@@ -1,0 +1,43 @@
+/** Central controls for the surface-to-core cinematic journey. */
+export const DEPTH_JOURNEY_CONFIG = {
+  hero: {
+    brightness: 1.2,
+    contrast: 1.05,
+    saturation: 1.08,
+    desktopPin: 1.85,
+    mobilePin: 1.42,
+    desktopZoom: 1.1,
+    mobileZoom: 1.055,
+    desktopRise: -5,
+    mobileRise: -2.5,
+    zoomStart: 0.06,
+    supportFadeStart: 0.16,
+    headingFadeStart: 0.33,
+    groundCrossing: 0.46,
+    foundationReveal: 0.84,
+  },
+  sections: {
+    automationPin: 2.45,
+    intelligencePin: 2.55,
+    coreDesktopHeight: "190svh",
+  },
+  motion: {
+    scrub: 0.52,
+    foundationParallax: 36,
+    deepParallax: 48,
+    mobileParallax: 18,
+    cardRevealDuration: 0.14,
+    cardGroupStart: 0.22,
+    cardGroupGap: 0.42,
+    workflowDuration: 0.68,
+    aiCoreRotation: 18,
+    finalCoreBrightness: 1.18,
+  },
+  particles: {
+    foundation: 18,
+    automation: 20,
+    intelligence: 22,
+    core: 18,
+    mobile: 6,
+  },
+} as const;

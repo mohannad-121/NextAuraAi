@@ -195,6 +195,71 @@
   mix-blend-mode: soft-light;
 }
 
+.hero-video {
+  object-position: 40% center;
+}
+
+[dir="rtl"] .hero-video {
+  object-position: 60% center;
+}
+
+@media (min-width: 640px) {
+  .hero-video {
+    object-position: 46% center;
+  }
+  [dir="rtl"] .hero-video {
+    object-position: 54% center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-video {
+    object-position: 55% center;
+  }
+  [dir="rtl"] .hero-video {
+    object-position: 45% center;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-video {
+    object-position: 64% center;
+  }
+  [dir="rtl"] .hero-video {
+    object-position: 36% center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  [data-automation-group],
+  [data-intelligence-group] {
+    position: relative !important;
+    inset: auto !important;
+    min-height: 90svh;
+    align-content: center;
+    margin-top: 1rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  [data-ai-mode]:not([data-ai-mode-index="0"]) {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) and (max-width: 900px) {
+  .underground-stage {
+    height: auto;
+    min-height: 620px;
+  }
+  .cinematic-hero {
+    min-height: 620px;
+    padding-top: 6rem;
+    padding-bottom: 2.5rem;
+  }
+}
+
 .neural-field {
   background-image:
     radial-gradient(circle at 13% 28%, rgb(125 211 252 / 0.38) 0 1px, transparent 2px),
@@ -534,6 +599,30 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .depth-scroll-section {
+    min-height: auto !important;
+  }
+
+  .depth-scroll-scene {
+    position: relative !important;
+  }
+
+  [data-automation-group],
+  [data-intelligence-group] {
+    position: relative !important;
+    inset: auto !important;
+    margin-top: 1rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    row-gap: 35svh !important;
+    margin-bottom: 20svh;
+  }
+
+  [data-ai-mode]:not([data-ai-mode-index="0"]) {
+    display: none !important;
   }
 }
 

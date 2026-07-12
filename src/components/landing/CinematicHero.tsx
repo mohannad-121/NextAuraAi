@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowDown, ArrowUpRight, Sparkles } from "lucide-react";
 import { useLanguage } from "@/i18n/translations";
 import { homepageContent } from "@/i18n/homepageContent";
+import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
 
 type CinematicHeroProps = { onStartProject: () => void };
 
@@ -12,14 +13,18 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
   return (
     <section
       id="home"
-      className="relative flex min-h-[max(760px,100svh)] items-center overflow-hidden pb-16 pt-32 sm:min-h-[max(820px,100svh)] sm:pb-20 sm:pt-36 lg:min-h-[100svh] lg:pb-20 lg:pt-28"
+      className="cinematic-hero relative flex min-h-[max(720px,100svh)] items-center overflow-hidden pb-16 pt-28 sm:min-h-[max(780px,100svh)] sm:pb-20 sm:pt-32 lg:min-h-[100svh] lg:pb-20 lg:pt-28"
     >
       <div
         data-hero-video-frame
-        className="absolute inset-0 overflow-hidden"
-        style={{ transform: "scale(1.04)" }}
+        className="absolute inset-0 overflow-hidden bg-cover bg-center"
+        style={{
+          transform: "scale(1.04)",
+          backgroundImage: "url('/images/cinematic/hero-robot-poster.webp')",
+        }}
       >
-        <motion.video
+        {/* Add responsive <source> elements here when dedicated mobile/desktop encodes exist. */}
+        <video
           src="/videos/hero-video.mp4"
           poster="/images/cinematic/hero-robot-poster.webp"
           autoPlay
@@ -27,10 +32,16 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
           muted
           playsInline
           preload="metadata"
+          controls={false}
+          disablePictureInPicture
           aria-hidden="true"
           data-hero-video
-          className="absolute inset-0 h-full w-full object-cover object-[52%_center] xl:object-[68%_center]"
-          style={{ filter: "brightness(1.2) contrast(1.05) saturate(1.08)" }}
+          className="hero-video absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+          style={{
+            filter: `brightness(${DEPTH_JOURNEY_CONFIG.hero.brightness}) contrast(${DEPTH_JOURNEY_CONFIG.hero.contrast}) saturate(${DEPTH_JOURNEY_CONFIG.hero.saturation})`,
+          }}
+          onCanPlay={(event) => (event.currentTarget.style.opacity = "1")}
+          onError={(event) => (event.currentTarget.style.opacity = "0")}
         />
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(2_4_13_/_0.76)_0%,rgb(2_4_13_/_0.62)_24%,rgb(2_4_13_/_0.28)_43%,transparent_68%)] rtl:bg-[linear-gradient(270deg,rgb(2_4_13_/_0.76)_0%,rgb(2_4_13_/_0.62)_24%,rgb(2_4_13_/_0.28)_43%,transparent_68%)]" />
@@ -38,7 +49,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
       <div className="absolute inset-0 neural-field opacity-40" aria-hidden="true" />
 
       <motion.div className="relative mx-auto w-full max-w-[96rem] px-5 sm:px-8 lg:px-12" dir={dir}>
-        <div className="max-w-[580px] 2xl:max-w-[680px]">
+        <div className="max-w-[580px] rtl:max-w-[620px] 2xl:max-w-[680px] 2xl:rtl:max-w-[720px]">
           <div data-hero-heading>
             <motion.div
               initial={{ opacity: 0, y: 18 }}
@@ -52,7 +63,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
               initial={{ opacity: 0, y: 34 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.28, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 max-w-[580px] text-balance text-[clamp(2.4rem,9.5vw,3.2rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-white [text-shadow:0_2px_18px_rgb(0_0_0_/_0.28)] sm:text-[clamp(3rem,6.2vw,4rem)] lg:text-[clamp(3.4rem,5vw,4.8rem)] 2xl:max-w-[680px] 2xl:text-[clamp(3.8rem,5vw,5.8rem)]"
+              className="mt-6 max-w-[580px] text-balance text-[clamp(2.35rem,9vw,3.05rem)] font-semibold leading-[0.99] tracking-[-0.045em] text-white [text-shadow:0_2px_18px_rgb(0_0_0_/_0.28)] sm:text-[clamp(2.9rem,6vw,3.85rem)] lg:text-[clamp(3.3rem,4.8vw,4.55rem)] 2xl:max-w-[680px] 2xl:text-[clamp(3.7rem,4.8vw,5.6rem)]"
             >
               {copy.lead}
               <span className="text-gradient">{copy.accent}</span>
@@ -60,6 +71,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
           </div>
           <div data-hero-support>
             <motion.p
+              data-hero-paragraph
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.75 }}
@@ -68,6 +80,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
               {copy.body}
             </motion.p>
             <motion.div
+              data-hero-actions
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.65 }}
@@ -89,6 +102,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
               </a>
             </motion.div>
             <motion.div
+              data-hero-trust
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}

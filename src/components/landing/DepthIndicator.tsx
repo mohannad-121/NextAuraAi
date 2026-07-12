@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CinematicJourneyContent } from "@/i18n/cinematicJourneyContent";
 
 const targets = [
@@ -13,6 +13,7 @@ export function DepthIndicator({ copy }: { copy: CinematicJourneyContent["depth"
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const update = () => {
@@ -52,19 +53,29 @@ export function DepthIndicator({ copy }: { copy: CinematicJourneyContent["depth"
       setActiveIndex(nextActive);
     };
 
+    const scheduleUpdate = () => {
+      if (frameRef.current !== null) return;
+      frameRef.current = window.requestAnimationFrame(() => {
+        frameRef.current = null;
+        update();
+      });
+    };
+
     update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
     return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
     };
   }, []);
 
   const goToStage = (index: number) => {
     const target = document.getElementById(targets[index]);
     if (!target) return;
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   };
 
   return (
@@ -84,6 +95,11 @@ export function DepthIndicator({ copy }: { copy: CinematicJourneyContent["depth"
             key={stage.label}
             type="button"
             onClick={() => goToStage(index)}
+            onKeyDown={(event) => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+              event.preventDefault();
+              goToStage(index);
+            }}
             aria-current={activeIndex === index ? "step" : undefined}
             aria-label={`${stage.label}, ${stage.depth}`}
             className="group relative flex min-h-8 items-center gap-2.5 rounded-xl px-2 text-start focus-visible:outline-cyan-300"
