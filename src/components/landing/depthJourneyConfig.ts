@@ -26,6 +26,12 @@ export const DEPTH_JOURNEY_CONFIG = {
     foundationParallax: 36,
     deepParallax: 48,
     mobileParallax: 18,
+    planeParallax: {
+      background: 14,
+      midground: 30,
+      foreground: 54,
+      mobileScale: 0.42,
+    },
     cardRevealDuration: 0.14,
     cardGroupStart: 0.22,
     cardGroupGap: 0.42,

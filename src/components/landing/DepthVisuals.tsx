@@ -1,4 +1,4 @@
-import { BrainCircuit, Check, Database, FileText, MessageCircle, Sparkles } from "lucide-react";
+import { Check, Database, FileText, MessageCircle, Sparkles } from "lucide-react";
 import type { JourneyService } from "@/i18n/cinematicJourneyContent";
 
 type ParticleLayerProps = {
@@ -35,29 +35,63 @@ export function ParticleLayer({ count, mobileCount = 8, tone = "digital" }: Part
   );
 }
 
+type EnvironmentTone = "foundation" | "automation" | "intelligence" | "core";
+
+/** Shared strata and signal traces keep every depth scene part of the same environment. */
+export function EnvironmentalPlanes({ tone }: { tone: EnvironmentTone }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`depth-environment depth-environment-${tone} pointer-events-none absolute inset-0 overflow-hidden`}
+    >
+      <div data-depth-plane="background" className="depth-plane depth-plane-background">
+        <span />
+        <span />
+      </div>
+      <div data-depth-plane="midground" className="depth-plane depth-plane-midground">
+        <span />
+        <span />
+        <span />
+      </div>
+      <svg
+        data-depth-plane="foreground"
+        className="depth-plane depth-plane-foreground"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        <path className="depth-trace depth-trace-a" d="M12 -8 C8 18 22 28 17 49 S12 80 22 108" />
+        <path className="depth-trace depth-trace-b" d="M87 -8 C92 17 78 35 84 57 S92 82 79 108" />
+        <path
+          className="depth-trace depth-trace-core"
+          d="M49 -8 C45 22 54 38 50 59 S46 84 51 108"
+        />
+      </svg>
+      <div className="depth-seam" />
+    </div>
+  );
+}
+
 export function ServiceCard({ service, index }: { service: JourneyService; index: number }) {
   return (
     <article
       data-service-card
-      className="group relative min-h-44 overflow-hidden rounded-[1.4rem] border border-white/9 bg-[linear-gradient(145deg,rgb(17_20_31_/_0.93),rgb(8_10_18_/_0.86))] p-6 shadow-[inset_0_1px_rgb(255_255_255_/_0.045),0_20px_60px_rgb(0_0_0_/_0.26)] backdrop-blur-sm transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-violet-300/20 hover:shadow-[inset_0_1px_rgb(255_255_255_/_0.06),0_24px_65px_rgb(24_16_48_/_0.34)] motion-reduce:transform-none"
+      className="depth-service-module group relative min-h-44 p-6 transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none"
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-7 top-0 h-px bg-gradient-to-r from-transparent via-violet-300/45 to-transparent"
-      />
-      <div className="mb-7 flex items-center justify-between gap-4">
-        <span className="grid size-9 place-items-center rounded-xl border border-violet-300/15 bg-violet-400/10 text-xs font-semibold text-violet-200">
+      <div aria-hidden="true" className="depth-module-strata" />
+      <div aria-hidden="true" className="depth-module-branch depth-module-branch-a" />
+      <div aria-hidden="true" className="depth-module-branch depth-module-branch-b" />
+      <div className="relative z-10 mb-7 flex items-center gap-4">
+        <span className="depth-module-index grid size-9 shrink-0 place-items-center text-xs font-semibold text-violet-100">
           {String(index + 1).padStart(2, "0")}
         </span>
-        <span
-          aria-hidden="true"
-          className="h-px flex-1 bg-gradient-to-r from-violet-300/20 to-transparent"
-        />
+        <span aria-hidden="true" className="depth-module-rail h-px flex-1" />
       </div>
-      <h3 className="text-balance text-xl font-semibold tracking-[-0.025em] text-white sm:text-2xl">
+      <h3 className="relative z-10 text-balance text-xl font-semibold tracking-[-0.025em] text-white sm:text-2xl">
         {service.title}
       </h3>
-      <p className="mt-3 text-sm leading-6 text-slate-300/75">{service.description}</p>
+      <p className="relative z-10 mt-3 text-sm leading-6 text-slate-300/75">
+        {service.description}
+      </p>
     </article>
   );
 }
@@ -73,12 +107,11 @@ export function WorkflowVisualization({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="relative rounded-[2rem] border border-cyan-200/10 bg-[#070a16]/90 p-5 shadow-[inset_0_0_50px_rgb(34_211_238_/_0.03),0_30px_90px_rgb(0_0_0_/_0.36)] backdrop-blur-sm md:p-7"
+      className="depth-workflow-environment relative px-2 py-8 md:px-5 md:py-12"
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_50%_0%,rgb(34_211_238_/_0.1),transparent_42%)]"
-      />
+      <div aria-hidden="true" className="workflow-rock-bed" />
+      <div aria-hidden="true" className="workflow-cable workflow-cable-a" />
+      <div aria-hidden="true" className="workflow-cable workflow-cable-b" />
       <ol className="sr-only">
         {labels.map((label) => (
           <li key={label}>{label}</li>
@@ -93,22 +126,22 @@ export function WorkflowVisualization({
             <div
               data-workflow-node
               data-workflow-index={index}
-              className="relative z-10 flex min-h-20 flex-1 items-center justify-center rounded-2xl border border-white/10 bg-[#0c1323]/95 px-3 text-center text-[0.68rem] font-semibold leading-4 text-slate-100 shadow-[0_10px_35px_rgb(0_0_0_/_0.3)] md:min-h-28"
+              className="workflow-node relative z-10 flex min-h-20 flex-1 items-center justify-center px-3 text-center text-[0.68rem] font-semibold leading-4 text-slate-100 md:min-h-28"
             >
               <span
                 data-workflow-status
-                className="absolute start-3 top-3 size-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgb(34_211_238_/_0.7)]"
+                className="workflow-status absolute start-3 top-3 size-1.5 rounded-full"
               />
               {label}
             </div>
             {index < labels.length - 1 ? (
               <div
                 data-workflow-path
-                className="relative mx-auto h-7 w-px overflow-hidden bg-cyan-200/15 md:mx-0 md:h-px md:w-7 lg:w-10"
+                className="workflow-path relative mx-auto h-7 w-px overflow-visible md:mx-0 md:h-px md:w-7 lg:w-10"
               >
                 <span
                   data-workflow-line
-                  className="absolute inset-0 origin-top bg-gradient-to-b from-cyan-300 via-violet-400 to-transparent shadow-[0_0_9px_rgb(34_211_238_/_0.5)] md:origin-left md:bg-gradient-to-r"
+                  className="workflow-line absolute inset-0 origin-top md:origin-left"
                 />
               </div>
             ) : null}
@@ -127,55 +160,51 @@ const neuralNodes = Array.from({ length: 16 }, (_, index) => ({
 
 export function NeuralCoreVisualization() {
   return (
-    <div aria-hidden="true" className="relative mx-auto aspect-square w-full max-w-[31rem]">
-      <div
-        data-neural-ring
-        className="absolute inset-[8%] rounded-full border border-cyan-200/15"
-      />
-      <div
-        data-neural-ring
-        className="absolute inset-[17%] rounded-full border border-violet-300/20"
-      />
-      <div
-        data-neural-ring
-        className="absolute inset-[25%] rounded-full border border-cyan-300/20"
-      />
+    <div
+      aria-hidden="true"
+      className="neural-organism relative mx-auto aspect-square w-full max-w-[31rem]"
+    >
       <div
         data-neural-glow
-        className="absolute inset-[18%] rounded-full bg-[radial-gradient(circle,rgb(34_211_238_/_0.16),rgb(124_58_237_/_0.14)_40%,transparent_72%)] blur-xl"
+        className="absolute inset-[12%] bg-[radial-gradient(ellipse,rgb(34_211_238_/_0.16),rgb(124_58_237_/_0.14)_38%,transparent_72%)] blur-xl"
       />
-      <div className="absolute inset-[31%] grid place-items-center rounded-full border border-white/15 bg-[#090d1b]/85 shadow-[0_0_70px_rgb(99_102_241_/_0.35),inset_0_0_35px_rgb(34_211_238_/_0.13)] backdrop-blur-md">
-        <BrainCircuit className="size-14 text-cyan-100 sm:size-20" strokeWidth={1.2} />
+      <div data-neural-core className="neural-seed absolute inset-[31%] grid place-items-center">
+        <svg className="h-[58%] w-[58%]" viewBox="0 0 100 100">
+          <path d="M18 50 34 27 55 36 78 20 84 48 69 73 43 80 22 66Z" />
+          <path d="M34 27 43 80M55 36 69 73M18 50 84 48M22 66 78 20" />
+          {[
+            { x: 18, y: 50 },
+            { x: 34, y: 27 },
+            { x: 55, y: 36 },
+            { x: 78, y: 20 },
+            { x: 84, y: 48 },
+            { x: 69, y: 73 },
+            { x: 43, y: 80 },
+            { x: 22, y: 66 },
+          ].map((node) => (
+            <circle key={`${node.x}-${node.y}`} cx={node.x} cy={node.y} r="2.4" />
+          ))}
+        </svg>
       </div>
       <svg
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full opacity-35"
+        className="absolute inset-0 h-full w-full overflow-visible"
         viewBox="0 0 100 100"
       >
         <path
-          d="M14 34 Q31 12 50 30 T86 33"
-          fill="none"
-          stroke="url(#neural-gradient)"
-          strokeWidth=".35"
+          data-neural-ring
+          className="neural-filament neural-filament-cyan"
+          d="M8 42 C14 14 43 7 58 22 C72 35 94 25 91 54 C88 78 62 94 42 82 C23 71 2 72 8 42Z"
         />
         <path
-          d="M12 66 Q33 88 51 67 T90 62"
-          fill="none"
-          stroke="url(#neural-gradient)"
-          strokeWidth=".35"
+          data-neural-ring
+          className="neural-filament neural-filament-violet"
+          d="M17 25 C37 4 65 18 70 37 C76 58 99 65 76 82 C59 95 39 78 25 70 C7 60 2 41 17 25Z"
         />
         <path
-          d="M23 17 Q29 50 12 78 M77 13 Q69 49 91 82"
-          fill="none"
-          stroke="url(#neural-gradient)"
-          strokeWidth=".3"
+          className="neural-filament neural-filament-muted"
+          d="M12 62 C29 52 26 28 45 18 M55 84 C61 66 82 61 89 40 M19 39 C34 41 44 57 48 78 M52 17 C54 38 71 45 84 72"
         />
-        <defs>
-          <linearGradient id="neural-gradient">
-            <stop stopColor="#67e8f9" />
-            <stop offset="1" stopColor="#8b5cf6" />
-          </linearGradient>
-        </defs>
       </svg>
       {neuralNodes.map((node, index) => (
         <span
@@ -193,21 +222,21 @@ export function NeuralCoreVisualization() {
       <div
         data-ai-mode
         data-ai-mode-index="0"
-        className="absolute left-[2%] top-[40%] grid size-12 place-items-center rounded-2xl border border-violet-300/20 bg-[#0b1020]/90 text-violet-200"
+        className="ai-signal-marker absolute left-[2%] top-[40%] grid size-12 place-items-center text-violet-200"
       >
         <MessageCircle className="size-5" />
       </div>
       <div
         data-ai-mode
         data-ai-mode-index="1"
-        className="absolute right-[3%] top-[23%] grid size-12 place-items-center rounded-2xl border border-cyan-300/20 bg-[#0b1020]/90 text-cyan-100"
+        className="ai-signal-marker absolute right-[3%] top-[23%] grid size-12 place-items-center text-cyan-100"
       >
         <FileText className="size-5" />
       </div>
       <div
         data-ai-mode
         data-ai-mode-index="2"
-        className="absolute bottom-[10%] left-[46%] grid size-12 place-items-center rounded-2xl border border-blue-300/20 bg-[#0b1020]/90 text-blue-100"
+        className="ai-signal-marker absolute bottom-[10%] left-[46%] grid size-12 place-items-center text-blue-100"
       >
         <Database className="size-5" />
       </div>
@@ -218,6 +247,11 @@ export function NeuralCoreVisualization() {
 export function EnergyCore({ logoAlt }: { logoAlt: string }) {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[38rem]">
+      <div aria-hidden="true" className="core-convergence-field">
+        {Array.from({ length: 8 }, (_, index) => (
+          <span key={index} style={{ rotate: `${index * 45}deg` }} />
+        ))}
+      </div>
       <div
         data-energy-ray
         className="absolute left-1/2 top-1/2 h-[10%] w-[110%] -translate-x-1/2 -translate-y-1/2 rotate-12 bg-gradient-to-r from-transparent via-cyan-300/15 to-transparent blur-xl"

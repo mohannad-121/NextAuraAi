@@ -81,7 +81,7 @@ export function DepthIndicator({ copy }: { copy: CinematicJourneyContent["depth"
   return (
     <nav
       aria-label={copy.label}
-      className={`fixed end-3 top-1/2 z-[65] hidden -translate-y-1/2 rounded-2xl border border-white/10 bg-[#050713]/72 px-2.5 py-3 shadow-[0_18px_60px_rgb(0_0_0_/_0.38)] backdrop-blur-xl transition-opacity duration-300 md:block 2xl:end-6 ${isVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      className={`fixed end-3 top-1/2 z-[65] hidden -translate-y-1/2 px-2.5 py-3 [filter:drop-shadow(0_12px_28px_rgb(0_0_0_/_0.55))] transition-opacity duration-300 md:block 2xl:end-6 ${isVisible ? "opacity-100" : "pointer-events-none opacity-0"}`}
     >
       <div className="relative flex flex-col gap-3">
         <div className="absolute bottom-3 end-[0.55rem] top-3 w-px bg-white/10" aria-hidden="true">
