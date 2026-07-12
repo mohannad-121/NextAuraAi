@@ -5,15 +5,9 @@ import { CinematicDepthJourney } from "@/components/landing/CinematicDepthJourne
 import { CinematicHero } from "@/components/landing/CinematicHero";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
+import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
 
 type HeroUndergroundJourneyProps = { onStartProject: () => void };
-
-const DESKTOP_PIN_DISTANCE = 2.1;
-const MOBILE_PIN_DISTANCE = 1.65;
-const DESKTOP_VIDEO_ZOOM = 1.12;
-const MOBILE_VIDEO_ZOOM = 1.08;
-const DESKTOP_VIDEO_RISE = -6;
-const MOBILE_VIDEO_RISE = -4;
 
 const surfaceDust = Array.from({ length: 10 }, (_, index) => ({
   left: (index * 31 + 7) % 96,
@@ -58,7 +52,9 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
       const videoFrame = select("[data-hero-video-frame]")[0] as HTMLElement | undefined;
       const video = select("[data-hero-video]")[0] as HTMLVideoElement | undefined;
       const heading = select("[data-hero-heading]");
-      const support = select("[data-hero-support]");
+      const paragraph = select("[data-hero-paragraph]");
+      const actions = select("[data-hero-actions]");
+      const trust = select("[data-hero-trust]");
       const scrollCue = select("[data-hero-scroll]");
       const vignette = select("[data-underground-vignette]");
       const surfaceParticles = select("[data-surface-dust]");
@@ -84,21 +80,31 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
         {
           isDesktop: "(min-width: 768px)",
           isMobile: "(max-width: 767px)",
+          isCompactLandscape:
+            "(orientation: landscape) and (max-height: 600px) and (max-width: 900px)",
           reduceMotion: "(prefers-reduced-motion: reduce)",
         },
         (matchContext) => {
           const conditions = matchContext.conditions as {
             isMobile: boolean;
+            isCompactLandscape: boolean;
             reduceMotion: boolean;
           };
-          const { isMobile, reduceMotion } = conditions;
-          const pinDistance = isMobile ? MOBILE_PIN_DISTANCE : DESKTOP_PIN_DISTANCE;
+          const { isMobile, isCompactLandscape, reduceMotion } = conditions;
+          const simplified = isMobile || isCompactLandscape;
+          const pinDistance = simplified
+            ? DEPTH_JOURNEY_CONFIG.hero.mobilePin
+            : DEPTH_JOURNEY_CONFIG.hero.desktopPin;
           const videoZoom = reduceMotion
             ? 1.055
-            : isMobile
-              ? MOBILE_VIDEO_ZOOM
-              : DESKTOP_VIDEO_ZOOM;
-          const videoRise = reduceMotion ? -2 : isMobile ? MOBILE_VIDEO_RISE : DESKTOP_VIDEO_RISE;
+            : simplified
+              ? DEPTH_JOURNEY_CONFIG.hero.mobileZoom
+              : DEPTH_JOURNEY_CONFIG.hero.desktopZoom;
+          const videoRise = reduceMotion
+            ? -1
+            : simplified
+              ? DEPTH_JOURNEY_CONFIG.hero.mobileRise
+              : DEPTH_JOURNEY_CONFIG.hero.desktopRise;
 
           const setActive = (active: boolean) => {
             root.dataset.journeyActive = active ? "true" : "false";
@@ -111,11 +117,12 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
             scrollTrigger: {
               id: "hero-underground-transition",
               trigger: root,
+              refreshPriority: 10,
               start: "top top",
               end: () => `+=${window.innerHeight * pinDistance}`,
-              pin: stage,
+              pin: isCompactLandscape ? false : stage,
               pinSpacing: true,
-              scrub: reduceMotion ? true : 0.45,
+              scrub: reduceMotion ? true : DEPTH_JOURNEY_CONFIG.motion.scrub,
               anticipatePin: 1,
               invalidateOnRefresh: true,
               onEnter: () => setActive(true),
@@ -127,22 +134,48 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
 
           timeline
             .addLabel("surface", 0)
-            .to(videoFrame, { scale: videoZoom, yPercent: videoRise, duration: 0.7 }, 0)
-            .to(scrollCue, { autoAlpha: 0, y: -8, duration: 0.1 }, 0.08)
-            .to(support, { autoAlpha: 0, y: -18, duration: 0.2, stagger: 0.012 }, 0.12)
-            .to(vignette, { autoAlpha: 0.72, duration: 0.32 }, 0.12)
+            .to(
+              videoFrame,
+              { scale: videoZoom, yPercent: videoRise, duration: 0.64 },
+              DEPTH_JOURNEY_CONFIG.hero.zoomStart,
+            )
+            .to(scrollCue, { autoAlpha: 0, y: -8, duration: 0.1 }, 0.1)
+            .to(
+              trust,
+              { autoAlpha: 0, y: -8, duration: 0.12 },
+              DEPTH_JOURNEY_CONFIG.hero.supportFadeStart,
+            )
+            .to(
+              paragraph,
+              { autoAlpha: 0, y: -14, duration: 0.17 },
+              DEPTH_JOURNEY_CONFIG.hero.supportFadeStart + 0.02,
+            )
+            .to(
+              actions,
+              { autoAlpha: 0, y: -16, duration: 0.16 },
+              DEPTH_JOURNEY_CONFIG.hero.supportFadeStart + 0.06,
+            )
+            .to(vignette, { autoAlpha: 0.68, duration: 0.32 }, 0.14)
             .to(
               surfaceParticles,
               { autoAlpha: 0.64, yPercent: -42, duration: 0.32, stagger: 0.004 },
               0.22,
             )
-            .to(heading, { autoAlpha: 0, y: -24, duration: 0.22, stagger: 0.018 }, 0.31)
-            .addLabel("crossing", 0.42)
-            .to(backdrop, { autoAlpha: 1, duration: 0.3 }, 0.48)
-            .to(soilStack, { yPercent: -16, duration: 0.57 }, 0.42)
-            .to(surfaceEdge, { yPercent: -145, duration: 0.42 }, 0.43)
-            .to(topSoil, { yPercent: -76, duration: 0.46 }, 0.44)
-            .to(compactSoil, { yPercent: -38, duration: 0.48 }, 0.46)
+            .to(
+              heading,
+              { autoAlpha: 0, y: -22, duration: 0.22, stagger: 0.018 },
+              DEPTH_JOURNEY_CONFIG.hero.headingFadeStart,
+            )
+            .addLabel("crossing", DEPTH_JOURNEY_CONFIG.hero.groundCrossing)
+            .to(backdrop, { autoAlpha: 1, duration: 0.3 }, 0.5)
+            .to(
+              soilStack,
+              { yPercent: -16, duration: 0.54 },
+              DEPTH_JOURNEY_CONFIG.hero.groundCrossing,
+            )
+            .to(surfaceEdge, { yPercent: -145, duration: 0.4 }, 0.47)
+            .to(topSoil, { yPercent: -76, duration: 0.44 }, 0.48)
+            .to(compactSoil, { yPercent: -38, duration: 0.46 }, 0.5)
             .to(
               stones,
               {
@@ -151,13 +184,17 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
                 duration: 0.46,
                 stagger: 0.006,
               },
-              0.44,
+              0.48,
             )
-            .to(deepParticles, { autoAlpha: 0.62, y: -18, duration: 0.3, stagger: 0.004 }, 0.7)
-            .addLabel("foundation", 0.82)
-            .to(foundationLabel, { autoAlpha: 1, y: 0, duration: 0.18 }, 0.82);
+            .to(deepParticles, { autoAlpha: 0.5, y: -16, duration: 0.3, stagger: 0.004 }, 0.72)
+            .addLabel("foundation", DEPTH_JOURNEY_CONFIG.hero.foundationReveal)
+            .to(
+              foundationLabel,
+              { autoAlpha: 1, y: 0, duration: 0.16 },
+              DEPTH_JOURNEY_CONFIG.hero.foundationReveal,
+            );
 
-          if (!reduceMotion && !isMobile) {
+          if (!reduceMotion && !simplified) {
             timeline
               .to(camera, { x: 1.5, y: -1, rotation: 0.025, duration: 0.015 }, 0.55)
               .to(camera, { x: -1.25, y: 0.8, rotation: -0.02, duration: 0.015 }, 0.565)
@@ -180,11 +217,45 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
     };
   }, []);
 
+  useEffect(() => {
+    const refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => window.cancelAnimationFrame(refreshFrame);
+  }, [language]);
+
+  useEffect(() => {
+    const storageKey = "nextaura-journey-scroll";
+    const navigation = window.performance.getEntriesByType("navigation")[0] as
+      PerformanceNavigationTiming | undefined;
+    const savedPosition = Number(window.sessionStorage.getItem(storageKey));
+    let restoreFrame: number | undefined;
+    let scrollFrame: number | undefined;
+
+    if (navigation?.type === "reload" && Number.isFinite(savedPosition) && savedPosition > 0) {
+      restoreFrame = window.requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        scrollFrame = window.requestAnimationFrame(() => {
+          window.scrollTo(0, savedPosition);
+          ScrollTrigger.update();
+        });
+      });
+    }
+
+    const rememberPosition = () =>
+      window.sessionStorage.setItem(storageKey, String(window.scrollY));
+    window.addEventListener("pagehide", rememberPosition);
+
+    return () => {
+      window.removeEventListener("pagehide", rememberPosition);
+      if (restoreFrame !== undefined) window.cancelAnimationFrame(restoreFrame);
+      if (scrollFrame !== undefined) window.cancelAnimationFrame(scrollFrame);
+    };
+  }, []);
+
   return (
     <section ref={rootRef} className="relative isolate bg-[#0d0b12]" dir={dir}>
       <div
         data-underground-stage
-        className="relative h-[100svh] min-h-[760px] overflow-hidden bg-[#020617] sm:min-h-[820px] lg:min-h-[100svh]"
+        className="underground-stage relative h-[100svh] min-h-[720px] overflow-hidden bg-[#020617] sm:min-h-[780px] lg:min-h-[100svh]"
       >
         <div data-underground-camera className="relative h-full w-full overflow-hidden">
           <CinematicHero onStartProject={onStartProject} />
@@ -203,7 +274,7 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
               <span
                 key={`surface-${index}`}
                 data-surface-dust
-                className={`absolute rounded-full bg-[#c7a58a] shadow-[0_0_8px_rgb(167_139_250_/_0.35)] ${index >= 4 ? "hidden md:block" : ""}`}
+                className={`absolute rounded-full bg-[#c7a58a] shadow-[0_0_8px_rgb(167_139_250_/_0.3)] motion-reduce:hidden ${index >= 4 ? "hidden md:block" : ""}`}
                 style={{
                   left: `${particle.left}%`,
                   bottom: `${particle.bottom}%`,
@@ -282,7 +353,7 @@ export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourne
               <span
                 key={`deep-${index}`}
                 data-underground-dust
-                className={`absolute rounded-full bg-[#c7b5c9] shadow-[0_0_7px_rgb(139_92_246_/_0.28)] ${index >= 8 ? "hidden md:block" : ""}`}
+                className={`absolute rounded-full bg-[#c7b5c9] shadow-[0_0_7px_rgb(139_92_246_/_0.24)] motion-reduce:hidden ${index >= 8 ? "hidden md:block" : ""}`}
                 style={{
                   left: `${particle.left}%`,
                   top: `${particle.top}%`,
