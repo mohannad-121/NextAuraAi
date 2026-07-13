@@ -1,5 +1,6 @@
-import { Check, Database, FileText, MessageCircle, Sparkles } from "lucide-react";
 import type { JourneyService } from "@/i18n/cinematicJourneyContent";
+import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
+import type { CSSProperties } from "react";
 
 type ParticleLayerProps = {
   count: number;
@@ -9,10 +10,10 @@ type ParticleLayerProps = {
 
 export function ParticleLayer({ count, mobileCount = 8, tone = "digital" }: ParticleLayerProps) {
   const colors = {
-    earth: "bg-[#c8a98f] shadow-[0_0_8px_rgb(167_139_250_/_0.24)]",
-    digital: "bg-cyan-200 shadow-[0_0_8px_rgb(34_211_238_/_0.34)]",
-    neural: "border border-cyan-200/55 bg-violet-200/60 shadow-[0_0_9px_rgb(99_102_241_/_0.32)]",
-    core: "bg-violet-100 shadow-[0_0_10px_rgb(139_92_246_/_0.45)]",
+    earth: "bg-[#d6b9a5]",
+    digital: "bg-cyan-200 shadow-[0_0_5px_rgb(34_211_238_/_0.2)]",
+    neural: "bg-violet-200 shadow-[0_0_5px_rgb(99_102_241_/_0.2)]",
+    core: "bg-violet-100 shadow-[0_0_6px_rgb(139_92_246_/_0.24)]",
   };
 
   return (
@@ -25,9 +26,9 @@ export function ParticleLayer({ count, mobileCount = 8, tone = "digital" }: Part
           style={{
             left: `${(index * 37 + 11) % 96}%`,
             top: `${(index * 53 + 7) % 92}%`,
-            width: `${1 + (index % 3)}px`,
-            height: `${1 + (index % 3)}px`,
-            opacity: 0.12 + (index % 5) * 0.065,
+            width: `${1 + (index % 2)}px`,
+            height: `${1 + (index % 2)}px`,
+            opacity: 0.08 + (index % 4) * 0.04,
           }}
         />
       ))}
@@ -37,7 +38,7 @@ export function ParticleLayer({ count, mobileCount = 8, tone = "digital" }: Part
 
 type EnvironmentTone = "foundation" | "automation" | "intelligence" | "core";
 
-/** Shared strata and signal traces keep every depth scene part of the same environment. */
+/** Two restrained planes preserve continuity without competing with section content. */
 export function EnvironmentalPlanes({ tone }: { tone: EnvironmentTone }) {
   return (
     <div
@@ -46,27 +47,10 @@ export function EnvironmentalPlanes({ tone }: { tone: EnvironmentTone }) {
     >
       <div data-depth-plane="background" className="depth-plane depth-plane-background">
         <span />
-        <span />
       </div>
       <div data-depth-plane="midground" className="depth-plane depth-plane-midground">
         <span />
-        <span />
-        <span />
       </div>
-      <svg
-        data-depth-plane="foreground"
-        className="depth-plane depth-plane-foreground"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <path className="depth-trace depth-trace-a" d="M12 -8 C8 18 22 28 17 49 S12 80 22 108" />
-        <path className="depth-trace depth-trace-b" d="M87 -8 C92 17 78 35 84 57 S92 82 79 108" />
-        <path
-          className="depth-trace depth-trace-core"
-          d="M49 -8 C45 22 54 38 50 59 S46 84 51 108"
-        />
-      </svg>
-      <div className="depth-seam" />
     </div>
   );
 }
@@ -75,12 +59,14 @@ export function ServiceCard({ service, index }: { service: JourneyService; index
   return (
     <article
       data-service-card
-      className="depth-service-module group relative min-h-44 p-6 transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none"
+      className="depth-service-module group relative min-h-44 p-6 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 motion-reduce:transform-none sm:p-7"
+      style={
+        {
+          "--depth-card-brightness": DEPTH_JOURNEY_CONFIG.cards.brightness,
+        } as CSSProperties
+      }
     >
-      <div aria-hidden="true" className="depth-module-strata" />
-      <div aria-hidden="true" className="depth-module-branch depth-module-branch-a" />
-      <div aria-hidden="true" className="depth-module-branch depth-module-branch-b" />
-      <div className="relative z-10 mb-7 flex items-center gap-4">
+      <div className="relative z-10 mb-6 flex items-center gap-4">
         <span className="depth-module-index grid size-9 shrink-0 place-items-center text-xs font-semibold text-violet-100">
           {String(index + 1).padStart(2, "0")}
         </span>
@@ -89,7 +75,7 @@ export function ServiceCard({ service, index }: { service: JourneyService; index
       <h3 className="relative z-10 text-balance text-xl font-semibold tracking-[-0.025em] text-white sm:text-2xl">
         {service.title}
       </h3>
-      <p className="relative z-10 mt-3 text-sm leading-6 text-slate-300/75">
+      <p className="relative z-10 mt-3 text-sm leading-6 text-slate-200/85">
         {service.description}
       </p>
     </article>
@@ -107,11 +93,8 @@ export function WorkflowVisualization({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="depth-workflow-environment relative px-2 py-8 md:px-5 md:py-12"
+      className="depth-workflow-environment relative px-4 py-7 md:px-6 md:py-9"
     >
-      <div aria-hidden="true" className="workflow-rock-bed" />
-      <div aria-hidden="true" className="workflow-cable workflow-cable-a" />
-      <div aria-hidden="true" className="workflow-cable workflow-cable-b" />
       <ol className="sr-only">
         {labels.map((label) => (
           <li key={label}>{label}</li>
@@ -121,38 +104,42 @@ export function WorkflowVisualization({
         aria-hidden="true"
         className="relative flex flex-col items-stretch gap-2 md:flex-row md:items-center md:gap-0"
       >
-        {labels.map((label, index) => (
-          <div key={label} className="contents">
-            <div
-              data-workflow-node
-              data-workflow-index={index}
-              className="workflow-node relative z-10 flex min-h-20 flex-1 items-center justify-center px-3 text-center text-[0.68rem] font-semibold leading-4 text-slate-100 md:min-h-28"
-            >
-              <span
-                data-workflow-status
-                className="workflow-status absolute start-3 top-3 size-1.5 rounded-full"
-              />
-              {label}
-            </div>
-            {index < labels.length - 1 ? (
+        {labels
+          .filter(
+            (_, index) => index === 0 || index === 2 || index === 3 || index === labels.length - 1,
+          )
+          .map((label, index, visibleLabels) => (
+            <div key={label} className="contents">
               <div
-                data-workflow-path
-                className="workflow-path relative mx-auto h-7 w-px overflow-visible md:mx-0 md:h-px md:w-7 lg:w-10"
+                data-workflow-node
+                data-workflow-index={index}
+                className="workflow-node relative z-10 flex min-h-20 flex-1 items-center justify-center px-4 text-center text-xs font-semibold leading-4 text-slate-100 md:min-h-24"
               >
                 <span
-                  data-workflow-line
-                  className="workflow-line absolute inset-0 origin-top md:origin-left"
+                  data-workflow-status
+                  className="workflow-status absolute start-3 top-3 size-1.5 rounded-full"
                 />
+                {label}
               </div>
-            ) : null}
-          </div>
-        ))}
+              {index < visibleLabels.length - 1 ? (
+                <div
+                  data-workflow-path
+                  className="workflow-path relative mx-auto h-7 w-px overflow-visible md:mx-0 md:h-px md:w-7 lg:w-10"
+                >
+                  <span
+                    data-workflow-line
+                    className="workflow-line absolute inset-0 origin-top md:origin-left"
+                  />
+                </div>
+              ) : null}
+            </div>
+          ))}
       </div>
     </div>
   );
 }
 
-const neuralNodes = Array.from({ length: 16 }, (_, index) => ({
+const neuralNodes = Array.from({ length: 8 }, (_, index) => ({
   left: 10 + ((index * 29) % 80),
   top: 9 + ((index * 43) % 82),
   size: 3 + (index % 3) * 2,
@@ -210,7 +197,7 @@ export function NeuralCoreVisualization() {
         <span
           key={index}
           data-neural-node
-          className={`absolute rounded-full border border-white/20 bg-cyan-200 shadow-[0_0_11px_rgb(34_211_238_/_0.55)] motion-reduce:hidden ${index >= 9 ? "hidden md:block" : ""}`}
+          className={`absolute rounded-full bg-cyan-100 shadow-[0_0_8px_rgb(34_211_238_/_0.38)] motion-reduce:hidden ${index >= 4 ? "hidden md:block" : ""}`}
           style={{
             left: `${node.left}%`,
             top: `${node.top}%`,
@@ -219,27 +206,6 @@ export function NeuralCoreVisualization() {
           }}
         />
       ))}
-      <div
-        data-ai-mode
-        data-ai-mode-index="0"
-        className="ai-signal-marker absolute left-[2%] top-[40%] grid size-12 place-items-center text-violet-200"
-      >
-        <MessageCircle className="size-5" />
-      </div>
-      <div
-        data-ai-mode
-        data-ai-mode-index="1"
-        className="ai-signal-marker absolute right-[3%] top-[23%] grid size-12 place-items-center text-cyan-100"
-      >
-        <FileText className="size-5" />
-      </div>
-      <div
-        data-ai-mode
-        data-ai-mode-index="2"
-        className="ai-signal-marker absolute bottom-[10%] left-[46%] grid size-12 place-items-center text-blue-100"
-      >
-        <Database className="size-5" />
-      </div>
     </div>
   );
 }
@@ -248,8 +214,8 @@ export function EnergyCore({ logoAlt }: { logoAlt: string }) {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[38rem]">
       <div aria-hidden="true" className="core-convergence-field">
-        {Array.from({ length: 8 }, (_, index) => (
-          <span key={index} style={{ rotate: `${index * 45}deg` }} />
+        {Array.from({ length: 4 }, (_, index) => (
+          <span key={index} style={{ rotate: `${index * 90}deg` }} />
         ))}
       </div>
       <div
@@ -257,16 +223,8 @@ export function EnergyCore({ logoAlt }: { logoAlt: string }) {
         className="absolute left-1/2 top-1/2 h-[10%] w-[110%] -translate-x-1/2 -translate-y-1/2 rotate-12 bg-gradient-to-r from-transparent via-cyan-300/15 to-transparent blur-xl"
       />
       <div
-        data-energy-ray
-        className="absolute left-1/2 top-1/2 h-[10%] w-[110%] -translate-x-1/2 -translate-y-1/2 -rotate-[18deg] bg-gradient-to-r from-transparent via-violet-400/20 to-transparent blur-xl"
-      />
-      <div
         data-energy-ring
         className="absolute inset-[4%] rounded-full border border-violet-300/10"
-      />
-      <div
-        data-energy-ring
-        className="absolute inset-[14%] rounded-full border border-cyan-200/15"
       />
       <div
         data-energy-ring
@@ -283,8 +241,6 @@ export function EnergyCore({ logoAlt }: { logoAlt: string }) {
         alt={logoAlt}
         className="absolute left-1/2 top-1/2 z-10 h-auto w-[34%] -translate-x-1/2 -translate-y-1/2 object-contain"
       />
-      <Sparkles className="absolute right-[18%] top-[20%] size-5 text-cyan-100/70" />
-      <Check className="absolute bottom-[20%] left-[18%] size-4 text-violet-100/55" />
     </div>
   );
 }
