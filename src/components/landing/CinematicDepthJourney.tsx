@@ -13,6 +13,7 @@ import {
 } from "@/components/landing/DepthVisuals";
 import {
   cinematicJourneyContent,
+  type JourneyService,
   type JourneySectionContent,
 } from "@/i18n/cinematicJourneyContent";
 import { useLanguage } from "@/i18n/translations";
@@ -22,23 +23,31 @@ type CinematicDepthJourneyProps = { onStartProject: () => void };
 
 const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
+const toFocusedServiceGroups = (groups: JourneyService[][]) => {
+  const services = groups.flat();
+  const visibleCount = DEPTH_JOURNEY_CONFIG.cards.visiblePerGroup;
+  return Array.from({ length: Math.ceil(services.length / visibleCount) }, (_, index) =>
+    services.slice(index * visibleCount, (index + 1) * visibleCount),
+  );
+};
+
 function SectionHeading({ copy }: { copy: JourneySectionContent }) {
   return (
-    <header data-scene-copy className="relative z-10 max-w-[42.5rem] rtl:max-w-[46rem]">
+    <header data-scene-copy className="relative z-10 max-w-[38rem] rtl:max-w-[41rem]">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-8 -inset-y-10 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(3_5_16_/_0.62),transparent_72%)] blur-xl"
+        className="pointer-events-none absolute -inset-6 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(5_8_20_/_0.48),transparent_74%)] blur-md"
       />
       <p className="section-eyebrow">{copy.eyebrow}</p>
       <h2
         data-scene-heading
-        className="mt-5 text-balance font-display text-[clamp(2.25rem,4.9vw,5rem)] font-semibold leading-[0.99] tracking-[-0.048em] text-white [text-shadow:0_4px_24px_rgb(0_0_0_/_0.4)] rtl:tracking-[-0.025em]"
+        className="mt-4 text-balance font-display text-[clamp(2.2rem,4.4vw,4.4rem)] font-semibold leading-[1.01] tracking-[-0.045em] text-white [text-shadow:0_3px_18px_rgb(0_0_0_/_0.34)] rtl:tracking-[-0.025em]"
       >
         {copy.title}
       </h2>
       <p
         data-scene-body
-        className="mt-6 max-w-[40rem] text-base leading-7 text-slate-200/80 sm:text-lg sm:leading-8"
+        className="mt-5 max-w-[36rem] text-base leading-7 text-slate-200/85 sm:text-lg sm:leading-8"
       >
         {copy.body}
       </p>
@@ -47,53 +56,32 @@ function SectionHeading({ copy }: { copy: JourneySectionContent }) {
 }
 
 function FoundationSection({ copy }: { copy: JourneySectionContent }) {
-  let serviceIndex = 0;
+  const serviceGroups = toFocusedServiceGroups(copy.groups);
   return (
     <section
       id="depth-foundation"
       data-depth-section="foundation"
-      className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_74%_14%,rgb(124_58_237_/_0.18),transparent_30%),radial-gradient(circle_at_18%_48%,rgb(115_75_53_/_0.2),transparent_35%),linear-gradient(180deg,#151117_0%,#0c0e15_52%,#070a13_100%)] px-5 pb-28 pt-32 sm:px-8 lg:px-12 lg:pb-40 lg:pt-44"
+      className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_72%_16%,rgb(124_58_237_/_0.12),transparent_34%),linear-gradient(180deg,#181722_0%,#111522_55%,#0a101d_100%)] px-5 pb-28 pt-32 sm:px-8 lg:px-12 lg:pb-40 lg:pt-44"
     >
       <EnvironmentalPlanes tone="foundation" />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-55 [background-image:radial-gradient(circle_at_15%_22%,rgb(255_255_255_/_0.04)_0_1px,transparent_2px),radial-gradient(circle_at_80%_60%,rgb(167_139_250_/_0.06)_0_1px,transparent_2px)] [background-size:47px_43px,68px_61px]"
-      />
-      <div
-        data-foundation-rock
-        className="absolute -left-20 top-[24%] h-72 w-72 rounded-[42%_58%_64%_36%] border border-white/5 bg-[#1a151b]/75 shadow-[inset_-20px_-24px_50px_rgb(0_0_0_/_0.5)] blur-[1px]"
-      />
-      <div
-        data-foundation-rock
-        className="absolute -right-28 top-[52%] h-96 w-96 rounded-[63%_37%_45%_55%] border border-violet-300/5 bg-[#11121a]/80 shadow-[inset_24px_-20px_60px_rgb(0_0_0_/_0.55)]"
-      />
-      <div
-        data-digital-crack
-        className="absolute left-[7%] top-[35%] h-px w-[41%] -rotate-[11deg] bg-gradient-to-r from-transparent via-violet-300/35 to-cyan-200/5 shadow-[0_0_14px_rgb(139_92_246_/_0.25)]"
-      />
-      <div
-        data-digital-crack
-        className="absolute right-[4%] top-[68%] h-px w-[45%] rotate-[14deg] bg-gradient-to-r from-transparent via-cyan-200/20 to-transparent shadow-[0_0_12px_rgb(34_211_238_/_0.15)]"
-      />
       <ParticleLayer
         count={DEPTH_JOURNEY_CONFIG.particles.foundation}
         mobileCount={DEPTH_JOURNEY_CONFIG.particles.mobile}
         tone="earth"
       />
 
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <SectionHeading copy={copy} />
-        <div className="mt-24 space-y-[24svh] lg:mt-36 lg:space-y-36">
-          {copy.groups.map((group, groupIndex) => (
+        <div className="mt-28 lg:mt-40">
+          {serviceGroups.map((group, groupIndex) => (
             <div
               key={groupIndex}
               data-foundation-group
-              className={`grid min-h-[48svh] content-center gap-[44svh] md:gap-5 ${group.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-2 lg:px-[8%]"}`}
+              className="mx-auto grid min-h-[72svh] max-w-[42rem] content-center"
             >
-              {group.map((service) => {
-                const index = serviceIndex++;
-                return <ServiceCard key={service.title} service={service} index={index} />;
-              })}
+              {group.map((service) => (
+                <ServiceCard key={service.title} service={service} index={groupIndex} />
+              ))}
             </div>
           ))}
         </div>
@@ -102,21 +90,17 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 h-64 bg-[linear-gradient(180deg,transparent_0%,rgb(7_10_19_/_0.72)_50%,#050816_100%)]"
       />
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-8 h-28 opacity-45 [clip-path:polygon(0_74%,9%_50%,18%_69%,31%_35%,44%_62%,57%_28%,70%_57%,84%_32%,100%_61%,100%_100%,0_100%)] bg-[linear-gradient(180deg,transparent,#09101e)]"
-      />
     </section>
   );
 }
 
 function AutomationSection({ copy }: { copy: ReturnType<typeof getCopy>["automation"] }) {
-  let serviceIndex = 0;
+  const serviceGroups = toFocusedServiceGroups(copy.groups);
   return (
     <section
       id="depth-automation"
       data-depth-section="automation"
-      className="depth-scroll-section relative isolate bg-[#050816] xl:min-h-[var(--scene-scroll-height)]"
+      className="depth-scroll-section relative isolate bg-[#08101f] xl:min-h-[var(--scene-scroll-height)]"
       style={
         {
           "--scene-scroll-height": `${(1 + DEPTH_JOURNEY_CONFIG.sections.automationPin) * 100}svh`,
@@ -129,29 +113,16 @@ function AutomationSection({ copy }: { copy: ReturnType<typeof getCopy>["automat
       >
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_72%_30%,rgb(37_99_235_/_0.16),transparent_32%),radial-gradient(circle_at_16%_70%,rgb(124_58_237_/_0.18),transparent_35%),linear-gradient(180deg,#050816,#050713_70%,#040611)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_76%_36%,rgb(37_99_235_/_0.13),transparent_36%),linear-gradient(180deg,#08101f,#080d1c_70%,#070b18)]"
         />
         <EnvironmentalPlanes tone="automation" />
-        <div
-          data-network-grid
-          aria-hidden="true"
-          className="grid-fade absolute inset-0 opacity-50"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,#050816_0%,rgb(5_8_22_/_0.82)_42%,transparent_100%)]"
-        />
         <ParticleLayer
           count={DEPTH_JOURNEY_CONFIG.particles.automation}
           mobileCount={DEPTH_JOURNEY_CONFIG.particles.mobile}
           tone="digital"
         />
 
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-10 xl:grid-cols-[0.72fr_1.28fr] xl:items-center xl:gap-14">
+        <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 xl:grid-cols-[0.72fr_1.28fr] xl:items-center xl:gap-16">
           <div>
             <SectionHeading copy={copy} />
             <div className="mt-8 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200/65">
@@ -161,17 +132,16 @@ function AutomationSection({ copy }: { copy: ReturnType<typeof getCopy>["automat
           </div>
           <div>
             <WorkflowVisualization labels={copy.workflow} ariaLabel={copy.workflowLabel} />
-            <div className="relative mt-6 min-h-[38rem] sm:min-h-[14rem]">
-              {copy.groups.map((group, groupIndex) => (
+            <div className="depth-service-sequence relative mt-8 min-h-[14rem]">
+              {serviceGroups.map((group, groupIndex) => (
                 <div
                   key={groupIndex}
                   data-automation-group
-                  className={`absolute inset-0 grid content-start gap-4 ${group.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+                  className="absolute inset-0 grid content-start"
                 >
-                  {group.map((service) => {
-                    const index = serviceIndex++;
-                    return <ServiceCard key={service.title} service={service} index={index} />;
-                  })}
+                  {group.map((service) => (
+                    <ServiceCard key={service.title} service={service} index={groupIndex} />
+                  ))}
                 </div>
               ))}
             </div>
@@ -183,12 +153,12 @@ function AutomationSection({ copy }: { copy: ReturnType<typeof getCopy>["automat
 }
 
 function IntelligenceSection({ copy }: { copy: ReturnType<typeof getCopy>["intelligence"] }) {
-  let serviceIndex = 0;
+  const serviceGroups = toFocusedServiceGroups(copy.groups);
   return (
     <section
       id="depth-intelligence"
       data-depth-section="intelligence"
-      className="depth-scroll-section relative isolate bg-[#040611] xl:min-h-[var(--scene-scroll-height)]"
+      className="depth-scroll-section relative isolate bg-[#070b19] xl:min-h-[var(--scene-scroll-height)]"
       style={
         {
           "--scene-scroll-height": `${(1 + DEPTH_JOURNEY_CONFIG.sections.intelligencePin) * 100}svh`,
@@ -201,38 +171,28 @@ function IntelligenceSection({ copy }: { copy: ReturnType<typeof getCopy>["intel
       >
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_68%_44%,rgb(34_211_238_/_0.12),transparent_27%),radial-gradient(circle_at_36%_48%,rgb(109_40_217_/_0.22),transparent_36%),linear-gradient(180deg,#040611,#030510_72%,#02040c)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_70%_44%,rgb(34_211_238_/_0.1),transparent_33%),linear-gradient(180deg,#070b19,#070a18_72%,#060916)]"
         />
         <EnvironmentalPlanes tone="intelligence" />
-        <div
-          data-neural-field
-          aria-hidden="true"
-          className="neural-field absolute inset-0 opacity-60"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-44 bg-[linear-gradient(180deg,#040611_0%,rgb(4_6_17_/_0.78)_48%,transparent_100%)]"
-        />
         <ParticleLayer
           count={DEPTH_JOURNEY_CONFIG.particles.intelligence}
           mobileCount={DEPTH_JOURNEY_CONFIG.particles.mobile}
           tone="neural"
         />
 
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 xl:grid-cols-[1fr_0.9fr] xl:items-center xl:gap-14">
+        <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 xl:grid-cols-[1fr_0.9fr] xl:items-center xl:gap-16">
           <div>
             <SectionHeading copy={copy} />
-            <div className="relative mt-8 min-h-[38rem] sm:min-h-[14rem]">
-              {copy.groups.map((group, groupIndex) => (
+            <div className="depth-service-sequence relative mt-8 min-h-[14rem]">
+              {serviceGroups.map((group, groupIndex) => (
                 <div
                   key={groupIndex}
                   data-intelligence-group
-                  className={`absolute inset-0 grid content-start gap-4 ${group.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+                  className="absolute inset-0 grid content-start"
                 >
-                  {group.map((service) => {
-                    const index = serviceIndex++;
-                    return <ServiceCard key={service.title} service={service} index={index} />;
-                  })}
+                  {group.map((service) => (
+                    <ServiceCard key={service.title} service={service} index={groupIndex} />
+                  ))}
                 </div>
               ))}
             </div>
@@ -258,7 +218,7 @@ function CoreSection({
     <section
       id="depth-core"
       data-depth-section="core"
-      className="relative bg-[#02040c] md:min-h-[var(--core-desktop-height)]"
+      className="relative bg-[#050817] md:min-h-[var(--core-desktop-height)]"
       style={
         {
           "--core-desktop-height": DEPTH_JOURNEY_CONFIG.sections.coreDesktopHeight,
@@ -271,19 +231,15 @@ function CoreSection({
       >
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_47%,rgb(37_99_235_/_0.18),transparent_20%),radial-gradient(circle_at_50%_50%,rgb(124_58_237_/_0.16),transparent_42%),linear-gradient(180deg,#02040c,#030511_70%,#040617)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_58%_46%,rgb(37_99_235_/_0.15),transparent_30%),linear-gradient(180deg,#050817,#060919_70%,#070a1c)]"
         />
         <EnvironmentalPlanes tone="core" />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-44 bg-[linear-gradient(180deg,#02040c_0%,rgb(2_4_12_/_0.72)_48%,transparent_100%)]"
-        />
         <ParticleLayer
           count={DEPTH_JOURNEY_CONFIG.particles.core}
           mobileCount={DEPTH_JOURNEY_CONFIG.particles.mobile}
           tone="core"
         />
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-2 lg:grid-cols-[1fr_1.08fr] lg:gap-12">
+        <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1fr_1.08fr] lg:gap-16">
           <div
             data-core-copy
             className="relative z-20 order-2 max-w-[40rem] pb-6 text-center lg:order-1 lg:text-start rtl:lg:max-w-[43rem]"
@@ -293,7 +249,7 @@ function CoreSection({
             </p>
             <h2
               data-core-heading
-              className="mt-5 text-balance font-display text-[clamp(2.5rem,5.5vw,5.5rem)] font-semibold leading-[0.97] tracking-[-0.05em] text-white rtl:tracking-[-0.025em]"
+              className="mt-5 text-balance font-display text-[clamp(2.4rem,4.8vw,4.8rem)] font-semibold leading-[0.99] tracking-[-0.048em] text-white rtl:tracking-[-0.025em]"
             >
               {copy.title}
             </h2>
@@ -413,51 +369,49 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
 
           select("[data-foundation-group]").forEach((group, index) => {
             const cards = group.querySelectorAll("[data-service-card]");
-            const tween = gsap.fromTo(
-              cards,
-              {
-                autoAlpha: reduceMotion ? 0.55 : 0,
-                y: reduceMotion ? 0 : 52,
-                scale: reduceMotion ? 1 : 0.97,
-              },
-              {
-                autoAlpha: 1,
-                y: 0,
-                scale: 1,
-                stagger: reduceMotion ? 0 : 0.075,
-                ease: "power2.out",
-                scrollTrigger: {
-                  id: `foundation-group-${index}`,
-                  trigger: group,
-                  start: "top 82%",
-                  end: "top 42%",
-                  scrub,
-                },
-              },
-            );
-            cleanups.push(() => tween.kill());
-          });
+            if (reduceMotion) {
+              gsap.set(cards, { autoAlpha: 1, y: 0, scale: 1 });
+              return;
+            }
 
-          if (!reduceMotion) {
-            select("[data-digital-crack]").forEach((crack, index) => {
-              const tween = gsap.to(crack, {
-                xPercent:
-                  (index % 2 ? -1 : 1) *
-                  (simplified
-                    ? DEPTH_JOURNEY_CONFIG.motion.mobileParallax
-                    : DEPTH_JOURNEY_CONFIG.motion.foundationParallax),
-                scaleX: 1.18,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: "#depth-foundation",
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub,
-                },
-              });
-              cleanups.push(() => tween.kill());
+            const timeline = gsap.timeline({
+              scrollTrigger: {
+                id: `foundation-group-${index}`,
+                trigger: group,
+                start: "top 88%",
+                end: "bottom 18%",
+                scrub,
+              },
             });
-          }
+            timeline
+              .fromTo(
+                cards,
+                {
+                  autoAlpha: 0,
+                  y: DEPTH_JOURNEY_CONFIG.cards.revealDistance,
+                  scale: 0.99,
+                },
+                {
+                  autoAlpha: 1,
+                  y: 0,
+                  scale: DEPTH_JOURNEY_CONFIG.cards.activeScale,
+                  duration: 0.42,
+                  ease: "power2.out",
+                },
+              )
+              .to(
+                cards,
+                {
+                  autoAlpha: DEPTH_JOURNEY_CONFIG.cards.inactiveOpacity,
+                  y: DEPTH_JOURNEY_CONFIG.cards.activeLift,
+                  scale: 0.99,
+                  duration: 0.28,
+                  ease: "power1.inOut",
+                },
+                0.72,
+              );
+            cleanups.push(() => timeline.kill());
+          });
 
           const setupScrollScene = (
             sectionSelector: string,
@@ -470,13 +424,17 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
             const groups = select(groupSelector) as HTMLElement[];
             if (!section || !scene || groups.length === 0) return;
 
-            if (reduceMotion || tablet) {
+            if (reduceMotion || tablet || simplified) {
               gsap.set(groups, { autoAlpha: 1, x: 0, y: 0, clearProps: "transform" });
               return;
             }
 
-            gsap.set(groups, { autoAlpha: 0, y: reduceMotion ? 0 : 24 });
-            gsap.set(groups[0], { autoAlpha: 1, y: 0 });
+            gsap.set(groups, {
+              autoAlpha: 0,
+              y: DEPTH_JOURNEY_CONFIG.cards.revealDistance,
+              scale: 0.99,
+            });
+            gsap.set(groups[0], { autoAlpha: 1, y: 0, scale: 1 });
 
             const timeline = gsap.timeline({
               defaults: { ease: "none" },
@@ -499,8 +457,9 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
                 .to(
                   previous,
                   {
-                    autoAlpha: 0,
-                    y: reduceMotion ? 0 : -24,
+                    autoAlpha: DEPTH_JOURNEY_CONFIG.cards.inactiveOpacity,
+                    y: DEPTH_JOURNEY_CONFIG.cards.activeLift,
+                    scale: 0.99,
                     duration: DEPTH_JOURNEY_CONFIG.motion.cardRevealDuration,
                   },
                   position,
@@ -510,9 +469,15 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
                   {
                     autoAlpha: 1,
                     y: 0,
+                    scale: DEPTH_JOURNEY_CONFIG.cards.activeScale,
                     duration: DEPTH_JOURNEY_CONFIG.motion.cardRevealDuration,
                   },
-                  position + DEPTH_JOURNEY_CONFIG.motion.cardRevealDuration + 0.015,
+                  position,
+                )
+                .to(
+                  group,
+                  { scale: 1, duration: DEPTH_JOURNEY_CONFIG.motion.cardRevealDuration },
+                  position + DEPTH_JOURNEY_CONFIG.motion.cardRevealDuration,
                 );
             });
             enhance(timeline);
@@ -574,7 +539,6 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
                   );
                 }
               });
-              timeline.to("[data-network-grid]", { yPercent: -3, opacity: 0.66, duration: 0.9 }, 0);
             },
           );
 
@@ -583,10 +547,7 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
             "[data-intelligence-scene]",
             "[data-intelligence-group]",
             (timeline) => {
-              const modes = select("[data-ai-mode]");
               const neuralGlow = select("[data-neural-glow]");
-              gsap.set(modes, { autoAlpha: 0, scale: 0.92 });
-              gsap.set(modes[0], { autoAlpha: 1, scale: 1 });
               timeline
                 .to(
                   "[data-neural-ring]",
@@ -603,41 +564,16 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
                   { autoAlpha: reduceMotion ? 0.6 : 0.25, scale: reduceMotion ? 1 : 0.7 },
                   {
                     autoAlpha: 1,
-                    scale: reduceMotion ? 1 : 1.06,
+                    scale: reduceMotion ? 1 : 1.025,
                     stagger: reduceMotion ? 0 : 0.025,
-                    duration: 0.5,
+                    duration: 0.46,
                   },
                   0.05,
                 )
-                .to(modes[0], { autoAlpha: 0, scale: 0.94, duration: 0.12 }, 0.22)
-                .to(modes[1], { autoAlpha: 1, scale: 1, duration: 0.14 }, 0.375)
-                .to(neuralGlow, { scale: 1.07, opacity: 0.92, duration: 0.22 }, 0.375)
-                .to(modes[1], { autoAlpha: 0, scale: 0.94, duration: 0.12 }, 0.64)
-                .to(modes[2], { autoAlpha: 1, scale: 1, duration: 0.14 }, 0.795)
-                .to(neuralGlow, { scale: 0.98, opacity: 0.76, duration: 0.18 }, 0.795)
-                .to(
-                  "[data-neural-field]",
-                  { yPercent: reduceMotion ? 0 : -4, scale: reduceMotion ? 1 : 1.025, duration: 1 },
-                  0,
-                );
+                .to(neuralGlow, { scale: 1.035, opacity: 0.84, duration: 0.42 }, 0.28)
+                .to(neuralGlow, { scale: 1, opacity: 0.72, duration: 0.3 }, 0.7);
             },
           );
-
-          const intelligenceSection = select("#depth-intelligence")[0] as HTMLElement | undefined;
-          const neuralField = select("[data-neural-field]")[0] as HTMLElement | undefined;
-          if (intelligenceSection && neuralField) {
-            neuralField.style.animationPlayState = "paused";
-            const ambientTrigger = ScrollTrigger.create({
-              trigger: intelligenceSection,
-              start: "top bottom",
-              end: "bottom top",
-              onEnter: () => (neuralField.style.animationPlayState = "running"),
-              onEnterBack: () => (neuralField.style.animationPlayState = "running"),
-              onLeave: () => (neuralField.style.animationPlayState = "paused"),
-              onLeaveBack: () => (neuralField.style.animationPlayState = "paused"),
-            });
-            cleanups.push(() => ambientTrigger.kill());
-          }
 
           const core = select("#depth-core")[0] as HTMLElement | undefined;
           if (core) {
@@ -721,8 +657,7 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
           if (!reduceMotion) {
             select("[data-depth-section]").forEach((section) => {
               section.querySelectorAll<HTMLElement>("[data-depth-plane]").forEach((plane) => {
-                const planeName = plane.dataset.depthPlane as
-                  "background" | "midground" | "foreground";
+                const planeName = plane.dataset.depthPlane as "background" | "midground";
                 const baseDistance = DEPTH_JOURNEY_CONFIG.motion.planeParallax[planeName];
                 const distance = simplified
                   ? baseDistance * DEPTH_JOURNEY_CONFIG.motion.planeParallax.mobileScale

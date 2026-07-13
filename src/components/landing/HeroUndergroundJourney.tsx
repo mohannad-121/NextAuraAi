@@ -9,21 +9,21 @@ import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
 
 type HeroUndergroundJourneyProps = { onStartProject: () => void };
 
-const surfaceDust = Array.from({ length: 10 }, (_, index) => ({
+const surfaceDust = Array.from({ length: 6 }, (_, index) => ({
   left: (index * 31 + 7) % 96,
   bottom: 2 + ((index * 17) % 24),
   size: 1 + (index % 3),
   opacity: 0.18 + (index % 4) * 0.08,
 }));
 
-const undergroundDust = Array.from({ length: 20 }, (_, index) => ({
+const undergroundDust = Array.from({ length: 10 }, (_, index) => ({
   left: (index * 37 + 9) % 96,
   top: 10 + ((index * 43) % 82),
   size: 1 + (index % 3),
   opacity: 0.16 + (index % 5) * 0.07,
 }));
 
-const stoneFragments = Array.from({ length: 12 }, (_, index) => ({
+const stoneFragments = Array.from({ length: 8 }, (_, index) => ({
   left: 4 + ((index * 29) % 91),
   top: 10 + ((index * 13) % 30),
   width: 8 + (index % 4) * 5,
