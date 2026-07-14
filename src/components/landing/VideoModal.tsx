@@ -66,6 +66,7 @@ export function VideoModal({ open, onClose, title, closeLabel, src }: VideoModal
               src={src}
               controls
               autoPlay
+              loop
               playsInline
               preload="metadata"
               className="aspect-video w-full bg-black object-contain"

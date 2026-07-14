@@ -55,18 +55,26 @@ export function EnvironmentalPlanes({ tone }: { tone: EnvironmentTone }) {
   );
 }
 
-export function ServiceCard({ service, index }: { service: JourneyService; index: number }) {
+export function ServiceCard({
+  service,
+  index,
+  compact = false,
+}: {
+  service: JourneyService;
+  index: number;
+  compact?: boolean;
+}) {
   return (
     <article
       data-service-card
-      className="depth-service-module group relative min-h-44 p-6 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 motion-reduce:transform-none sm:p-7"
+      className={`depth-service-module group relative transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 motion-reduce:transform-none ${compact ? "h-auto min-h-0 p-5 sm:p-6" : "min-h-44 p-6 sm:p-7"}`}
       style={
         {
           "--depth-card-brightness": DEPTH_JOURNEY_CONFIG.cards.brightness,
         } as CSSProperties
       }
     >
-      <div className="relative z-10 mb-6 flex items-center gap-4">
+      <div className={`relative z-10 flex items-center gap-4 ${compact ? "mb-4" : "mb-6"}`}>
         <span className="depth-module-index grid size-9 shrink-0 place-items-center text-xs font-semibold text-violet-100">
           {String(index + 1).padStart(2, "0")}
         </span>

@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { ArrowUpRight, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
@@ -14,9 +13,10 @@ export function Contact({ onStartProject }: ContactProps) {
   const footer = page.footer;
   const navigation = [
     [nav.home, "#home"],
-    [nav.about, "#about"],
     [nav.services, "#services"],
     [nav.projects, "#projects"],
+    [nav.process, "#process"],
+    [nav.team, "#team"],
     [nav.contact, "#contact"],
   ];
   const services = page.services.items.slice(0, 6).map((item) => item.title);
@@ -24,24 +24,16 @@ export function Contact({ onStartProject }: ContactProps) {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-[#030611] pt-24 sm:pt-28 lg:pt-40"
+      className="homepage-environment-alt relative overflow-hidden pt-[var(--section-space)]"
       dir={dir}
     >
-      <div className="absolute inset-0 grid-fade opacity-25" />
-      <div className="relative mx-auto max-w-[96rem] px-5 sm:px-8 lg:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 38 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative overflow-hidden rounded-[2rem] border border-white/10 px-6 py-14 sm:px-10 sm:py-20 lg:px-16 lg:py-24"
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.25),transparent_36%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.2),transparent_38%),linear-gradient(135deg,#070b1b,#040712)]" />
-          <div className="absolute inset-0 hero-noise opacity-40" />
+      <div className="homepage-container">
+        <div className="relative overflow-hidden rounded-2xl border border-white/12 px-5 py-12 sm:px-10 sm:py-16 lg:px-14 lg:py-20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.3),transparent_36%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.24),transparent_38%),linear-gradient(135deg,#0b1326,#071020)]" />
           <div className="relative grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div>
               <div className="section-eyebrow">{copy.eyebrow}</div>
-              <h2 className="mt-5 max-w-5xl text-balance text-4xl font-semibold leading-[0.98] sm:text-6xl lg:text-8xl">
+              <h2 className="mt-5 max-w-4xl text-balance text-4xl font-semibold leading-[1.06] sm:text-5xl lg:text-6xl">
                 {copy.title}
               </h2>
               <p className="mt-7 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
@@ -51,7 +43,7 @@ export function Contact({ onStartProject }: ContactProps) {
                 <button
                   type="button"
                   onClick={onStartProject}
-                  className="premium-button premium-button-primary justify-center"
+                  className="premium-button premium-button-primary cursor-pointer justify-center"
                 >
                   {copy.start}
                   <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
@@ -86,12 +78,12 @@ export function Contact({ onStartProject }: ContactProps) {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <footer className="relative pb-28 pt-16 md:pb-10 lg:pt-24">
           <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-2 lg:grid-cols-[1.3fr_0.7fr_1fr_0.9fr]">
             <div>
-              <BrandSymbol className="!rounded-2xl !bg-black/70 !p-2" imageClassName="w-20" />
+              <BrandSymbol className="!rounded-2xl !bg-[#0b1326]/88 !p-2" imageClassName="w-20" />
               <p className="mt-6 max-w-sm text-sm leading-7 text-slate-400">{footer.description}</p>
               <a
                 href="https://linkedin.com/company/nextaura-ai"
@@ -164,7 +156,7 @@ function ContactLink({
           <span className="mt-1 block text-sm">{value}</span>
         </span>
       </span>
-      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
+      <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
     </a>
   );
 }

@@ -7,7 +7,7 @@ import { BrandSymbol } from "@/components/landing/BrandSymbol";
 
 type NavProps = { onStartProject: () => void };
 
-const ids = ["home", "services", "about", "projects", "process", "team", "insights", "contact"];
+const ids = ["home", "services", "projects", "process", "team", "contact"];
 
 export function Nav({ onStartProject }: NavProps) {
   const { language, dir } = useLanguage();
@@ -20,11 +20,9 @@ export function Nav({ onStartProject }: NavProps) {
     () => [
       { id: "home", label: copy.home },
       { id: "services", label: copy.services },
-      { id: "about", label: copy.about },
       { id: "projects", label: copy.projects },
       { id: "process", label: copy.process },
       { id: "team", label: copy.team },
-      { id: "insights", label: copy.insights },
       { id: "contact", label: copy.contact },
     ],
     [copy],
@@ -69,21 +67,19 @@ export function Nav({ onStartProject }: NavProps) {
   };
 
   return (
-    <motion.header
-      initial={{ y: -28, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-x-0 top-0 z-[70] px-3 sm:px-5"
-    >
+    <header className="fixed inset-x-0 top-0 z-[70] px-3 sm:px-5">
       <div
-        className={`mx-auto mt-3 flex max-w-[96rem] items-center justify-between rounded-2xl px-3 py-2.5 transition-all duration-500 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#050817]/80 shadow-[0_20px_70px_rgb(0_0_0_/_0.45)] backdrop-blur-2xl" : "border border-transparent bg-transparent"}`}
+        className={`mx-auto mt-3 flex max-w-[var(--homepage-container)] items-center justify-between rounded-2xl px-3 py-2.5 transition-[background-color,border-color,box-shadow] duration-200 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#081123]/92 shadow-[0_14px_40px_rgb(0_0_0_/_0.32)] backdrop-blur-md" : "border border-white/8 bg-[#081123]/32 backdrop-blur-[6px]"}`}
       >
         <a
           href="#home"
           aria-label="NextAura AI home"
           className="relative z-10 inline-flex min-h-11 items-center"
         >
-          <BrandSymbol className="!rounded-xl !bg-black/45 !p-1.5" imageClassName="w-11 sm:w-12" />
+          <BrandSymbol
+            className="!rounded-xl !bg-[#0b1326]/72 !p-1.5"
+            imageClassName="w-11 sm:w-12"
+          />
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-1 xl:flex">
@@ -133,23 +129,20 @@ export function Nav({ onStartProject }: NavProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
-            className="absolute inset-x-3 top-[4.9rem] overflow-hidden rounded-3xl border border-white/10 bg-[#050817]/96 p-5 shadow-2xl backdrop-blur-2xl sm:inset-x-5"
+            className="absolute inset-x-3 top-[4.9rem] overflow-hidden rounded-2xl border border-white/10 bg-[#081123]/98 p-5 shadow-2xl backdrop-blur-md sm:inset-x-5"
             dir={dir}
           >
             <nav aria-label="Mobile navigation" className="grid gap-1">
               {links.map((link, index) => (
-                <motion.a
+                <a
                   key={link.id}
                   href={`#${link.id}`}
                   onClick={() => setOpen(false)}
-                  initial={{ opacity: 0, x: dir === "rtl" ? 16 : -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.025 }}
                   className={`flex min-h-12 items-center justify-between border-b border-white/6 px-2 text-lg ${active === link.id ? "text-cyan-300" : "text-white"}`}
                 >
                   <span>{link.label}</span>
                   <span className="font-mono text-[0.65rem] text-slate-600">0{index + 1}</span>
-                </motion.a>
+                </a>
               ))}
             </nav>
             <div className="mt-5 flex items-center gap-3 sm:hidden">
@@ -165,6 +158,6 @@ export function Nav({ onStartProject }: NavProps) {
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

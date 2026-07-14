@@ -49,44 +49,22 @@ const en = {
     cta: "Discuss your project",
     items: [
       {
-        title: "Website Design & Development",
+        title: "Websites & Digital Products",
         description:
-          "High-performance websites, corporate platforms, portfolios, landing pages, and interactive web experiences.",
+          "High-performing digital experiences designed to attract customers and make everyday interactions easier.",
+        examples: ["Business websites", "E-commerce platforms", "Booking and dashboard systems"],
       },
       {
-        title: "AI Chatbots & Virtual Assistants",
+        title: "AI Assistants & Automation",
         description:
-          "Intelligent assistants trained around business information, services, products, and customer questions.",
+          "Purposeful AI that answers questions, connects knowledge, and removes repetitive work from your team.",
+        examples: ["AI chatbots", "Workflow automation", "RAG and knowledge assistants"],
       },
       {
-        title: "Business Automation",
+        title: "Business Systems & Custom Software",
         description:
-          "Automated workflows for operations, communication, data handling, and repetitive internal processes.",
-      },
-      {
-        title: "CRM & Business Platforms",
-        description:
-          "Custom dashboards, client systems, booking platforms, memberships, and administrative tools.",
-      },
-      {
-        title: "AI Integration",
-        description:
-          "AI models, retrieval systems, recommendation engines, APIs, and purposeful intelligent functionality.",
-      },
-      {
-        title: "UI/UX & Product Design",
-        description:
-          "Research, wireframes, interface systems, responsive prototypes, and complete product experiences.",
-      },
-      {
-        title: "Custom Software Development",
-        description:
-          "Tailored software designed around specific operational, team, or customer needs.",
-      },
-      {
-        title: "MVP Development",
-        description:
-          "A focused path from idea to a functional, testable, and scalable initial product.",
+          "Connected software built around the way your business operates, manages data, and grows.",
+        examples: ["CRM integrations", "Admin systems", "Custom internal tools"],
       },
     ],
   },
@@ -147,22 +125,17 @@ const en = {
         description: "We understand your business, audience, challenges, and objectives.",
       },
       {
-        title: "Define",
+        title: "Plan",
         description:
-          "We translate the idea into a clear scope, feature plan, and technical direction.",
-      },
-      {
-        title: "Design",
-        description: "We create the user experience, visual system, and interactive prototype.",
+          "We shape the scope, experience, priorities, and technical direction before building.",
       },
       {
         title: "Build",
         description: "We develop, integrate, test, and optimize the complete solution.",
       },
-      { title: "Launch", description: "We deploy the product and prepare it for real users." },
       {
-        title: "Improve",
-        description: "We support, analyze, refine, and expand the product as the business grows.",
+        title: "Launch & Improve",
+        description: "We release, monitor, support, and expand the product as your business grows.",
       },
     ],
   },
@@ -220,31 +193,19 @@ const en = {
     title: "Why businesses choose us",
     items: [
       {
-        title: "Personalized, Not Generic",
+        title: "Built Around Your Business",
         description:
-          "Every solution is designed around the specific business, audience, and goals.",
+          "Every decision starts with your customers, operations, goals, and real constraints.",
       },
       {
-        title: "Modern Technology",
+        title: "Web, Automation & AI in One Team",
         description:
-          "We select current, scalable tools for the actual requirements of the product.",
+          "Strategy, product design, software, automation, and AI move together without handoff gaps.",
       },
       {
-        title: "AI With a Purpose",
+        title: "Clear Delivery & Long-Term Support",
         description:
-          "AI is implemented where it creates real value, not added as a marketing label.",
-      },
-      {
-        title: "End-to-End Execution",
-        description: "Strategy, design, development, integration, deployment, and support.",
-      },
-      {
-        title: "Clear Communication",
-        description: "Transparent stages, realistic expectations, and direct collaboration.",
-      },
-      {
-        title: "Built for Growth",
-        description: "Products are structured so they can evolve as the business expands.",
+          "You get visible progress, realistic expectations, direct communication, and support after launch.",
       },
     ],
   },
@@ -398,36 +359,20 @@ const ar: Widen<typeof en> = {
     cta: "ناقش مشروعك",
     items: [
       {
-        title: "تصميم وتطوير المواقع",
-        description: "مواقع سريعة، ومنصات شركات، وصفحات هبوط، ومحافظ أعمال وتجارب ويب تفاعلية.",
+        title: "المواقع والمنتجات الرقمية",
+        description: "تجارب رقمية سريعة تساعدك على جذب العملاء وتسهّل تفاعلهم اليومي مع أعمالك.",
+        examples: ["مواقع الأعمال", "منصات التجارة الإلكترونية", "أنظمة الحجز ولوحات التحكم"],
       },
       {
-        title: "مساعدون وشات بوتات ذكية",
-        description: "مساعدون مدربون على معلومات العمل وخدماته ومنتجاته وأسئلة العملاء.",
+        title: "المساعدون الأذكياء والأتمتة",
+        description:
+          "ذكاء اصطناعي هادف يجيب عن الأسئلة ويربط المعرفة ويخفف المهام المتكررة عن فريقك.",
+        examples: ["شات بوتات ذكية", "أتمتة سير العمل", "مساعدو المعرفة وRAG"],
       },
       {
-        title: "أتمتة الأعمال",
-        description: "سير عمل آلي للعمليات والتواصل والبيانات والمهام الداخلية المتكررة.",
-      },
-      {
-        title: "CRM ومنصات الأعمال",
-        description: "لوحات تحكم وأنظمة عملاء وحجز وعضويات وأدوات إدارية مخصصة.",
-      },
-      {
-        title: "تكامل الذكاء الاصطناعي",
-        description: "نماذج AI وأنظمة استرجاع وتوصيات وواجهات API ووظائف ذكية هادفة.",
-      },
-      {
-        title: "تصميم UI/UX والمنتجات",
-        description: "بحث وتجربة مستخدم وواجهات وأنظمة متجاوبة ونماذج أولية متكاملة.",
-      },
-      {
-        title: "تطوير برمجيات مخصصة",
-        description: "حلول برمجية مصممة للاحتياجات التشغيلية أو احتياجات الفريق والعملاء.",
-      },
-      {
-        title: "تطوير MVP",
-        description: "طريق مركز من الفكرة إلى منتج أولي وظيفي وقابل للاختبار والتوسع.",
+        title: "أنظمة الأعمال والبرمجيات المخصصة",
+        description: "برمجيات مترابطة مبنية حول طريقة تشغيل أعمالك وإدارة بياناتك وخطط نموك.",
+        examples: ["تكاملات CRM", "الأنظمة الإدارية", "أدوات داخلية مخصصة"],
       },
     ],
   },
@@ -484,11 +429,12 @@ const ar: Widen<typeof en> = {
     scroll: "مرّر لمتابعة مراحل البناء",
     steps: [
       { title: "اكتشاف", description: "نفهم عملك وجمهورك وتحدياتك وأهدافك." },
-      { title: "تحديد", description: "نحوّل الفكرة إلى نطاق واضح وخطة ميزات واتجاه تقني." },
-      { title: "تصميم", description: "نصمم تجربة المستخدم والنظام البصري والنموذج التفاعلي." },
+      {
+        title: "تخطيط",
+        description: "نحدد النطاق والتجربة والأولويات والاتجاه التقني قبل بدء البناء.",
+      },
       { title: "بناء", description: "نطور الحل الكامل وندمجه ونختبره ونحسنه." },
-      { title: "إطلاق", description: "ننشر المنتج ونجهزه للمستخدمين الحقيقيين." },
-      { title: "تحسين", description: "ندعم المنتج ونحلله ونطوره مع نمو العمل." },
+      { title: "إطلاق وتحسين", description: "نطلق المنتج ونراقبه وندعمه ونطوره مع نمو أعمالك." },
     ],
   },
   featured: {
@@ -539,18 +485,19 @@ const ar: Widen<typeof en> = {
     eyebrow: "لماذا NextAura",
     title: "لماذا تختارنا الأعمال",
     items: [
-      { title: "مخصص وليس عامًا", description: "كل حل مصمم حول العمل والجمهور والأهداف." },
       {
-        title: "تقنية حديثة",
-        description: "نختار أدوات حديثة وقابلة للتوسع حسب احتياجات المنتج الفعلية.",
+        title: "مبني حول أعمالك",
+        description: "كل قرار يبدأ من عملائك وعملياتك وأهدافك وقيودك الحقيقية.",
       },
       {
-        title: "ذكاء اصطناعي هادف",
-        description: "نستخدم AI حيث يصنع قيمة حقيقية، لا كشعار تسويقي.",
+        title: "الويب والأتمتة والذكاء الاصطناعي في فريق واحد",
+        description:
+          "تتحرك الاستراتيجية والتصميم والبرمجيات والأتمتة والذكاء الاصطناعي معًا دون فجوات.",
       },
-      { title: "تنفيذ متكامل", description: "استراتيجية وتصميم وتطوير وتكامل ونشر ودعم." },
-      { title: "تواصل واضح", description: "مراحل شفافة وتوقعات واقعية وتعاون مباشر." },
-      { title: "مبني للنمو", description: "هيكلة تسمح للمنتج بالتطور مع توسع العمل." },
+      {
+        title: "تسليم واضح ودعم طويل المدى",
+        description: "تحصل على تقدم واضح وتوقعات واقعية وتواصل مباشر ودعم مستمر بعد الإطلاق.",
+      },
     ],
   },
   quality: {
@@ -651,43 +598,30 @@ const es: Widen<typeof en> = {
     cta: "Hablar de tu proyecto",
     items: [
       {
-        title: "Diseño y desarrollo web",
+        title: "Sitios web y productos digitales",
         description:
-          "Sitios de alto rendimiento, plataformas corporativas, portfolios, landing pages y experiencias interactivas.",
+          "Experiencias digitales rápidas que atraen clientes y facilitan cada interacción con tu negocio.",
+        examples: ["Sitios empresariales", "Plataformas e-commerce", "Reservas y paneles"],
       },
       {
-        title: "Chatbots y asistentes virtuales",
+        title: "Asistentes de IA y automatización",
         description:
-          "Asistentes entrenados con la información, servicios, productos y preguntas de tu negocio.",
+          "IA útil que responde preguntas, conecta conocimiento y elimina tareas repetitivas del equipo.",
+        examples: [
+          "Chatbots de IA",
+          "Automatización de flujos",
+          "Asistentes RAG y de conocimiento",
+        ],
       },
       {
-        title: "Automatización empresarial",
+        title: "Sistemas empresariales y software a medida",
         description:
-          "Flujos automáticos para operaciones, comunicación, datos y procesos internos repetitivos.",
-      },
-      {
-        title: "CRM y plataformas empresariales",
-        description:
-          "Paneles, gestión de clientes, reservas, membresías y herramientas administrativas.",
-      },
-      {
-        title: "Integración de IA",
-        description:
-          "Modelos, sistemas de recuperación, recomendaciones, APIs y funciones inteligentes con propósito.",
-      },
-      {
-        title: "UI/UX y diseño de producto",
-        description:
-          "Investigación, wireframes, interfaces, prototipos responsive y experiencias de producto.",
-      },
-      {
-        title: "Software a medida",
-        description: "Soluciones adaptadas a necesidades operativas, del equipo o del cliente.",
-      },
-      {
-        title: "Desarrollo MVP",
-        description:
-          "Un camino enfocado de la idea a un primer producto funcional, testeable y escalable.",
+          "Software conectado alrededor de cómo opera tu negocio, gestiona sus datos y crece.",
+        examples: [
+          "Integraciones CRM",
+          "Sistemas administrativos",
+          "Herramientas internas a medida",
+        ],
       },
     ],
   },
@@ -745,24 +679,17 @@ const es: Widen<typeof en> = {
     steps: [
       { title: "Descubrir", description: "Entendemos tu negocio, audiencia, retos y objetivos." },
       {
-        title: "Definir",
-        description: "Convertimos la idea en alcance, funciones y dirección técnica.",
-      },
-      {
-        title: "Diseñar",
-        description: "Creamos la experiencia, el sistema visual y el prototipo.",
+        title: "Planificar",
+        description:
+          "Definimos alcance, experiencia, prioridades y dirección técnica antes de construir.",
       },
       {
         title: "Construir",
         description: "Desarrollamos, integramos, probamos y optimizamos la solución.",
       },
       {
-        title: "Lanzar",
-        description: "Desplegamos el producto y lo preparamos para usuarios reales.",
-      },
-      {
-        title: "Mejorar",
-        description: "Apoyamos, analizamos y ampliamos el producto con el negocio.",
+        title: "Lanzar y mejorar",
+        description: "Publicamos, monitorizamos, apoyamos y ampliamos el producto con tu negocio.",
       },
     ],
   },
@@ -801,28 +728,19 @@ const es: Widen<typeof en> = {
     title: "Por qué las empresas nos eligen",
     items: [
       {
-        title: "Personalizado",
-        description: "Cada solución se diseña para el negocio, audiencia y objetivos.",
+        title: "Creado alrededor de tu negocio",
+        description:
+          "Cada decisión parte de tus clientes, operaciones, objetivos y límites reales.",
       },
       {
-        title: "Tecnología moderna",
-        description: "Seleccionamos herramientas actuales y escalables para cada producto.",
+        title: "Web, automatización e IA en un equipo",
+        description:
+          "Estrategia, diseño, software, automatización e IA avanzan sin brechas entre equipos.",
       },
       {
-        title: "IA con propósito",
-        description: "Usamos IA donde crea valor real, no como etiqueta de marketing.",
-      },
-      {
-        title: "Ejecución integral",
-        description: "Estrategia, diseño, desarrollo, integración, despliegue y soporte.",
-      },
-      {
-        title: "Comunicación clara",
-        description: "Etapas transparentes, expectativas realistas y colaboración directa.",
-      },
-      {
-        title: "Creado para crecer",
-        description: "Productos que pueden evolucionar junto con el negocio.",
+        title: "Entrega clara y soporte a largo plazo",
+        description:
+          "Recibes progreso visible, expectativas realistas, comunicación directa y apoyo tras el lanzamiento.",
       },
     ],
   },
