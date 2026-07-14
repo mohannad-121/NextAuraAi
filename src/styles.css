@@ -86,6 +86,10 @@
   --hero-video-contrast: 1.03;
   --hero-video-saturation: 1.04;
   --hero-overlay-opacity: 0.72;
+  --continuation-video-brightness: 1.12;
+  --continuation-video-contrast: 1.04;
+  --continuation-video-saturation: 1.03;
+  --continuation-overlap: 6rem;
   --section-ambient-light: 0.16;
   --card-surface-opacity: 0.96;
   --primary-cta-motion-duration: 3.8s;
@@ -320,6 +324,58 @@
   );
 }
 
+.moon-continuation {
+  position: relative;
+  z-index: 1;
+  height: calc(70svh + var(--continuation-overlap));
+  min-height: calc(31rem + var(--continuation-overlap));
+  margin-top: calc(var(--continuation-overlap) * -1);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.moon-continuation-video,
+.moon-continuation-tone {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 0.36) calc(var(--continuation-overlap) * 0.48),
+    #000 calc(var(--continuation-overlap) - 2rem)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 0.36) calc(var(--continuation-overlap) * 0.48),
+    #000 calc(var(--continuation-overlap) - 2rem)
+  );
+}
+
+.moon-continuation-video {
+  z-index: 0;
+  object-fit: cover;
+  object-position: 50% 42%;
+  background: #071020;
+  filter: brightness(var(--continuation-video-brightness))
+    contrast(var(--continuation-video-contrast))
+    saturate(var(--continuation-video-saturation));
+}
+
+.moon-continuation-tone {
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgb(7 16 32 / 0.12) 0,
+    transparent calc(var(--continuation-overlap) + 4rem),
+    transparent 76%,
+    rgb(7 14 29 / 0.16) 100%
+  );
+}
+
 [dir="rtl"] .hero-copy-support {
   background: linear-gradient(
     270deg,
@@ -458,15 +514,32 @@
 }
 
 @media (min-width: 640px) {
+  :root {
+    --continuation-overlap: 7rem;
+  }
+
   .hero-video {
     object-position: 25% center;
   }
   [dir="rtl"] .hero-video {
     object-position: 75% center;
   }
+
+  .moon-continuation {
+    height: calc(76svh + var(--continuation-overlap));
+    min-height: calc(35rem + var(--continuation-overlap));
+  }
+
+  .moon-continuation-video {
+    object-position: 50% 46%;
+  }
 }
 
 @media (min-width: 1024px) {
+  :root {
+    --continuation-overlap: 7.5rem;
+  }
+
   .hero-video {
     object-position: left center;
     transform: scale(1.12);
@@ -476,6 +549,25 @@
     object-position: right center;
     transform-origin: right center;
   }
+
+  .moon-continuation {
+    height: calc(86svh + var(--continuation-overlap));
+    min-height: calc(39rem + var(--continuation-overlap));
+  }
+
+  .moon-continuation-video {
+    object-position: 50% 50%;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --continuation-overlap: 8rem;
+  }
+
+  .moon-continuation {
+    height: calc(90svh + var(--continuation-overlap));
+  }
 }
 
 @media (orientation: landscape) and (max-width: 1023px) {
@@ -484,6 +576,15 @@
   }
   [dir="rtl"] .hero-video {
     object-position: right center;
+  }
+
+  .moon-continuation {
+    height: calc(92svh + var(--continuation-overlap));
+    min-height: calc(30rem + var(--continuation-overlap));
+  }
+
+  .moon-continuation-video {
+    object-position: 50% 50%;
   }
 }
 
@@ -1685,6 +1786,7 @@
   }
 
   .hero-video,
+  .moon-continuation-video,
   .wired-robot-video {
     animation: none !important;
   }
