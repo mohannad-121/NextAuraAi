@@ -11,7 +11,6 @@ import { Contact } from "@/components/landing/Contact";
 import { ProjectRequestModal } from "@/components/landing/ProjectRequestModal";
 import { MobileCTA } from "@/components/landing/MobileCTA";
 import { WebsiteAssistantChatbot } from "@/components/landing/WebsiteAssistantChatbot";
-import { LanguageProvider } from "@/i18n/translations";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -54,11 +53,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return (
-    <LanguageProvider>
-      <LandingPage />
-    </LanguageProvider>
-  );
+  return <LandingPage />;
 }
 
 function LandingPage() {

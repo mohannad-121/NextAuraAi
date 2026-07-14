@@ -22,6 +22,11 @@ const en = {
     menu: "Open menu",
     close: "Close menu",
   },
+  ambientAudio: {
+    enable: "Enable ambient sound",
+    mute: "Mute ambient sound",
+    unmute: "Unmute ambient sound",
+  },
   hero: {
     eyebrow: "AI • SOFTWARE • DIGITAL EXPERIENCES",
     lead: "We turn ambitious ideas into ",
@@ -332,6 +337,11 @@ const ar: Widen<typeof en> = {
     menu: "افتح القائمة",
     close: "أغلق القائمة",
   },
+  ambientAudio: {
+    enable: "تشغيل الصوت المحيطي",
+    mute: "كتم الصوت المحيطي",
+    unmute: "إلغاء كتم الصوت المحيطي",
+  },
   hero: {
     eyebrow: "ذكاء اصطناعي • برمجيات • تجارب رقمية",
     lead: "نحوّل الأفكار الطموحة إلى ",
@@ -570,6 +580,11 @@ const es: Widen<typeof en> = {
     start: "Iniciar un proyecto",
     menu: "Abrir menú",
     close: "Cerrar menú",
+  },
+  ambientAudio: {
+    enable: "Activar sonido ambiental",
+    mute: "Silenciar sonido ambiental",
+    unmute: "Reactivar sonido ambiental",
   },
   hero: {
     eyebrow: "IA • SOFTWARE • EXPERIENCIAS DIGITALES",
