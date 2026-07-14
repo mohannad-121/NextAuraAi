@@ -6,6 +6,7 @@ import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
 const icons = [MonitorSmartphone, Bot, PanelsTopLeft] as const;
+const AI_VIDEO_SRC = "/videos/wired-robot.mp4";
 
 export function ServicesUniverse({ onStartProject }: { onStartProject: () => void }) {
   const { language, dir } = useLanguage();
@@ -60,17 +61,8 @@ export function ServicesUniverse({ onStartProject }: { onStartProject: () => voi
                 ))}
               </ul>
             </div>
-            <div className="relative aspect-[16/10] min-h-0 overflow-hidden lg:aspect-auto lg:min-h-[29rem]">
-              {/* Optimized desktop/mobile sources can replace this single source once available. */}
-              <ViewportVideo
-                src="/videos/wired-robot.mp4"
-                poster="/images/cinematic/nextaura-ai-hero.webp"
-                className="wired-robot-video"
-              />
-              <div
-                aria-hidden="true"
-                className="ai-video-blend pointer-events-none absolute inset-0"
-              />
+            <div className="ai-video-frame relative aspect-[16/10] min-h-0 overflow-hidden lg:aspect-auto lg:min-h-[29rem]">
+              <ViewportVideo src={AI_VIDEO_SRC} className="wired-robot-video" />
             </div>
           </div>
         </CinematicCard>

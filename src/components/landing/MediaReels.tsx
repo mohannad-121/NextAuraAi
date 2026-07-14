@@ -64,7 +64,7 @@ export function MediaReels() {
         onClose={() => setActive(null)}
         title={active === null ? "" : copy.items[active].title}
         closeLabel={copy.close}
-        src="/videos/hero-video.mp4"
+        src="/videos/astronaut-hero.mp4"
       />
     </section>
   );

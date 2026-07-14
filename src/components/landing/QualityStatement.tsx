@@ -18,7 +18,7 @@ export function QualityStatement() {
       {visible ? (
         <video
           className="absolute inset-0 h-full w-full object-cover"
-          src="/videos/hero-video.mp4"
+          src="/videos/astronaut-hero.mp4"
           autoPlay
           loop
           muted

@@ -82,19 +82,19 @@
   --motion-duration: 240ms;
 
   /* Homepage lighting and focal-motion controls. */
-  --hero-video-brightness: 1.22;
-  --hero-video-contrast: 1.04;
-  --hero-video-saturation: 1.03;
-  --hero-overlay-opacity: 0.76;
-  --section-ambient-light: 0.18;
+  --hero-video-brightness: 1.2;
+  --hero-video-contrast: 1.03;
+  --hero-video-saturation: 1.04;
+  --hero-overlay-opacity: 0.72;
+  --section-ambient-light: 0.16;
   --card-surface-opacity: 0.96;
   --primary-cta-motion-duration: 3.8s;
   --primary-cta-glow-opacity: 0.34;
   --title-sweep-duration: 3.6s;
   --title-sweep-highlight: #38bdf8;
   --ai-video-brightness: 1.14;
-  --ai-video-contrast: 1.03;
-  --ai-video-saturation: 1.04;
+  --ai-video-contrast: 1.04;
+  --ai-video-saturation: 1.05;
 
   --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 42%, #0ea5e9 100%);
   --gradient-glow: radial-gradient(
@@ -206,14 +206,12 @@
       rgb(14 165 233 / var(--section-ambient-light)),
       transparent 34%
     ),
-    radial-gradient(circle at 12% 78%, rgb(124 58 237 / 0.14), transparent 38%),
     var(--page-background);
 }
 
 .homepage-environment-alt {
   background:
     radial-gradient(circle at 16% 18%, rgb(124 58 237 / 0.17), transparent 34%),
-    radial-gradient(circle at 88% 78%, rgb(14 165 233 / 0.12), transparent 38%),
     var(--alternate-background);
 }
 
@@ -307,40 +305,29 @@
 }
 
 .hero-video {
-  object-position: 50% center;
+  object-position: 38% center;
   filter: brightness(var(--hero-video-brightness)) contrast(var(--hero-video-contrast))
     saturate(var(--hero-video-saturation));
-  animation: hero-visual-reveal 900ms ease-out both;
 }
 
 .hero-copy-support {
-  background:
-    radial-gradient(ellipse at 30% 52%, rgb(5 12 29 / 0.56), transparent 48%),
-    linear-gradient(
-      90deg,
-      rgb(5 12 29 / var(--hero-overlay-opacity)) 0%,
-      rgb(5 12 29 / 0.56) 30%,
-      rgb(5 12 29 / 0.2) 55%,
-      transparent 76%
-    );
+  background: linear-gradient(
+    90deg,
+    rgb(5 12 29 / var(--hero-overlay-opacity)) 0%,
+    rgb(5 12 29 / 0.54) 30%,
+    rgb(5 12 29 / 0.18) 52%,
+    transparent 66%
+  );
 }
 
 [dir="rtl"] .hero-copy-support {
-  background:
-    radial-gradient(ellipse at 70% 52%, rgb(5 12 29 / 0.56), transparent 48%),
-    linear-gradient(
-      270deg,
-      rgb(5 12 29 / var(--hero-overlay-opacity)) 0%,
-      rgb(5 12 29 / 0.56) 30%,
-      rgb(5 12 29 / 0.2) 55%,
-      transparent 76%
-    );
-}
-
-.hero-ambient-vignette {
-  background:
-    linear-gradient(180deg, rgb(3 8 23 / 0.2), transparent 24%),
-    linear-gradient(180deg, transparent 68%, rgb(7 16 32 / 0.48) 88%, var(--page-background));
+  background: linear-gradient(
+    270deg,
+    rgb(5 12 29 / var(--hero-overlay-opacity)) 0%,
+    rgb(5 12 29 / 0.54) 30%,
+    rgb(5 12 29 / 0.18) 52%,
+    transparent 66%
+  );
 }
 
 .hero-start-project {
@@ -446,15 +433,6 @@
   }
 }
 
-@keyframes hero-visual-reveal {
-  from {
-    opacity: 0.86;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .hero-depth-threshold {
   position: relative;
   z-index: 3;
@@ -476,40 +454,42 @@
 }
 
 [dir="rtl"] .hero-video {
-  object-position: 50% center;
+  object-position: 62% center;
 }
 
 @media (min-width: 640px) {
   .hero-video {
-    object-position: 54% center;
+    object-position: 25% center;
   }
   [dir="rtl"] .hero-video {
-    object-position: 46% center;
+    object-position: 75% center;
   }
 }
 
 @media (min-width: 1024px) {
   .hero-video {
-    object-position: 58% center;
+    object-position: left center;
+    transform: scale(1.12);
+    transform-origin: left center;
   }
   [dir="rtl"] .hero-video {
-    object-position: 42% center;
+    object-position: right center;
+    transform-origin: right center;
   }
 }
 
-@media (min-width: 1280px) {
+@media (orientation: landscape) and (max-width: 1023px) {
   .hero-video {
-    object-position: 60% center;
+    object-position: left center;
   }
   [dir="rtl"] .hero-video {
-    object-position: 40% center;
+    object-position: right center;
   }
 }
 
 .foundation-section {
   background:
     radial-gradient(circle at 72% 16%, rgb(124 58 237 / 0.18), transparent 36%),
-    radial-gradient(circle at 18% 70%, rgb(56 189 248 / 0.1), transparent 38%),
     linear-gradient(180deg, #1d1c2b 0%, #151b2b 55%, #0d1728 100%);
 }
 
@@ -573,18 +553,15 @@
 
 .ai-service-feature {
   border-color: rgb(129 140 248 / 0.3);
-  background:
-    radial-gradient(circle at 18% 38%, rgb(124 58 237 / 0.14), transparent 42%),
-    rgb(17 27 48 / 0.98);
+  background: rgb(17 27 48 / 0.98);
   box-shadow:
     inset 0 1px rgb(255 255 255 / 0.065),
-    0 24px 72px rgb(2 6 23 / 0.34),
-    0 0 64px rgb(59 130 246 / 0.08);
+    0 20px 52px rgb(2 6 23 / 0.28);
 }
 
 .ai-video-frame {
   background: #0b1326;
-  box-shadow: inset 0 0 54px rgb(3 8 23 / 0.42);
+  border-inline-start: 1px solid rgb(129 140 248 / 0.24);
 }
 
 .wired-robot-video {
@@ -593,19 +570,10 @@
     saturate(var(--ai-video-saturation));
 }
 
-.ai-video-blend {
-  box-shadow: inset 0 0 54px rgb(7 16 32 / 0.46);
-  background: linear-gradient(90deg, rgb(17 27 48 / 0.58), transparent 18%, transparent 88%);
-}
-
-[dir="rtl"] .ai-video-blend {
-  background: linear-gradient(270deg, rgb(17 27 48 / 0.58), transparent 18%, transparent 88%);
-}
-
 @media (max-width: 1023px) {
-  .ai-video-blend,
-  [dir="rtl"] .ai-video-blend {
-    background: linear-gradient(180deg, rgb(17 27 48 / 0.28), transparent 18%, transparent 86%);
+  .ai-video-frame {
+    border-block-start: 1px solid rgb(129 140 248 / 0.24);
+    border-inline-start: 0;
   }
 }
 
