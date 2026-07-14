@@ -32,29 +32,30 @@
   --color-electric: var(--electric);
   --font-display: "Space Grotesk", "Inter", sans-serif;
   --font-sans: "Inter", sans-serif;
+  --font-arabic: "Noto Sans Arabic", sans-serif;
 }
 
 :root {
   --radius: 0.875rem;
   /* NextAura AI logo palette */
-  --background: #020617;
+  --background: #030817;
   --foreground: #ffffff;
-  --card: #0f172a;
+  --card: #111b30;
   --card-foreground: #ffffff;
   --popover: #070a16;
   --popover-foreground: #ffffff;
   --primary: #7c3aed;
   --primary-foreground: #ffffff;
-  --secondary: #070a16;
+  --secondary: #0b1326;
   --secondary-foreground: #ffffff;
-  --muted: #111827;
+  --muted: #15223a;
   --muted-foreground: #cbd5e1;
   --accent: #0ea5e9;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: rgb(96 165 250 / 0.22);
-  --input: rgb(96 165 250 / 0.22);
+  --border: rgb(148 163 184 / 0.2);
+  --input: rgb(148 163 184 / 0.22);
   --ring: #38bdf8;
   --electric: #38bdf8;
   --cyan: #38bdf8;
@@ -63,6 +64,22 @@
   --light-indigo: #eef2ff;
   --light-text: #111827;
   --light-muted: #475569;
+
+  /* Homepage semantic system */
+  --page-background: #030817;
+  --elevated-background: #0b1326;
+  --alternate-background: #071020;
+  --card-background: #111b30;
+  --primary-text: #f8fafc;
+  --secondary-text: #cbd5e1;
+  --subtle-border: rgb(148 163 184 / 0.2);
+  --brand-violet: #8b5cf6;
+  --brand-cyan: #38bdf8;
+  --homepage-container: 75rem;
+  --section-space: clamp(4rem, 7vw, 7rem);
+  --card-radius: 1rem;
+  --card-shadow: 0 18px 50px rgb(0 0 0 / 0.22);
+  --motion-duration: 240ms;
 
   --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 42%, #0ea5e9 100%);
   --gradient-glow: radial-gradient(
@@ -85,13 +102,13 @@
   }
   html {
     scroll-behavior: smooth;
-    background: #020617;
+    background: var(--page-background);
   }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    background-image: radial-gradient(circle at 50% -20%, rgb(46 16 101 / 0.28), transparent 38%);
+    background-image: radial-gradient(circle at 50% -20%, rgb(76 29 149 / 0.2), transparent 36%);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
@@ -103,8 +120,18 @@
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
+  [dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4 {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
   section[id] {
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 7rem;
   }
   ::selection {
     background: rgb(124 58 237 / 0.65);
@@ -127,11 +154,67 @@
   align-items: center;
   gap: 0.5rem;
   color: #67e8f9;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.14em;
   line-height: 1.5;
   text-transform: uppercase;
+}
+
+[dir="rtl"] .section-eyebrow {
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.homepage-section {
+  padding-block: var(--section-space);
+}
+
+.homepage-container {
+  position: relative;
+  width: 100%;
+  max-width: var(--homepage-container);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .homepage-container {
+    padding-inline: 2rem;
+  }
+}
+
+.homepage-environment {
+  background: var(--page-background);
+}
+
+.homepage-environment-alt {
+  background: var(--alternate-background);
+}
+
+.cinematic-card {
+  border: 1px solid var(--subtle-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--card-shadow);
+  color: var(--primary-text);
+  padding: 1.25rem;
+  transition:
+    border-color var(--motion-duration) ease,
+    background-color var(--motion-duration) ease,
+    box-shadow var(--motion-duration) ease;
+}
+
+.cinematic-card:hover {
+  border-color: rgb(56 189 248 / 0.38);
+  background: #14213a;
+  box-shadow: 0 20px 55px rgb(0 0 0 / 0.26);
+}
+
+@media (min-width: 640px) {
+  .cinematic-card {
+    padding: 1.5rem;
+  }
 }
 
 .premium-button {
@@ -144,14 +227,13 @@
   font-size: 0.875rem;
   font-weight: 650;
   transition:
-    transform 240ms ease,
     border-color 240ms ease,
     background 240ms ease,
     box-shadow 240ms ease;
 }
 
 .premium-button:hover {
-  transform: translateY(-2px);
+  transform: none;
 }
 
 .premium-button-primary {
@@ -197,6 +279,36 @@
 
 .hero-video {
   object-position: 40% center;
+  animation: hero-visual-reveal 900ms ease-out both;
+}
+
+@keyframes hero-visual-reveal {
+  from {
+    opacity: 0.86;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-depth-threshold {
+  position: relative;
+  z-index: 3;
+  height: clamp(3.5rem, 7vw, 6rem);
+  margin-top: clamp(-2.5rem, -4vw, -1.5rem);
+  overflow: hidden;
+  background:
+    linear-gradient(168deg, transparent 0 28%, rgb(29 18 35 / 0.82) 29% 38%, transparent 39%),
+    linear-gradient(192deg, transparent 0 36%, rgb(17 19 35 / 0.9) 37% 47%, transparent 48%),
+    linear-gradient(180deg, transparent, var(--page-background) 86%);
+}
+
+.hero-depth-line {
+  position: absolute;
+  inset-inline: 12%;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(56 189 248 / 0.32), transparent);
 }
 
 [dir="rtl"] .hero-video {
@@ -451,7 +563,6 @@
     linear-gradient(145deg, rgb(16 15 39 / 0.92), rgb(7 8 22 / 0.78));
 }
 
-[data-foundation-group] .depth-service-module:nth-child(2),
 [data-automation-group] .depth-service-module:nth-child(2),
 [data-intelligence-group] .depth-service-module:nth-child(2) {
   clip-path: polygon(5% 0, 94% 4%, 100% 17%, 97% 91%, 89% 100%, 3% 96%, 0 79%, 2% 12%);
@@ -828,7 +939,27 @@
 
 #depth-foundation .depth-service-module {
   border-color: rgb(216 190 174 / 0.17);
-  background: linear-gradient(145deg, rgb(38 34 43 / 0.97), rgb(22 24 36 / 0.95));
+  border-radius: 1rem;
+  background: linear-gradient(145deg, rgb(32 38 58 / 0.98), rgb(18 25 43 / 0.98));
+  clip-path: none;
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.055),
+    0 12px 30px rgb(0 0 0 / 0.2);
+}
+
+.foundation-services-grid {
+  animation: foundation-grid-enter 420ms ease-out both;
+}
+
+@keyframes foundation-grid-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 #depth-automation .depth-service-module {
@@ -944,7 +1075,6 @@
     width: 72vw;
   }
 
-  [data-foundation-group],
   [data-automation-group],
   [data-intelligence-group] {
     position: relative !important;

@@ -92,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/images/cinematic/nextaura-ai-hero.webp" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#020617" },
+      { name: "theme-color", content: "#030817" },
     ],
     links: [
       {
@@ -132,6 +132,12 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{const l=localStorage.getItem('nextaura-language');if(l&&['ar','en','es'].includes(l)){document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr'}}catch{}",
+          }}
+        />
         <HeadContent />
         <script
           type="application/ld+json"

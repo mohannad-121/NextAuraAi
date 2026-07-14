@@ -31,7 +31,13 @@ const toFocusedServiceGroups = (groups: JourneyService[][]) => {
   );
 };
 
-function SectionHeading({ copy }: { copy: JourneySectionContent }) {
+function SectionHeading({
+  copy,
+  compact = false,
+}: {
+  copy: JourneySectionContent;
+  compact?: boolean;
+}) {
   return (
     <header data-scene-copy className="relative z-10 max-w-[38rem] rtl:max-w-[41rem]">
       <div
@@ -47,7 +53,7 @@ function SectionHeading({ copy }: { copy: JourneySectionContent }) {
       </h2>
       <p
         data-scene-body
-        className="mt-5 max-w-[36rem] text-base leading-7 text-slate-200/85 sm:text-lg sm:leading-8"
+        className={`${compact ? "mt-4" : "mt-5"} max-w-[36rem] text-base leading-7 text-slate-200/85 sm:text-lg sm:leading-8`}
       >
         {copy.body}
       </p>
@@ -56,12 +62,12 @@ function SectionHeading({ copy }: { copy: JourneySectionContent }) {
 }
 
 function FoundationSection({ copy }: { copy: JourneySectionContent }) {
-  const serviceGroups = toFocusedServiceGroups(copy.groups);
+  const services = copy.groups.flat();
   return (
     <section
       id="depth-foundation"
       data-depth-section="foundation"
-      className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_72%_16%,rgb(124_58_237_/_0.12),transparent_34%),linear-gradient(180deg,#181722_0%,#111522_55%,#0a101d_100%)] px-5 pb-28 pt-32 sm:px-8 lg:px-12 lg:pb-40 lg:pt-44"
+      className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_72%_16%,rgb(124_58_237_/_0.12),transparent_34%),linear-gradient(180deg,#181722_0%,#111522_55%,#0a101d_100%)] px-5 py-14 sm:px-8 md:py-18 lg:px-12 xl:py-20"
     >
       <EnvironmentalPlanes tone="foundation" />
       <ParticleLayer
@@ -71,18 +77,13 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        <SectionHeading copy={copy} />
-        <div className="mt-28 lg:mt-40">
-          {serviceGroups.map((group, groupIndex) => (
-            <div
-              key={groupIndex}
-              data-foundation-group
-              className="mx-auto grid min-h-[72svh] max-w-[42rem] content-center"
-            >
-              {group.map((service) => (
-                <ServiceCard key={service.title} service={service} index={groupIndex} />
-              ))}
-            </div>
+        <SectionHeading copy={copy} compact />
+        <div
+          data-foundation-group
+          className="foundation-services-grid mt-6 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2 lg:gap-5 xl:grid-cols-3"
+        >
+          {services.map((service, index) => (
+            <ServiceCard key={service.title} service={service} index={index} compact />
           ))}
         </div>
       </div>
@@ -91,6 +92,15 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
         className="absolute inset-x-0 bottom-0 h-64 bg-[linear-gradient(180deg,transparent_0%,rgb(7_10_19_/_0.72)_50%,#050816_100%)]"
       />
     </section>
+  );
+}
+
+export function DigitalFoundationSection() {
+  const { language, dir } = useLanguage();
+  return (
+    <div dir={dir}>
+      <FoundationSection copy={cinematicJourneyContent[language].foundation} />
+    </div>
   );
 }
 
@@ -338,80 +348,9 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
           const scrub = reduceMotion ? true : DEPTH_JOURNEY_CONFIG.motion.scrub;
           const cleanups: Array<() => void> = [];
 
-          const foundationSection = select("#depth-foundation")[0] as HTMLElement | undefined;
-          if (foundationSection) {
-            const foundationHeading = foundationSection.querySelector("[data-scene-heading]");
-            const foundationBody = foundationSection.querySelector("[data-scene-body]");
-            const copyTimeline = gsap.timeline({
-              scrollTrigger: {
-                id: "foundation-copy",
-                trigger: foundationSection,
-                start: "top 78%",
-                end: "top 34%",
-                scrub,
-              },
-            });
-            copyTimeline
-              .fromTo(
-                foundationHeading,
-                { autoAlpha: reduceMotion ? 0.6 : 0, y: reduceMotion ? 0 : 30 },
-                { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" },
-                0,
-              )
-              .fromTo(
-                foundationBody,
-                { autoAlpha: reduceMotion ? 0.6 : 0, y: reduceMotion ? 0 : 20 },
-                { autoAlpha: 1, y: 0, duration: 0.42, ease: "power2.out" },
-                0.34,
-              );
-            cleanups.push(() => copyTimeline.kill());
-          }
-
-          select("[data-foundation-group]").forEach((group, index) => {
-            const cards = group.querySelectorAll("[data-service-card]");
-            if (reduceMotion) {
-              gsap.set(cards, { autoAlpha: 1, y: 0, scale: 1 });
-              return;
-            }
-
-            const timeline = gsap.timeline({
-              scrollTrigger: {
-                id: `foundation-group-${index}`,
-                trigger: group,
-                start: "top 88%",
-                end: "bottom 18%",
-                scrub,
-              },
-            });
-            timeline
-              .fromTo(
-                cards,
-                {
-                  autoAlpha: 0,
-                  y: DEPTH_JOURNEY_CONFIG.cards.revealDistance,
-                  scale: 0.99,
-                },
-                {
-                  autoAlpha: 1,
-                  y: 0,
-                  scale: DEPTH_JOURNEY_CONFIG.cards.activeScale,
-                  duration: 0.42,
-                  ease: "power2.out",
-                },
-              )
-              .to(
-                cards,
-                {
-                  autoAlpha: DEPTH_JOURNEY_CONFIG.cards.inactiveOpacity,
-                  y: DEPTH_JOURNEY_CONFIG.cards.activeLift,
-                  scale: 0.99,
-                  duration: 0.28,
-                  ease: "power1.inOut",
-                },
-                0.72,
-              );
-            cleanups.push(() => timeline.kill());
-          });
+          const animatedDepthSections = (select("[data-depth-section]") as HTMLElement[]).filter(
+            (section) => section.dataset.depthSection !== "foundation",
+          );
 
           const setupScrollScene = (
             sectionSelector: string,
@@ -655,7 +594,7 @@ export function CinematicDepthJourney({ onStartProject }: CinematicDepthJourneyP
           }
 
           if (!reduceMotion) {
-            select("[data-depth-section]").forEach((section) => {
+            animatedDepthSections.forEach((section) => {
               section.querySelectorAll<HTMLElement>("[data-depth-plane]").forEach((plane) => {
                 const planeName = plane.dataset.depthPlane as "background" | "midground";
                 const baseDistance = DEPTH_JOURNEY_CONFIG.motion.planeParallax[planeName];

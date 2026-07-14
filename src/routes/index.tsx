@@ -2,18 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav } from "@/components/landing/Nav";
 import { HeroUndergroundJourney } from "@/components/landing/HeroUndergroundJourney";
-import { TrustBar } from "@/components/landing/TrustBar";
 import { ServicesUniverse } from "@/components/landing/ServicesUniverse";
-import { AboutSection } from "@/components/landing/AboutSection";
-import { IndustriesSection } from "@/components/landing/IndustriesSection";
 import { Process } from "@/components/landing/Process";
 import { FeaturedProject } from "@/components/landing/FeaturedProject";
-import { SelectedWork } from "@/components/landing/SelectedWork";
 import { WhyChoose } from "@/components/landing/WhyChoose";
-import { QualityStatement } from "@/components/landing/QualityStatement";
-import { ValuesSection } from "@/components/landing/ValuesSection";
-import { InsightsGrid } from "@/components/landing/InsightsGrid";
-import { MediaReels } from "@/components/landing/MediaReels";
 import { Team } from "@/components/landing/Team";
 import { Contact } from "@/components/landing/Contact";
 import { ProjectRequestModal } from "@/components/landing/ProjectRequestModal";
@@ -54,7 +46,7 @@ export const Route = createFileRoute("/")({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
       },
     ],
   }),
@@ -76,19 +68,11 @@ function LandingPage() {
     <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
       <Nav onStartProject={() => setProjectModalOpen(true)} />
       <HeroUndergroundJourney onStartProject={() => setProjectModalOpen(true)} />
-      <TrustBar />
       <ServicesUniverse onStartProject={() => setProjectModalOpen(true)} />
-      <AboutSection />
-      <IndustriesSection />
-      <Team />
+      <FeaturedProject onStartProject={() => setProjectModalOpen(true)} />
       <Process />
-      <FeaturedProject />
-      <SelectedWork onStartProject={() => setProjectModalOpen(true)} />
+      <Team />
       <WhyChoose />
-      <QualityStatement />
-      <ValuesSection />
-      <InsightsGrid />
-      <MediaReels />
       <Contact onStartProject={() => setProjectModalOpen(true)} />
       <MobileCTA onStartProject={() => setProjectModalOpen(true)} />
       <WebsiteAssistantChatbot />

@@ -1,5 +1,5 @@
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Bot, MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { Bot, MessageCircle, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/translations";
 import { chatbotCopy, getChatbotResponse } from "@/lib/getChatbotResponse";
@@ -18,6 +18,7 @@ export function WebsiteAssistantChatbot() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [contactVisible, setContactVisible] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => [
     { id: 1, role: "assistant", content: copy.welcome },
   ]);
@@ -32,6 +33,17 @@ export function WebsiteAssistantChatbot() {
   useEffect(() => {
     viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    const contact = document.getElementById("contact");
+    if (!contact) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setContactVisible(entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+    observer.observe(contact);
+    return () => observer.disconnect();
+  }, []);
 
   const assistantSide = dir === "rtl" ? "left-4 sm:left-6" : "right-4 sm:right-6";
   const quickSuggestions = useMemo(() => copy.suggestions.slice(0, 6), [copy.suggestions]);
@@ -68,7 +80,9 @@ export function WebsiteAssistantChatbot() {
   };
 
   return (
-    <div className={`fixed bottom-24 z-[80] md:bottom-6 ${assistantSide}`}>
+    <div
+      className={`fixed bottom-4 z-[80] flex-col items-end md:bottom-6 md:flex ${contactVisible ? "flex" : "hidden"} ${assistantSide}`}
+    >
       <AnimatePresence>
         {open ? (
           <motion.section
@@ -76,7 +90,7 @@ export function WebsiteAssistantChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="mb-3 flex h-[min(72vh,620px)] w-[calc(100vw-2rem)] max-w-[420px] flex-col overflow-hidden rounded-[1.35rem] border border-primary/35 bg-background/92 shadow-[0_24px_90px_oklch(0.05_0.04_265_/_0.82),0_0_54px_oklch(0.58_0.24_315_/_0.24)] backdrop-blur-2xl sm:w-[420px]"
+            className="mb-3 flex h-[min(72vh,620px)] w-[calc(100vw-2rem)] max-w-[420px] flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0b1529]/98 shadow-[0_24px_70px_rgb(0_0_0_/_0.48)] backdrop-blur-md sm:w-[420px]"
             dir={dir}
           >
             <header className="flex items-center justify-between border-b border-primary/20 bg-card/60 px-4 py-3">
@@ -181,12 +195,10 @@ export function WebsiteAssistantChatbot() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-label="Open NextAura Assistant"
-        className="group relative flex min-h-14 min-w-14 items-center justify-center rounded-2xl border border-primary/35 text-background shadow-[0_0_42px_oklch(0.58_0.24_315_/_0.32)] transition-transform hover:-translate-y-1 md:min-h-16 md:min-w-16"
+        className="group relative flex min-h-14 min-w-14 cursor-pointer items-center justify-center rounded-2xl border border-primary/35 text-background shadow-[0_12px_34px_rgb(0_0_0_/_0.34)] transition-[border-color,filter] duration-200 hover:border-cyan/60 hover:brightness-110 md:min-h-16 md:min-w-16"
         style={{ background: "var(--gradient-primary)" }}
       >
-        <span className="absolute inset-0 -z-10 rounded-2xl bg-primary/30 blur-xl transition-opacity group-hover:opacity-80" />
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
-        <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-foreground" />
       </button>
     </div>
   );
