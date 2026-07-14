@@ -1,14 +1,20 @@
 import { ArrowUpRight, Bot, MonitorSmartphone, PanelsTopLeft } from "lucide-react";
 import { CinematicCard } from "@/components/landing/CinematicCard";
 import { SectionHeading } from "@/components/landing/SectionHeading";
+import { ViewportVideo } from "@/components/landing/ViewportVideo";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
-const icons = [MonitorSmartphone, Bot, PanelsTopLeft];
+const icons = [MonitorSmartphone, Bot, PanelsTopLeft] as const;
 
 export function ServicesUniverse({ onStartProject }: { onStartProject: () => void }) {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].services;
+  const aiService = copy.items[1];
+  const supportingServices = [
+    { service: copy.items[0], Icon: icons[0] },
+    { service: copy.items[2], Icon: icons[2] },
+  ];
 
   return (
     <section id="services" className="homepage-section homepage-environment relative" dir={dir}>
@@ -30,34 +36,70 @@ export function ServicesUniverse({ onStartProject }: { onStartProject: () => voi
           </div>
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {copy.items.map((service, index) => {
-            const Icon = icons[index];
-            return (
-              <CinematicCard key={service.title} className="flex min-h-full flex-col">
-                <div className="grid h-11 w-11 place-items-center rounded-xl border border-cyan-300/20 bg-cyan-300/8 text-cyan-300">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-7 text-2xl font-semibold leading-tight text-white">
-                  {service.title}
-                </h3>
-                <p className="mt-4 text-base leading-7 text-[var(--secondary-text)]">
-                  {service.description}
-                </p>
-                <ul className="mt-6 space-y-3 border-t border-white/10 pt-5">
-                  {service.examples.map((example) => (
-                    <li
-                      key={example}
-                      className="flex items-start gap-3 text-sm leading-6 text-slate-300"
-                    >
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
-                      <span>{example}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CinematicCard>
-            );
-          })}
+        <CinematicCard className="ai-service-feature mt-12 overflow-hidden !p-0">
+          <div className="grid lg:grid-cols-[0.44fr_0.56fr] lg:items-stretch">
+            <div className="relative z-10 flex flex-col justify-center p-5 sm:p-8 lg:p-10">
+              <div className="grid h-11 w-11 place-items-center rounded-xl border border-violet-300/25 bg-violet-400/10 text-violet-200">
+                <Bot className="h-5 w-5" />
+              </div>
+              <h3 className="mt-7 text-2xl font-semibold leading-tight text-white sm:text-3xl">
+                {aiService.title}
+              </h3>
+              <p className="mt-4 text-base leading-7 text-[var(--secondary-text)]">
+                {aiService.description}
+              </p>
+              <ul className="mt-6 space-y-3 border-t border-white/12 pt-5">
+                {aiService.examples.map((example) => (
+                  <li
+                    key={example}
+                    className="flex items-start gap-3 text-sm leading-6 text-slate-200"
+                  >
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>{example}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative aspect-[16/10] min-h-0 overflow-hidden lg:aspect-auto lg:min-h-[29rem]">
+              {/* Optimized desktop/mobile sources can replace this single source once available. */}
+              <ViewportVideo
+                src="/videos/wired-robot.mp4"
+                poster="/images/cinematic/nextaura-ai-hero.webp"
+                className="wired-robot-video"
+              />
+              <div
+                aria-hidden="true"
+                className="ai-video-blend pointer-events-none absolute inset-0"
+              />
+            </div>
+          </div>
+        </CinematicCard>
+
+        <div className="mt-5 grid gap-5 md:grid-cols-2">
+          {supportingServices.map(({ service, Icon }) => (
+            <CinematicCard key={service.title} className="flex min-h-full flex-col">
+              <div className="grid h-11 w-11 place-items-center rounded-xl border border-cyan-300/20 bg-cyan-300/8 text-cyan-300">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-7 text-2xl font-semibold leading-tight text-white">
+                {service.title}
+              </h3>
+              <p className="mt-4 text-base leading-7 text-[var(--secondary-text)]">
+                {service.description}
+              </p>
+              <ul className="mt-6 space-y-3 border-t border-white/10 pt-5">
+                {service.examples.map((example) => (
+                  <li
+                    key={example}
+                    className="flex items-start gap-3 text-sm leading-6 text-slate-300"
+                  >
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>{example}</span>
+                  </li>
+                ))}
+              </ul>
+            </CinematicCard>
+          ))}
         </div>
       </div>
     </section>

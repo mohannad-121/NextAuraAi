@@ -23,7 +23,7 @@ export function FeaturedProject({ onStartProject }: { onStartProject: () => void
 
         <CinematicCard className="mt-12 overflow-hidden !p-0">
           <div className="grid lg:grid-cols-[1.08fr_0.92fr]">
-            <div className="aspect-[16/10] min-w-0 overflow-hidden bg-slate-950 lg:aspect-auto lg:h-full lg:min-h-[31rem]">
+            <div className="aspect-[16/10] min-w-0 overflow-hidden bg-[#071020] lg:aspect-auto lg:h-full lg:min-h-[31rem]">
               <img
                 src={primaryProject.image}
                 alt={primaryProject.name}
@@ -78,7 +78,7 @@ export function FeaturedProject({ onStartProject }: { onStartProject: () => void
               key={project.name}
               className="grid gap-5 sm:grid-cols-[11rem_1fr] sm:items-center"
             >
-              <div className="aspect-[16/10] overflow-hidden rounded-xl bg-slate-950">
+              <div className="aspect-[16/10] overflow-hidden rounded-xl bg-[#071020]">
                 <img
                   src={project.image}
                   alt={project.name}

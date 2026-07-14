@@ -29,7 +29,7 @@ export function Contact({ onStartProject }: ContactProps) {
     >
       <div className="homepage-container">
         <div className="relative overflow-hidden rounded-2xl border border-white/12 px-5 py-12 sm:px-10 sm:py-16 lg:px-14 lg:py-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.25),transparent_36%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.2),transparent_38%),linear-gradient(135deg,#070b1b,#040712)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.3),transparent_36%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.24),transparent_38%),linear-gradient(135deg,#0b1326,#071020)]" />
           <div className="relative grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div>
               <div className="section-eyebrow">{copy.eyebrow}</div>
@@ -83,7 +83,7 @@ export function Contact({ onStartProject }: ContactProps) {
         <footer className="relative pb-28 pt-16 md:pb-10 lg:pt-24">
           <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-2 lg:grid-cols-[1.3fr_0.7fr_1fr_0.9fr]">
             <div>
-              <BrandSymbol className="!rounded-2xl !bg-black/70 !p-2" imageClassName="w-20" />
+              <BrandSymbol className="!rounded-2xl !bg-[#0b1326]/88 !p-2" imageClassName="w-20" />
               <p className="mt-6 max-w-sm text-sm leading-7 text-slate-400">{footer.description}</p>
               <a
                 href="https://linkedin.com/company/nextaura-ai"

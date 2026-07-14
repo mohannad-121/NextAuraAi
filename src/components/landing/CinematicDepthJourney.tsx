@@ -18,6 +18,7 @@ import {
 } from "@/i18n/cinematicJourneyContent";
 import { useLanguage } from "@/i18n/translations";
 import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
+import { useViewportActivity } from "@/hooks/use-viewport-activity";
 
 type CinematicDepthJourneyProps = { onStartProject: () => void };
 
@@ -34,9 +35,11 @@ const toFocusedServiceGroups = (groups: JourneyService[][]) => {
 function SectionHeading({
   copy,
   compact = false,
+  foundationSweepActive,
 }: {
   copy: JourneySectionContent;
   compact?: boolean;
+  foundationSweepActive?: boolean;
 }) {
   return (
     <header data-scene-copy className="relative z-10 max-w-[38rem] rtl:max-w-[41rem]">
@@ -44,7 +47,12 @@ function SectionHeading({
         aria-hidden="true"
         className="pointer-events-none absolute -inset-6 -z-10 bg-[radial-gradient(ellipse_at_center,rgb(5_8_20_/_0.48),transparent_74%)] blur-md"
       />
-      <p className="section-eyebrow">{copy.eyebrow}</p>
+      <p
+        className={`section-eyebrow ${foundationSweepActive !== undefined ? "digital-foundation-sweep" : ""}`}
+        data-sweep-active={foundationSweepActive}
+      >
+        {copy.eyebrow}
+      </p>
       <h2
         data-scene-heading
         className="mt-4 text-balance font-display text-[clamp(2.2rem,4.4vw,4.4rem)] font-semibold leading-[1.01] tracking-[-0.045em] text-white [text-shadow:0_3px_18px_rgb(0_0_0_/_0.34)] rtl:tracking-[-0.025em]"
@@ -63,11 +71,16 @@ function SectionHeading({
 
 function FoundationSection({ copy }: { copy: JourneySectionContent }) {
   const services = copy.groups.flat();
+  const { targetRef: sectionRef, isActive: isSweepActive } = useViewportActivity<HTMLElement>({
+    rootMargin: "160px 0px",
+    threshold: 0.05,
+  });
   return (
     <section
+      ref={sectionRef}
       id="depth-foundation"
       data-depth-section="foundation"
-      className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_72%_16%,rgb(124_58_237_/_0.12),transparent_34%),linear-gradient(180deg,#181722_0%,#111522_55%,#0a101d_100%)] px-5 py-14 sm:px-8 md:py-18 lg:px-12 xl:py-20"
+      className="foundation-section relative isolate overflow-hidden px-5 py-14 sm:px-8 md:py-18 lg:px-12 xl:py-20"
     >
       <EnvironmentalPlanes tone="foundation" />
       <ParticleLayer
@@ -77,7 +90,7 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        <SectionHeading copy={copy} compact />
+        <SectionHeading copy={copy} compact foundationSweepActive={isSweepActive} />
         <div
           data-foundation-group
           className="foundation-services-grid mt-6 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2 lg:gap-5 xl:grid-cols-3"
@@ -87,10 +100,7 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
           ))}
         </div>
       </div>
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-64 bg-[linear-gradient(180deg,transparent_0%,rgb(7_10_19_/_0.72)_50%,#050816_100%)]"
-      />
+      <div aria-hidden="true" className="foundation-bottom-fade absolute inset-x-0 bottom-0 h-64" />
     </section>
   );
 }

@@ -69,14 +69,17 @@ export function Nav({ onStartProject }: NavProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-[70] px-3 sm:px-5">
       <div
-        className={`mx-auto mt-3 flex max-w-[var(--homepage-container)] items-center justify-between rounded-2xl px-3 py-2.5 transition-[background-color,border-color,box-shadow] duration-200 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#081123]/92 shadow-[0_14px_40px_rgb(0_0_0_/_0.32)] backdrop-blur-md" : "border border-transparent bg-transparent"}`}
+        className={`mx-auto mt-3 flex max-w-[var(--homepage-container)] items-center justify-between rounded-2xl px-3 py-2.5 transition-[background-color,border-color,box-shadow] duration-200 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#081123]/92 shadow-[0_14px_40px_rgb(0_0_0_/_0.32)] backdrop-blur-md" : "border border-white/8 bg-[#081123]/32 backdrop-blur-[6px]"}`}
       >
         <a
           href="#home"
           aria-label="NextAura AI home"
           className="relative z-10 inline-flex min-h-11 items-center"
         >
-          <BrandSymbol className="!rounded-xl !bg-black/45 !p-1.5" imageClassName="w-11 sm:w-12" />
+          <BrandSymbol
+            className="!rounded-xl !bg-[#0b1326]/72 !p-1.5"
+            imageClassName="w-11 sm:w-12"
+          />
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-1 xl:flex">
