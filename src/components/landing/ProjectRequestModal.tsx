@@ -181,7 +181,7 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
     <AnimatePresence>
       {open ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-background/75 p-0 backdrop-blur-xl sm:items-center sm:p-6"
+          className="project-modal-backdrop"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -193,103 +193,104 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
             role="dialog"
             aria-modal="true"
             aria-labelledby="project-request-title"
-            className="glass glow-border h-[100dvh] w-full max-w-5xl overflow-y-auto rounded-none p-4 pb-24 text-right shadow-2xl sm:h-auto sm:max-h-[92vh] sm:rounded-2xl sm:p-7"
+            className="project-modal-shell"
             initial={{ opacity: 0, y: 24, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.18 }}
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div
-                  className="text-xs uppercase tracking-[0.3em]"
-                  style={{ color: "var(--cyan)" }}
-                >
-                  NextAura AI
-                </div>
-                <h2 id="project-request-title" className="mt-2 text-2xl font-bold sm:text-4xl">
+            <div className="project-modal-header">
+              <div className="project-modal-heading">
+                <div className="project-modal-brand">NextAura AI</div>
+                <h2 id="project-request-title" className="project-modal-title">
                   {tr.modal.title}
                 </h2>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
-                  {tr.modal.subtitle}
-                </p>
+                <p className="project-modal-subtitle">{tr.modal.subtitle}</p>
               </div>
               <button
                 ref={closeRef}
                 type="button"
                 onClick={requestClose}
                 aria-label={tr.modal.actions.close}
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border/70 bg-card/70 text-muted-foreground transition-colors hover:text-foreground"
+                className="project-modal-close"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-2 text-xs text-muted-foreground sm:mx-0 sm:grid sm:grid-cols-4 sm:overflow-visible sm:px-0 sm:pb-0">
+            <nav className="project-modal-steps" aria-label={tr.modal.title}>
               {tr.modal.steps.map((label: string, index: number) => (
                 <button
                   key={label}
                   type="button"
                   onClick={() => setStep(index + 1)}
-                  className={`min-h-10 min-w-[8.5rem] rounded-full border px-3 py-2 transition-colors sm:min-w-0 ${step === index + 1 ? "border-cyan/70 text-foreground shadow-[0_0_24px_rgb(56_189_248_/_0.26)]" : "border-border/60"}`}
+                  className="project-modal-step"
+                  data-active={step === index + 1}
+                  data-complete={step > index + 1}
+                  aria-current={step === index + 1 ? "step" : undefined}
                 >
-                  {label}
+                  <span className="project-modal-step-number">
+                    {step > index + 1 ? <Check className="h-3.5 w-3.5" /> : index + 1}
+                  </span>
+                  <span className="project-modal-step-label">{label}</span>
                 </button>
               ))}
-            </div>
+            </nav>
 
             {success ? (
-              <div className="mt-8 rounded-2xl border border-cyan/60 bg-card/70 p-6 text-center">
+              <div className="project-modal-success">
                 <Check className="mx-auto h-10 w-10" style={{ color: "var(--cyan)" }} />
                 <p className="mt-4 text-lg font-semibold">{tr.modal.success}</p>
                 <button
                   type="button"
                   onClick={resetAndClose}
-                  className="btn-primary mt-6 min-h-12 rounded-full px-6 text-sm"
+                  className="project-modal-button project-modal-button-primary mt-6"
                 >
                   {tr.modal.actions.close}
                 </button>
               </div>
             ) : (
-              <form onSubmit={submit} className="mt-6 sm:mt-8">
-                {step === 1 ? (
-                  <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
-                ) : null}
-                {step === 2 ? (
-                  <ProjectDetails
-                    form={form}
-                    setField={setField}
-                    toggleFeature={toggleFeature}
-                    errors={errors}
-                    tr={tr}
-                  />
-                ) : null}
-                {step === 3 ? (
-                  <PackageStep
-                    form={form}
-                    setField={setField}
-                    error={errors.selectedPackage}
-                    tr={tr}
-                  />
-                ) : null}
-                {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
+              <form onSubmit={submit} className="project-modal-form">
+                <div className="project-modal-body">
+                  {step === 1 ? (
+                    <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
+                  ) : null}
+                  {step === 2 ? (
+                    <ProjectDetails
+                      form={form}
+                      setField={setField}
+                      toggleFeature={toggleFeature}
+                      errors={errors}
+                      tr={tr}
+                    />
+                  ) : null}
+                  {step === 3 ? (
+                    <PackageStep
+                      form={form}
+                      setField={setField}
+                      error={errors.selectedPackage}
+                      tr={tr}
+                    />
+                  ) : null}
+                  {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
+                </div>
 
-                <div className="mt-7 flex flex-col-reverse gap-3 sm:mt-8 sm:flex-row sm:items-center sm:justify-between">
+                <div className="project-modal-actions">
                   <button
                     type="button"
                     onClick={() => setStep(Math.max(1, step - 1))}
                     disabled={step === 1}
-                    className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+                    className="project-modal-button project-modal-button-secondary disabled:cursor-not-allowed disabled:opacity-35"
                   >
                     <ChevronRight className="h-4 w-4" /> {tr.modal.actions.previous}
                   </button>
-                  <div className="flex flex-col gap-3 sm:flex-row">
+                  <div className="project-modal-actions-primary">
                     {step < 4 ? (
                       <button
                         type="button"
                         onClick={() => setStep(Math.min(4, step + 1))}
-                        className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm"
+                        className="project-modal-button project-modal-button-primary"
                       >
                         {tr.modal.actions.next} <ChevronLeft className="h-4 w-4" />
                       </button>
@@ -298,13 +299,13 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
                         <button
                           type="button"
                           onClick={openWhatsApp}
-                          className="btn-ghost inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm"
+                          className="project-modal-button project-modal-button-secondary"
                         >
                           {tr.modal.actions.whatsapp} <Send className="h-4 w-4" />
                         </button>
                         <button
                           type="submit"
-                          className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm"
+                          className="project-modal-button project-modal-button-primary"
                         >
                           {tr.modal.actions.submit} <Send className="h-4 w-4" />
                         </button>
@@ -333,13 +334,14 @@ function ClientInfo({
   tr: ProjectTranslation;
 }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="project-fields-grid">
       <Field label={tr.modal.labels.fullName} error={errors.fullName}>
         <input
           value={form.fullName}
           onChange={(e) => setField("fullName", e.target.value)}
           placeholder={tr.modal.placeholders.fullName}
           className="form-input"
+          autoComplete="name"
         />
       </Field>
       <Field label={tr.modal.labels.phone} error={errors.phone}>
@@ -348,6 +350,8 @@ function ClientInfo({
           onChange={(e) => setField("phone", e.target.value)}
           placeholder={tr.modal.placeholders.phone}
           className="form-input"
+          inputMode="tel"
+          autoComplete="tel"
         />
       </Field>
       <Field label={tr.modal.labels.email}>
@@ -356,6 +360,7 @@ function ClientInfo({
           onChange={(e) => setField("email", e.target.value)}
           type="email"
           className="form-input"
+          autoComplete="email"
         />
       </Field>
       <Field label={tr.modal.labels.businessName}>
@@ -384,7 +389,7 @@ function ProjectDetails({
   tr: ProjectTranslation;
 }) {
   return (
-    <div className="space-y-5">
+    <div className="project-step-content">
       <Field label={tr.modal.labels.projectType} error={errors.projectType}>
         <select
           value={form.projectType}
@@ -408,22 +413,22 @@ function ProjectDetails({
         />
       </Field>
       <div>
-        <div className="mb-3 text-sm font-semibold">{tr.modal.labels.features}</div>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {tr.modal.features.map((feature: string) => (
-            <label
-              key={feature}
-              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-border/60 bg-card/40 p-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <input
-                type="checkbox"
-                checked={form.features.includes(feature)}
-                onChange={() => toggleFeature(feature)}
-                className="accent-sky-400"
-              />
-              <span>{feature}</span>
-            </label>
-          ))}
+        <div className="project-field-heading">{tr.modal.labels.features}</div>
+        <div className="project-feature-grid">
+          {tr.modal.features.map((feature: string) => {
+            const selected = form.features.includes(feature);
+            return (
+              <label key={feature} className="project-feature-option" data-selected={selected}>
+                <input
+                  type="checkbox"
+                  checked={selected}
+                  onChange={() => toggleFeature(feature)}
+                  className="project-feature-checkbox"
+                />
+                <span>{feature}</span>
+              </label>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -442,11 +447,11 @@ function PackageStep({
   tr: ProjectTranslation;
 }) {
   return (
-    <div className="space-y-5">
+    <div className="project-step-content">
       <div>
-        <div className="mb-3 text-sm font-semibold">{tr.modal.labels.package}</div>
+        <div className="project-field-heading">{tr.modal.labels.package}</div>
         {error ? <p className="mb-3 text-xs text-red-300">{error}</p> : null}
-        <div className="grid gap-3 lg:grid-cols-3 lg:gap-4">
+        <div className="project-package-grid">
           {tr.modal.packages.map((pkg, index: number) => {
             const Icon = packageIcons[index];
             return (
@@ -454,20 +459,20 @@ function PackageStep({
                 key={pkg.title}
                 type="button"
                 onClick={() => setField("selectedPackage", pkg.title)}
-                className={`rounded-2xl border bg-card/50 p-4 text-right transition-all hover:-translate-y-1 sm:p-5 ${form.selectedPackage === pkg.title ? "border-cyan/80 shadow-[0_0_32px_rgb(56_189_248_/_0.3)]" : "border-border/60"}`}
+                className="project-package-card"
+                data-selected={form.selectedPackage === pkg.title}
+                aria-pressed={form.selectedPackage === pkg.title}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <Icon className="h-6 w-6" style={{ color: "var(--cyan)" }} />
-                  {pkg.badge ? (
-                    <span className="rounded-full bg-primary/30 px-3 py-1 text-xs text-foreground">
-                      {pkg.badge}
-                    </span>
-                  ) : null}
+                <div className="project-package-topline">
+                  <span className="project-package-icon">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  {pkg.badge ? <span className="project-package-badge">{pkg.badge}</span> : null}
                 </div>
-                <h3 className="mt-4 text-lg font-bold">{pkg.title}</h3>
-                <div className="mt-1 text-sm font-semibold text-gradient">{pkg.price}</div>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{pkg.desc}</p>
-                <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+                <h3 className="project-package-title">{pkg.title}</h3>
+                <div className="project-package-price">{pkg.price}</div>
+                <p className="project-package-description">{pkg.desc}</p>
+                <ul className="project-package-features">
                   {pkg.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2">
                       <Check className="h-4 w-4" style={{ color: "var(--cyan)" }} />
@@ -479,11 +484,9 @@ function PackageStep({
             );
           })}
         </div>
-        <p className="mt-4 rounded-xl border border-border/60 bg-card/40 p-4 text-sm leading-7 text-muted-foreground">
-          {tr.modal.pricingNote}
-        </p>
+        <p className="project-pricing-note">{tr.modal.pricingNote}</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="project-fields-grid">
         <Field label={tr.modal.labels.timeline}>
           <select
             value={form.timeline}
@@ -527,7 +530,7 @@ function ReviewStep({
   tr: ProjectTranslation;
 }) {
   return (
-    <div className="space-y-5">
+    <div className="project-step-content">
       <Field label={tr.modal.labels.notes}>
         <textarea
           value={form.notes}
@@ -536,9 +539,9 @@ function ReviewStep({
           className="form-input min-h-28 resize-y"
         />
       </Field>
-      <div className="rounded-2xl border border-border/60 bg-card/50 p-5">
-        <h3 className="text-lg font-bold">{tr.modal.labels.review}</h3>
-        <dl className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
+      <div className="project-review-panel">
+        <h3 className="project-review-title">{tr.modal.labels.review}</h3>
+        <dl className="project-review-grid">
           <Review
             label={tr.modal.labels.fullName}
             value={form.fullName}
@@ -577,19 +580,19 @@ function ReviewStep({
 
 function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-semibold">{label}</span>
+    <label className="project-field">
+      <span className="project-field-label">{label}</span>
       {children}
-      {error ? <span className="mt-2 block text-xs text-red-300">{error}</span> : null}
+      {error ? <span className="project-field-error">{error}</span> : null}
     </label>
   );
 }
 
 function Review({ label, value, fallback }: { label: string; value: string; fallback: string }) {
   return (
-    <div>
-      <dt className="text-xs">{label}</dt>
-      <dd className="mt-1 font-semibold text-foreground">{value || fallback}</dd>
+    <div className="project-review-item">
+      <dt>{label}</dt>
+      <dd>{value || fallback}</dd>
     </div>
   );
 }
