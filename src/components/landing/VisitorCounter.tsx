@@ -11,20 +11,36 @@ function loadVisitorCount() {
   if (!visitorCountRequest) {
     visitorCountRequest = fetch("/api/visitors", {
       method: "POST",
+      cache: "no-store",
       credentials: "same-origin",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ page: window.location.pathname }),
       keepalive: true,
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error("Visitor count request failed");
+        const data = (await response.json()) as {
+          displayedCount?: unknown;
+          error?: unknown;
+        };
 
-        const data = (await response.json()) as { count?: unknown };
-        return typeof data.count === "number" && Number.isFinite(data.count)
-          ? Math.max(BASE_VISITOR_COUNT, Math.floor(data.count))
+        if (!response.ok) {
+          if (import.meta.env.DEV) {
+            console.error(
+              "Visitor count request failed",
+              typeof data.error === "string" ? data.error : `HTTP ${response.status}`,
+            );
+          }
+          throw new Error("Visitor count request failed");
+        }
+
+        return typeof data.displayedCount === "number" && Number.isFinite(data.displayedCount)
+          ? Math.max(BASE_VISITOR_COUNT, Math.floor(data.displayedCount))
           : BASE_VISITOR_COUNT;
       })
-      .catch(() => BASE_VISITOR_COUNT);
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV) console.error("Using the visitor counter fallback", error);
+        return BASE_VISITOR_COUNT;
+      });
   }
 
   return visitorCountRequest;
