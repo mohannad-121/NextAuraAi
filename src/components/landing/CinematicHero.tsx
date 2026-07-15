@@ -75,7 +75,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
               <span>{copy.primary}</span>
               <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
             </button>
-            <div className="flex items-center gap-3">
+            <div className="flex max-w-full flex-wrap items-center gap-3">
               <a
                 href="#projects"
                 className="inline-flex min-h-11 items-center border-b border-white/30 text-sm font-semibold text-white transition-colors duration-200 hover:border-cyan-300 hover:text-cyan-200"
