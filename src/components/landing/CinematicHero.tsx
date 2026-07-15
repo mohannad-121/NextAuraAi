@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { usePrefersReducedMotion, useViewportActivity } from "@/hooks/use-viewport-activity";
+import { VisitorCounter } from "@/components/landing/VisitorCounter";
 
 type CinematicHeroProps = { onStartProject: () => void };
 
@@ -74,12 +75,15 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
               <span>{copy.primary}</span>
               <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
             </button>
-            <a
-              href="#projects"
-              className="inline-flex min-h-11 items-center border-b border-white/30 text-sm font-semibold text-white transition-colors duration-200 hover:border-cyan-300 hover:text-cyan-200"
-            >
-              {copy.secondary}
-            </a>
+            <div className="flex items-center gap-3">
+              <a
+                href="#projects"
+                className="inline-flex min-h-11 items-center border-b border-white/30 text-sm font-semibold text-white transition-colors duration-200 hover:border-cyan-300 hover:text-cyan-200"
+              >
+                {copy.secondary}
+              </a>
+              <VisitorCounter accessibleLabel={copy.visitors} />
+            </div>
           </div>
         </div>
       </div>
