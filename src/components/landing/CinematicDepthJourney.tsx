@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowRight, Network } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { DepthIndicator } from "@/components/landing/DepthIndicator";
 import {
   EnergyCore,
@@ -23,6 +23,58 @@ import { useViewportActivity } from "@/hooks/use-viewport-activity";
 type CinematicDepthJourneyProps = { onStartProject: () => void };
 
 const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const FOUNDATION_SERVICE_PRESENTATION = [
+  {
+    id: "website-development",
+    icon: "/icons/website-development.png",
+    orbitX: "50%",
+    orbitY: "50%",
+    center: true,
+  },
+  {
+    id: "landing-pages",
+    icon: "/icons/landing-page.png",
+    orbitX: "50%",
+    orbitY: "16%",
+    center: false,
+  },
+  {
+    id: "ecommerce-platforms",
+    icon: "/icons/ecommerce platforms.png",
+    orbitX: "79%",
+    orbitY: "33%",
+    center: false,
+  },
+  {
+    id: "booking-systems",
+    icon: "/icons/booking-systems.png",
+    orbitX: "79%",
+    orbitY: "67%",
+    center: false,
+  },
+  {
+    id: "admin-dashboards",
+    icon: "/icons/admin-dashboard.png",
+    orbitX: "50%",
+    orbitY: "84%",
+    center: false,
+  },
+  {
+    id: "multilingual-websites",
+    icon: "/icons/multilingual websites.png",
+    orbitX: "21%",
+    orbitY: "67%",
+    center: false,
+  },
+  {
+    id: "payment-integrations",
+    icon: "/icons/payment-integration.png",
+    orbitX: "21%",
+    orbitY: "33%",
+    center: false,
+  },
+] as const;
 
 const toFocusedServiceGroups = (groups: JourneyService[][]) => {
   const services = groups.flat();
@@ -55,7 +107,8 @@ function SectionHeading({
       </p>
       <h2
         data-scene-heading
-        className="mt-4 text-balance font-display text-[clamp(2.2rem,4.4vw,4.4rem)] font-semibold leading-[1.01] tracking-[-0.045em] text-white [text-shadow:0_3px_18px_rgb(0_0_0_/_0.34)] rtl:tracking-[-0.025em]"
+        data-brand-flow-active={foundationSweepActive}
+        className={`mt-4 text-balance font-display text-[clamp(2.2rem,4.4vw,4.4rem)] font-semibold leading-[1.01] tracking-[-0.045em] text-white [text-shadow:0_3px_18px_rgb(0_0_0_/_0.34)] rtl:tracking-[-0.025em] ${foundationSweepActive !== undefined ? "foundation-brand-headline" : ""}`}
       >
         {copy.title}
       </h2>
@@ -69,8 +122,60 @@ function SectionHeading({
   );
 }
 
+function FoundationServiceOrb({
+  service,
+  presentation,
+  active,
+  onActivate,
+}: {
+  service: JourneyService;
+  presentation: (typeof FOUNDATION_SERVICE_PRESENTATION)[number];
+  active: boolean;
+  onActivate: () => void;
+}) {
+  return (
+    <div
+      role="listitem"
+      className="foundation-service-slot"
+      data-active={active}
+      data-center={presentation.center}
+      style={
+        {
+          "--foundation-orbit-x": presentation.orbitX,
+          "--foundation-orbit-y": presentation.orbitY,
+        } as CSSProperties
+      }
+    >
+      <button
+        type="button"
+        className="foundation-service-orb"
+        aria-pressed={active}
+        data-active={active}
+        data-service-id={presentation.id}
+        onClick={onActivate}
+        onFocus={onActivate}
+      >
+        <span className="foundation-service-icon" aria-hidden="true">
+          <img
+            src={presentation.icon}
+            alt=""
+            width={512}
+            height={512}
+            loading="lazy"
+            draggable={false}
+          />
+        </span>
+        <span className="foundation-service-title">{service.title}</span>
+        <span className="foundation-service-description">{service.description}</span>
+        <span className="foundation-service-focus-ring" aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 function FoundationSection({ copy }: { copy: JourneySectionContent }) {
   const services = copy.groups.flat();
+  const [activeService, setActiveService] = useState(0);
   const { targetRef: sectionRef, isActive: isSweepActive } = useViewportActivity<HTMLElement>({
     rootMargin: "160px 0px",
     threshold: 0.05,
@@ -89,15 +194,44 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
         tone="earth"
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl">
+      <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHeading copy={copy} compact foundationSweepActive={isSweepActive} />
         <div
           data-foundation-group
-          className="foundation-services-grid mt-6 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-2 lg:gap-5 xl:grid-cols-3"
+          className="foundation-services-orbit mt-8"
+          role="list"
+          aria-label={copy.eyebrow}
         >
-          {services.map((service, index) => (
-            <ServiceCard key={service.title} service={service} index={index} compact />
-          ))}
+          <svg
+            aria-hidden="true"
+            className="foundation-orbit-connectors"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <ellipse cx="50" cy="50" rx="29" ry="34" />
+            {FOUNDATION_SERVICE_PRESENTATION.slice(1).map((item) => (
+              <line
+                key={item.id}
+                x1="50"
+                y1="50"
+                x2={item.orbitX.replace("%", "")}
+                y2={item.orbitY.replace("%", "")}
+              />
+            ))}
+          </svg>
+          {services.map((service, index) => {
+            const presentation = FOUNDATION_SERVICE_PRESENTATION[index];
+            if (!presentation) return null;
+            return (
+              <FoundationServiceOrb
+                key={presentation.id}
+                service={service}
+                presentation={presentation}
+                active={activeService === index}
+                onActivate={() => setActiveService(index)}
+              />
+            );
+          })}
         </div>
       </div>
       <div aria-hidden="true" className="foundation-bottom-fade absolute inset-x-0 bottom-0 h-64" />
