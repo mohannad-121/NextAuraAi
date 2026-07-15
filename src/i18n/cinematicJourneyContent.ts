@@ -12,13 +12,19 @@ export type JourneySectionContent = {
   groups: JourneyService[][];
 };
 
+export type FoundationJourneyContent = JourneySectionContent & {
+  orbitLabel: string;
+  activeLabel: string;
+  selectServiceLabel: string;
+};
+
 export type CinematicJourneyContent = {
   depth: {
     label: string;
     progress: string;
     stages: Array<{ label: string; depth: string }>;
   };
-  foundation: JourneySectionContent;
+  foundation: FoundationJourneyContent;
   automation: JourneySectionContent & {
     workflowLabel: string;
     workflow: string[];
@@ -52,6 +58,9 @@ const en: CinematicJourneyContent = {
     eyebrow: "Digital Foundation",
     title: "Every powerful digital experience begins with a strong foundation.",
     body: "We design and build fast, scalable, and professional digital platforms tailored around your business.",
+    orbitLabel: "Interactive digital foundation services",
+    activeLabel: "Active service",
+    selectServiceLabel: "Select service",
     groups: [
       [
         {
@@ -64,23 +73,25 @@ const en: CinematicJourneyContent = {
         },
         {
           title: "E-commerce Platforms",
-          description: "Conversion-ready stores with practical catalog and order workflows.",
+          description:
+            "Conversion-ready online stores with practical catalogs and scalable order workflows.",
         },
       ],
       [
         {
           title: "Booking Systems",
-          description: "Smooth scheduling journeys for customers, teams, and operations.",
+          description: "Smooth scheduling journeys for customers, teams, and daily operations.",
         },
         {
           title: "Admin Dashboards",
-          description: "Purpose-built control centers for content, customers, and performance.",
+          description:
+            "Purpose-built control centers for content, customers, analytics, and performance.",
         },
       ],
       [
         {
           title: "Multilingual Websites",
-          description: "Localized experiences that communicate naturally across markets.",
+          description: "Localized experiences that communicate naturally across different markets.",
         },
         {
           title: "Payment Integrations",
@@ -208,6 +219,9 @@ const ar: CinematicJourneyContent = {
     eyebrow: "الأساس الرقمي",
     title: "كل تجربة رقمية قوية تبدأ بأساس متين.",
     body: "نصمم ونبني منصات رقمية سريعة وقابلة للتوسع واحترافية، مصممة خصيصًا حول احتياجات عملك.",
+    orbitLabel: "خدمات الأساس الرقمي التفاعلية",
+    activeLabel: "الخدمة النشطة",
+    selectServiceLabel: "اختر الخدمة",
     groups: [
       [
         {
@@ -220,20 +234,21 @@ const ar: CinematicJourneyContent = {
         },
         {
           title: "منصات التجارة الإلكترونية",
-          description: "متاجر جاهزة للتحويل مع إدارة عملية للمنتجات والطلبات.",
+          description:
+            "متاجر إلكترونية جاهزة للتحويل مع كتالوجات عملية ومسارات طلبات قابلة للتوسع.",
         },
       ],
       [
-        { title: "أنظمة الحجز", description: "رحلات حجز سلسة للعملاء والفرق والعمليات." },
+        { title: "أنظمة الحجز", description: "رحلات حجز سلسة للعملاء والفرق والعمليات اليومية." },
         {
           title: "لوحات التحكم الإدارية",
-          description: "مراكز تحكم مخصصة للمحتوى والعملاء وقياس الأداء.",
+          description: "مراكز تحكم مخصصة للمحتوى والعملاء والتحليلات وقياس الأداء.",
         },
       ],
       [
         {
           title: "مواقع متعددة اللغات",
-          description: "تجارب محلية تتواصل بصورة طبيعية في مختلف الأسواق.",
+          description: "تجارب محلية تتواصل بصورة طبيعية عبر أسواق مختلفة.",
         },
         { title: "تكاملات الدفع", description: "عمليات دفع آمنة ومتصلة بسلاسة مع منصتك الرقمية." },
       ],
@@ -349,6 +364,9 @@ const es: CinematicJourneyContent = {
     eyebrow: "Fundación digital",
     title: "Toda experiencia digital potente comienza con una base sólida.",
     body: "Diseñamos y construimos plataformas digitales rápidas, escalables y profesionales, adaptadas a tu negocio.",
+    orbitLabel: "Servicios interactivos de fundamento digital",
+    activeLabel: "Servicio activo",
+    selectServiceLabel: "Seleccionar servicio",
     groups: [
       [
         {
@@ -363,23 +381,24 @@ const es: CinematicJourneyContent = {
         {
           title: "Plataformas e-commerce",
           description:
-            "Tiendas orientadas a conversión con flujos prácticos de catálogo y pedidos.",
+            "Tiendas online orientadas a conversión con catálogos prácticos y flujos de pedidos escalables.",
         },
       ],
       [
         {
           title: "Sistemas de reservas",
-          description: "Reservas fluidas para clientes, equipos y operaciones.",
+          description: "Reservas fluidas para clientes, equipos y operaciones diarias.",
         },
         {
           title: "Paneles administrativos",
-          description: "Centros de control para contenido, clientes y rendimiento.",
+          description: "Centros de control para contenido, clientes, analítica y rendimiento.",
         },
       ],
       [
         {
           title: "Sitios multilingües",
-          description: "Experiencias localizadas que comunican con naturalidad en cada mercado.",
+          description:
+            "Experiencias localizadas que comunican con naturalidad en distintos mercados.",
         },
         {
           title: "Integraciones de pago",

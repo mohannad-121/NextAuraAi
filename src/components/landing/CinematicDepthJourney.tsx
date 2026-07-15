@@ -13,12 +13,13 @@ import {
 } from "@/components/landing/DepthVisuals";
 import {
   cinematicJourneyContent,
+  type FoundationJourneyContent,
   type JourneyService,
   type JourneySectionContent,
 } from "@/i18n/cinematicJourneyContent";
 import { useLanguage } from "@/i18n/translations";
 import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
-import { useViewportActivity } from "@/hooks/use-viewport-activity";
+import { usePrefersReducedMotion, useViewportActivity } from "@/hooks/use-viewport-activity";
 
 type CinematicDepthJourneyProps = { onStartProject: () => void };
 
@@ -30,13 +31,19 @@ const FOUNDATION_SERVICE_PRESENTATION = [
     icon: "/icons/website-development.png",
     orbitX: "50%",
     orbitY: "50%",
+    path: "",
+    floatDuration: "0s",
+    floatDelay: "0s",
     center: true,
   },
   {
     id: "landing-pages",
     icon: "/icons/landing-page.png",
     orbitX: "50%",
-    orbitY: "16%",
+    orbitY: "13%",
+    path: "M 50 50 Q 47 32 50 13",
+    floatDuration: "5.8s",
+    floatDelay: "-1.2s",
     center: false,
   },
   {
@@ -44,6 +51,9 @@ const FOUNDATION_SERVICE_PRESENTATION = [
     icon: "/icons/ecommerce platforms.png",
     orbitX: "79%",
     orbitY: "33%",
+    path: "M 50 50 Q 66 41 79 33",
+    floatDuration: "6.6s",
+    floatDelay: "-3.4s",
     center: false,
   },
   {
@@ -51,13 +61,19 @@ const FOUNDATION_SERVICE_PRESENTATION = [
     icon: "/icons/booking-systems.png",
     orbitX: "79%",
     orbitY: "67%",
+    path: "M 50 50 Q 66 59 79 67",
+    floatDuration: "5.2s",
+    floatDelay: "-0.8s",
     center: false,
   },
   {
     id: "admin-dashboards",
     icon: "/icons/admin-dashboard.png",
     orbitX: "50%",
-    orbitY: "84%",
+    orbitY: "87%",
+    path: "M 50 50 Q 53 69 50 87",
+    floatDuration: "6.9s",
+    floatDelay: "-4.1s",
     center: false,
   },
   {
@@ -65,6 +81,9 @@ const FOUNDATION_SERVICE_PRESENTATION = [
     icon: "/icons/multilingual websites.png",
     orbitX: "21%",
     orbitY: "67%",
+    path: "M 50 50 Q 34 59 21 67",
+    floatDuration: "5.6s",
+    floatDelay: "-2.6s",
     center: false,
   },
   {
@@ -72,6 +91,9 @@ const FOUNDATION_SERVICE_PRESENTATION = [
     icon: "/icons/payment-integration.png",
     orbitX: "21%",
     orbitY: "33%",
+    path: "M 50 50 Q 34 41 21 33",
+    floatDuration: "6.2s",
+    floatDelay: "-1.7s",
     center: false,
   },
 ] as const;
@@ -122,20 +144,23 @@ function SectionHeading({
   );
 }
 
-function FoundationServiceOrb({
+function FoundationServiceButton({
   service,
   presentation,
   active,
+  activeLabel,
+  selectServiceLabel,
   onActivate,
 }: {
   service: JourneyService;
   presentation: (typeof FOUNDATION_SERVICE_PRESENTATION)[number];
   active: boolean;
+  activeLabel: string;
+  selectServiceLabel: string;
   onActivate: () => void;
 }) {
   return (
     <div
-      role="listitem"
       className="foundation-service-slot"
       data-active={active}
       data-center={presentation.center}
@@ -143,43 +168,54 @@ function FoundationServiceOrb({
         {
           "--foundation-orbit-x": presentation.orbitX,
           "--foundation-orbit-y": presentation.orbitY,
+          "--foundation-float-duration": presentation.floatDuration,
+          "--foundation-float-delay": presentation.floatDelay,
         } as CSSProperties
       }
     >
-      <button
-        type="button"
-        className="foundation-service-orb"
-        aria-pressed={active}
-        data-active={active}
-        data-service-id={presentation.id}
-        onClick={onActivate}
-        onFocus={onActivate}
-      >
-        <span className="foundation-service-icon" aria-hidden="true">
-          <img
-            src={presentation.icon}
-            alt=""
-            width={512}
-            height={512}
-            loading="lazy"
-            draggable={false}
-          />
-        </span>
-        <span className="foundation-service-title">{service.title}</span>
-        <span className="foundation-service-description">{service.description}</span>
-        <span className="foundation-service-focus-ring" aria-hidden="true" />
-      </button>
+      <div className="foundation-service-float">
+        <button
+          type="button"
+          className="foundation-service-orb"
+          aria-label={`${selectServiceLabel}: ${service.title}${active ? `, ${activeLabel}` : ""}`}
+          aria-pressed={active}
+          data-active={active}
+          data-service-id={presentation.id}
+          onClick={onActivate}
+        >
+          <span className="foundation-service-icon" aria-hidden="true">
+            <img
+              src={presentation.icon}
+              alt=""
+              width={512}
+              height={512}
+              loading="lazy"
+              draggable={false}
+            />
+          </span>
+          <span className="foundation-service-title">{service.title}</span>
+          {active ? <span className="foundation-service-active-label">{activeLabel}</span> : null}
+          <span className="foundation-service-focus-ring" aria-hidden="true" />
+        </button>
+      </div>
     </div>
   );
 }
 
-function FoundationSection({ copy }: { copy: JourneySectionContent }) {
+function FoundationSection({ copy }: { copy: FoundationJourneyContent }) {
   const services = copy.groups.flat();
   const [activeService, setActiveService] = useState(0);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const { targetRef: sectionRef, isActive: isSweepActive } = useViewportActivity<HTMLElement>({
     rootMargin: "160px 0px",
     threshold: 0.05,
   });
+  const activeCopy = services[activeService] ?? services[0];
+  const activePresentation = FOUNDATION_SERVICE_PRESENTATION[activeService];
+  const motionActive = isSweepActive && !prefersReducedMotion;
+
+  if (!activeCopy || !activePresentation) return null;
+
   return (
     <section
       ref={sectionRef}
@@ -199,8 +235,9 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
         <div
           data-foundation-group
           className="foundation-services-orbit mt-8"
-          role="list"
-          aria-label={copy.eyebrow}
+          data-motion-active={motionActive}
+          role="group"
+          aria-label={copy.orbitLabel}
         >
           <svg
             aria-hidden="true"
@@ -208,26 +245,69 @@ function FoundationSection({ copy }: { copy: JourneySectionContent }) {
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
           >
-            <ellipse cx="50" cy="50" rx="29" ry="34" />
+            <ellipse className="foundation-orbit-ring" cx="50" cy="50" rx="29" ry="34" />
             {FOUNDATION_SERVICE_PRESENTATION.slice(1).map((item) => (
-              <line
+              <path
                 key={item.id}
-                x1="50"
-                y1="50"
-                x2={item.orbitX.replace("%", "")}
-                y2={item.orbitY.replace("%", "")}
+                className="foundation-connector-path"
+                data-active={activePresentation.id === item.id}
+                d={item.path}
+                pathLength="100"
               />
             ))}
+            {activeService > 0 && motionActive && "path" in activePresentation ? (
+              <circle className="foundation-connector-pulse" r="0.72">
+                <animateMotion
+                  dur="2.8s"
+                  keyPoints="1;0"
+                  keyTimes="0;1"
+                  path={activePresentation.path}
+                  repeatCount="indefinite"
+                />
+              </circle>
+            ) : null}
           </svg>
-          {services.map((service, index) => {
+          <div className="foundation-orbit-particles" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <article
+            className="foundation-service-hub"
+            data-service-id={activePresentation.id}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <div className="foundation-service-hub-content" key={activePresentation.id}>
+              <span className="foundation-service-hub-label">{copy.activeLabel}</span>
+              <span
+                className="foundation-service-icon foundation-service-hub-icon"
+                aria-hidden="true"
+              >
+                <img
+                  src={activePresentation.icon}
+                  alt=""
+                  width={512}
+                  height={512}
+                  draggable={false}
+                />
+              </span>
+              <h3 className="foundation-service-hub-title">{activeCopy.title}</h3>
+              <p className="foundation-service-hub-description">{activeCopy.description}</p>
+            </div>
+          </article>
+          {services.slice(1).map((service, satelliteIndex) => {
+            const index = satelliteIndex + 1;
             const presentation = FOUNDATION_SERVICE_PRESENTATION[index];
             if (!presentation) return null;
             return (
-              <FoundationServiceOrb
+              <FoundationServiceButton
                 key={presentation.id}
                 service={service}
                 presentation={presentation}
                 active={activeService === index}
+                activeLabel={copy.activeLabel}
+                selectServiceLabel={copy.selectServiceLabel}
                 onActivate={() => setActiveService(index)}
               />
             );
