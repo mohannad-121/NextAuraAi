@@ -179,7 +179,7 @@ export const translations = {
           focus: ["AI logic", "Backend systems", "Client delivery"],
         },
         moayad: {
-          role: "Co-Founder & Systems Architect",
+          role: "Founder & Systems Architect",
           bio: "On our team, Moayad focuses on system structure, documentation, workflows, testing, and technical planning.",
           focus: ["System architecture", "Workflows", "Testing"],
         },
@@ -466,7 +466,7 @@ translations.ar = {
         focus: ["منطق AI", "أنظمة باكند", "تسليم العملاء"],
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         bio: "في فريقنا، يركز مؤيد على هيكلة الأنظمة، التوثيق، سير العمل، الاختبار، والتخطيط التقني.",
         focus: ["هيكلة الأنظمة", "سير العمل", "الاختبار"],
       },
@@ -776,7 +776,7 @@ translations.es = {
         focus: ["Lógica IA", "Backend", "Entrega al cliente"],
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         bio: "En nuestro equipo, Moayad se enfoca en arquitectura, documentación, flujos, pruebas y planificación técnica.",
         focus: ["Arquitectura", "Flujos", "Pruebas"],
       },

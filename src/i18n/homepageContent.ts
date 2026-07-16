@@ -116,7 +116,7 @@ const en = {
         description: "AI, backend systems, product development, and business direction.",
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         description: "Software development, system architecture, and technical execution.",
       },
     },
@@ -472,7 +472,7 @@ const ar: Widen<typeof en> = {
         description: "الذكاء الاصطناعي وأنظمة الباكند وتطوير المنتج واتجاه الأعمال.",
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         description: "تطوير البرمجيات وهيكلة الأنظمة والتنفيذ التقني.",
       },
     },
@@ -769,7 +769,7 @@ const es: Widen<typeof en> = {
         description: "IA, sistemas backend, desarrollo de producto y dirección de negocio.",
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         description: "Desarrollo de software, arquitectura de sistemas y ejecución técnica.",
       },
     },

@@ -136,7 +136,7 @@ export const siteKnowledge = {
     {
       id: "moayad",
       name: "Moayad",
-      role: "Co-Founder & Systems Architect",
+      role: "Founder & Systems Architect",
       bio: {
         en: "Moayad focuses on system structure, documentation, workflows, testing, and technical planning.",
         ar: "مؤيد يركز على هيكلة الأنظمة، التوثيق، سير العمل، الاختبار، والتخطيط التقني.",
