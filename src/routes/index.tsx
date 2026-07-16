@@ -1,5 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
 import { HeroUndergroundJourney } from "@/components/landing/HeroUndergroundJourney";
 import { ServicesUniverse } from "@/components/landing/ServicesUniverse";
@@ -8,7 +7,6 @@ import { FeaturedProject } from "@/components/landing/FeaturedProject";
 import { WhyChoose } from "@/components/landing/WhyChoose";
 import { Team } from "@/components/landing/Team";
 import { Contact } from "@/components/landing/Contact";
-import { ProjectRequestModal } from "@/components/landing/ProjectRequestModal";
 import { MobileCTA } from "@/components/landing/MobileCTA";
 import { WebsiteAssistantChatbot } from "@/components/landing/WebsiteAssistantChatbot";
 
@@ -57,21 +55,21 @@ function Index() {
 }
 
 function LandingPage() {
-  const [projectModalOpen, setProjectModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const startProject = () => navigate({ to: "/start-project" });
 
   return (
     <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
-      <Nav onStartProject={() => setProjectModalOpen(true)} />
-      <HeroUndergroundJourney onStartProject={() => setProjectModalOpen(true)} />
-      <ServicesUniverse onStartProject={() => setProjectModalOpen(true)} />
-      <FeaturedProject onStartProject={() => setProjectModalOpen(true)} />
+      <Nav onStartProject={startProject} />
+      <HeroUndergroundJourney onStartProject={startProject} />
+      <ServicesUniverse onStartProject={startProject} />
+      <FeaturedProject onStartProject={startProject} />
       <Process />
       <Team />
       <WhyChoose />
-      <Contact onStartProject={() => setProjectModalOpen(true)} />
-      <MobileCTA onStartProject={() => setProjectModalOpen(true)} />
+      <Contact onStartProject={startProject} />
+      <MobileCTA onStartProject={startProject} />
       <WebsiteAssistantChatbot />
-      <ProjectRequestModal open={projectModalOpen} onClose={() => setProjectModalOpen(false)} />
     </main>
   );
 }

@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Bot,
   Check,
+  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   Globe,
@@ -19,7 +20,7 @@ import {
   Send,
   X,
 } from "lucide-react";
-import { translations, useLanguage } from "@/i18n/translations";
+import { LanguageSwitcher, translations, useLanguage } from "@/i18n/translations";
 
 const WHATSAPP_NUMBER = "962799195498";
 
@@ -46,10 +47,16 @@ type ProjectTranslation = (typeof translations)["en"];
 type ProjectRequestModalProps = {
   open: boolean;
   onClose: () => void;
+  presentation?: "modal" | "page";
 };
 
-export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps) {
+export function ProjectRequestModal({
+  open,
+  onClose,
+  presentation = "modal",
+}: ProjectRequestModalProps) {
   const { tr, dir } = useLanguage();
+  const isPage = presentation === "page";
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<ProjectForm>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -136,7 +143,7 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
   }, [hasData, onClose, success, tr.modal.confirmClose]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || isPage) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") requestClose();
       if (event.key === "Tab") {
@@ -163,7 +170,7 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [open, requestClose]);
+  }, [isPage, open, requestClose]);
 
   const closeFromBackdrop = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) requestClose();
@@ -181,25 +188,48 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
     <AnimatePresence>
       {open ? (
         <motion.div
-          className="project-modal-backdrop"
-          initial={{ opacity: 0 }}
+          className={isPage ? "project-page" : "project-modal-backdrop"}
+          initial={isPage ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onMouseDown={closeFromBackdrop}
+          onMouseDown={isPage ? undefined : closeFromBackdrop}
         >
           <motion.div
             ref={dialogRef}
             dir={dir}
-            role="dialog"
-            aria-modal="true"
+            role={isPage ? undefined : "dialog"}
+            aria-modal={isPage ? undefined : "true"}
             aria-labelledby="project-request-title"
-            className="project-modal-shell"
-            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            className={isPage ? "project-page-shell" : "project-modal-shell"}
+            initial={isPage ? false : { opacity: 0, y: 24, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
+            exit={{ opacity: 0, y: 16, scale: isPage ? 1 : 0.98 }}
+            transition={{ duration: isPage ? 0.35 : 0.18 }}
             onMouseDown={(event) => event.stopPropagation()}
           >
+            {isPage ? (
+              <div className="project-page-topbar">
+                <button
+                  type="button"
+                  onClick={requestClose}
+                  className="project-page-identity"
+                  aria-label={tr.nav.home}
+                >
+                  <span className="project-page-mark" aria-hidden="true">
+                    <img src="/favicon-48.png" alt="" />
+                  </span>
+                  <span>NextAura AI</span>
+                </button>
+                <div className="project-page-topbar-actions">
+                  <LanguageSwitcher />
+                  <button type="button" onClick={requestClose} className="project-page-back">
+                    <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />
+                    <span>{tr.nav.home}</span>
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             <div className="project-modal-header">
               <div className="project-modal-heading">
                 <div className="project-modal-brand">NextAura AI</div>
@@ -208,15 +238,22 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
                 </h2>
                 <p className="project-modal-subtitle">{tr.modal.subtitle}</p>
               </div>
-              <button
-                ref={closeRef}
-                type="button"
-                onClick={requestClose}
-                aria-label={tr.modal.actions.close}
-                className="project-modal-close"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              {isPage ? (
+                <div className="project-page-step-count" aria-hidden="true">
+                  <span>{String(step).padStart(2, "0")}</span>
+                  <span>/ 04</span>
+                </div>
+              ) : (
+                <button
+                  ref={closeRef}
+                  type="button"
+                  onClick={requestClose}
+                  aria-label={tr.modal.actions.close}
+                  className="project-modal-close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
             </div>
 
             <nav className="project-modal-steps" aria-label={tr.modal.title}>
@@ -237,6 +274,11 @@ export function ProjectRequestModal({ open, onClose }: ProjectRequestModalProps)
                 </button>
               ))}
             </nav>
+            {isPage ? (
+              <div className="project-page-progress" aria-hidden="true">
+                <span style={{ width: `${step * 25}%` }} />
+              </div>
+            ) : null}
 
             {success ? (
               <div className="project-modal-success">
