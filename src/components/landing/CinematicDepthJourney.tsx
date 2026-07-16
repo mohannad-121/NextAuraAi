@@ -19,6 +19,7 @@ import {
 } from "@/i18n/cinematicJourneyContent";
 import { useLanguage } from "@/i18n/translations";
 import { DEPTH_JOURNEY_CONFIG } from "@/components/landing/depthJourneyConfig";
+import { SpaceSectionBackdrop } from "@/components/landing/SpaceSectionBackdrop";
 import { usePrefersReducedMotion, useViewportActivity } from "@/hooks/use-viewport-activity";
 
 type CinematicDepthJourneyProps = { onStartProject: () => void };
@@ -223,6 +224,7 @@ function FoundationSection({ copy }: { copy: FoundationJourneyContent }) {
       data-depth-section="foundation"
       className="foundation-section relative isolate overflow-hidden px-5 py-14 sm:px-8 md:py-18 lg:px-12 xl:py-20"
     >
+      <SpaceSectionBackdrop />
       <EnvironmentalPlanes tone="foundation" />
       <ParticleLayer
         count={DEPTH_JOURNEY_CONFIG.particles.foundation}
