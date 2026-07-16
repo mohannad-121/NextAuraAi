@@ -257,7 +257,6 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
   }));
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [stageWidth, setStageWidth] = useState(1100);
 
@@ -302,7 +301,7 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
 
   const finishDrag = () => {
     const currentOffset = dragOffsetRef.current;
-    const threshold = Math.max(stageWidth * 0.075, 42);
+    const threshold = Math.max(32, Math.min(stageWidth * 0.045, 68));
     const velocity = dragVelocityRef.current;
 
     if (currentOffset > threshold || velocity > 0.48) {
@@ -313,7 +312,6 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
 
     dragOffsetRef.current = 0;
     dragVelocityRef.current = 0;
-    setDragOffset(0);
     setIsDragging(false);
   };
 
@@ -330,9 +328,7 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return;
 
-    const rawOffset = event.clientX - dragStartXRef.current;
-    const limit = stageWidth * 0.48;
-    const nextOffset = Math.max(-limit, Math.min(limit, rawOffset));
+    const nextOffset = event.clientX - dragStartXRef.current;
     const elapsed = Math.max(event.timeStamp - lastPointerTimeRef.current, 1);
     const instantVelocity = (event.clientX - lastPointerXRef.current) / elapsed;
     dragVelocityRef.current = dragVelocityRef.current * 0.55 + instantVelocity * 0.45;
@@ -344,7 +340,6 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
     }
 
     dragOffsetRef.current = nextOffset;
-    setDragOffset(nextOffset);
   };
 
   const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
@@ -360,7 +355,6 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
 
-    setDragOffset(0);
     dragOffsetRef.current = 0;
     dragVelocityRef.current = 0;
     setIsDragging(false);
@@ -400,7 +394,7 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
           const isActive = relativeIndex === 0;
           const slotDistance =
             stageWidth * (stageWidth < 640 ? 0.78 : stageWidth < 1024 ? 0.42 : 0.34);
-          const horizontalOffset = relativeIndex * slotDistance + dragOffset;
+          const horizontalOffset = relativeIndex * slotDistance;
           const verticalOffset = isActive ? 0 : 24;
           const scale = isActive ? 1 : 0.78;
 

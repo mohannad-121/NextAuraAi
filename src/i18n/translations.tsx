@@ -179,7 +179,7 @@ export const translations = {
           focus: ["AI logic", "Backend systems", "Client delivery"],
         },
         moayad: {
-          role: "Co-Founder & Systems Architect",
+          role: "Founder & Systems Architect",
           bio: "On our team, Moayad focuses on system structure, documentation, workflows, testing, and technical planning.",
           focus: ["System architecture", "Workflows", "Testing"],
         },
@@ -235,6 +235,7 @@ export const translations = {
         timeline: "Choose timeline",
         contactMethod: "Choose contact method",
       },
+      contactMethods: ["WhatsApp", "Phone call", "Email"],
       actions: {
         next: "Next",
         previous: "Previous",
@@ -465,7 +466,7 @@ translations.ar = {
         focus: ["منطق AI", "أنظمة باكند", "تسليم العملاء"],
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         bio: "في فريقنا، يركز مؤيد على هيكلة الأنظمة، التوثيق، سير العمل، الاختبار، والتخطيط التقني.",
         focus: ["هيكلة الأنظمة", "سير العمل", "الاختبار"],
       },
@@ -522,6 +523,7 @@ translations.ar = {
       timeline: "اختر المدة",
       contactMethod: "اختر طريقة التواصل",
     },
+    contactMethods: ["واتساب", "مكالمة هاتفية", "بريد إلكتروني"],
     actions: {
       next: "التالي",
       previous: "السابق",
@@ -774,7 +776,7 @@ translations.es = {
         focus: ["Lógica IA", "Backend", "Entrega al cliente"],
       },
       moayad: {
-        role: "Co-Founder & Systems Architect",
+        role: "Founder & Systems Architect",
         bio: "En nuestro equipo, Moayad se enfoca en arquitectura, documentación, flujos, pruebas y planificación técnica.",
         focus: ["Arquitectura", "Flujos", "Pruebas"],
       },
@@ -832,6 +834,7 @@ translations.es = {
       timeline: "Elige el plazo",
       contactMethod: "Elige el método de contacto",
     },
+    contactMethods: ["WhatsApp", "Llamada telefónica", "Correo electrónico"],
     actions: {
       next: "Siguiente",
       previous: "Anterior",
