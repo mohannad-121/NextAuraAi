@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import {
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+} from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -80,6 +88,26 @@ const PLANET_MODELS = [
   },
 ] as const;
 
+const SERVICE_ORBIT_ICONS = [
+  [
+    "/images/service-orbits/web-designing.webp",
+    "/images/service-orbits/social-media-streaming.webp",
+    "/images/service-orbits/website.webp",
+  ],
+  [
+    "/images/service-orbits/ai.webp",
+    "/images/service-orbits/ai-network.webp",
+    "/images/service-orbits/ai-chip.webp",
+  ],
+  [
+    "/images/service-orbits/impact.webp",
+    "/images/service-orbits/web-development.webp",
+    "/images/service-orbits/system-integration.webp",
+  ],
+] as const;
+
+const ORBIT_ANGLES = [-90, 24, 156];
+
 function isMesh(object: unknown): object is DisposableMesh {
   return object instanceof THREE.Mesh;
 }
@@ -121,7 +149,15 @@ function getRelativeIndex(index: number, activeIndex: number, total: number) {
   return relative;
 }
 
-function PlanetModel({ src, active }: { src: string; active: boolean }) {
+function PlanetModel({
+  src,
+  active,
+  onReady,
+}: {
+  src: string;
+  active: boolean;
+  onReady: () => void;
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
   const modelRef = useRef<ModelRoot | null>(null);
   const activeRef = useRef(active);
@@ -133,6 +169,9 @@ function PlanetModel({ src, active }: { src: string; active: boolean }) {
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
+
+    mount.dataset.modelSrc = src;
+    mount.dataset.loadState = "loading";
 
     let frameId = 0;
     let disposed = false;
@@ -203,10 +242,13 @@ function PlanetModel({ src, active }: { src: string; active: boolean }) {
 
         scene.add(pivot);
         modelRef.current = pivot;
+        mount.dataset.loadState = "ready";
+        onReady();
       },
       undefined,
       () => {
         modelRef.current = null;
+        mount.dataset.loadState = "error";
       },
     );
 
@@ -245,9 +287,67 @@ function PlanetModel({ src, active }: { src: string; active: boolean }) {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [src]);
+  }, [onReady, src]);
 
   return <div ref={mountRef} className="service-planet-model" aria-hidden="true" />;
+}
+
+function ServicePlanetOrbit({
+  icons,
+}: {
+  icons: readonly string[];
+}) {
+  return (
+    <ul className="service-planet-orbit" aria-hidden="true">
+      {icons.slice(0, 3).map((iconSrc, index) => {
+        const angle = ORBIT_ANGLES[index] ?? index * 120 - 90;
+        const style = {
+          "--orbit-angle": `${angle}deg`,
+          "--orbit-counter-angle": `${-angle}deg`,
+        } as CSSProperties;
+
+        return (
+          <li key={iconSrc} className="service-planet-orbit-item" style={style}>
+            <span className="service-planet-orbit-module">
+              <img
+                className="service-planet-orbit-image"
+                src={iconSrc}
+                alt=""
+                width="320"
+                height="320"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function ServicePlanetVisual({
+  planet,
+  icons,
+  active,
+}: {
+  planet: ServicePlanet;
+  icons: readonly string[];
+  active: boolean;
+}) {
+  const [modelReady, setModelReady] = useState(false);
+  const handleReady = useCallback(() => setModelReady(true), []);
+
+  useEffect(() => {
+    setModelReady(false);
+  }, [planet.modelSrc]);
+
+  return (
+    <div className="service-planet-visual" data-model-ready={modelReady}>
+      <PlanetModel src={planet.modelSrc} active={active} onReady={handleReady} />
+      <ServicePlanetOrbit icons={icons} />
+    </div>
+  );
 }
 
 export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
@@ -413,7 +513,11 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
                 transform: `translate3d(calc(-50% + ${horizontalOffset}px), ${verticalOffset}px, 0) scale(${scale})`,
               }}
             >
-              <PlanetModel src={planet.modelSrc} active={isActive} />
+              <ServicePlanetVisual
+                planet={planet}
+                icons={SERVICE_ORBIT_ICONS[index]}
+                active={isActive}
+              />
               <div className="service-planet-copy">
                 <span className="service-planet-kicker">{planet.kicker}</span>
                 <h3 className="service-planet-title">{planet.service.title}</h3>
