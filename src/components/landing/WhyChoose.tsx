@@ -1,52 +1,66 @@
-import { Blocks, Route, Target, TrendingUp, type LucideIcon } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { SectionHeading } from "@/components/landing/SectionHeading";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
 type BenefitVisual = {
-  icon: LucideIcon;
+  icon: string;
   image: string;
   accent: "violet" | "cyan" | "blue";
+  imagePosition: string;
 };
 
 const benefitVisuals: BenefitVisual[] = [
   {
-    icon: Target,
-    image: "/images/cinematic/nextaura-sculpture.webp",
+    icon: "/icons/business011.ico",
+    image: "/images/cinematic/business01.png",
     accent: "violet",
+    imagePosition: "center",
   },
   {
-    icon: Blocks,
-    image: "/images/cinematic/business-automation.webp",
+    icon: "/icons/WAA1.ico",
+    image: "/images/cinematic/WAA.png",
     accent: "cyan",
+    imagePosition: "center 46%",
   },
   {
-    icon: Route,
-    image: "/images/cinematic/digital-commerce.webp",
+    icon: "/icons/CDC1.ico",
+    image: "/images/cinematic/CDC.png",
     accent: "blue",
+    imagePosition: "center 42%",
   },
   {
-    icon: TrendingUp,
-    image: "/images/cinematic/connected-industries.webp",
+    icon: "/icons/LSG1.ico",
+    image: "/images/cinematic/LSG.png",
     accent: "violet",
+    imagePosition: "center",
   },
 ];
 
 export function WhyChoose() {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].benefits;
-  const [lockedIndex, setLockedIndex] = useState<number | null>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  const activeIndex = hoveredIndex ?? focusedIndex ?? lockedIndex;
+  const shouldReduceMotion = useReducedMotion();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+
+  const cards = copy.items.map((item, index) => ({
+    item,
+    index,
+    visual: benefitVisuals[index],
+  }));
+  const selectedCard = cards[selectedIndex] ?? cards[0];
+  const orderedCards = selectedCard
+    ? [selectedCard, ...cards.filter((card) => card.index !== selectedCard.index)]
+    : cards;
 
   return (
     <section className="why-nextaura homepage-section" dir={dir}>
       <div className="why-nextaura-backdrop" aria-hidden="true">
         <img
           className="why-nextaura-backdrop-image"
-          src="/images/cinematic/nextaura-ai-hero.webp"
+          src="/images/cinematic/astro-moon-phone.png"
           alt=""
           loading="lazy"
           decoding="async"
@@ -65,34 +79,41 @@ export function WhyChoose() {
             className="why-nextaura-heading"
           />
 
-          <div className="why-nextaura-grid">
-            {copy.items.map((item, index) => {
-              const visual = benefitVisuals[index];
-              const Icon = visual.icon;
-              const isActive = activeIndex === index;
+          <div className="why-nextaura-grid" data-selected-index={selectedIndex}>
+            {orderedCards.map(({ item, index, visual }, displayPosition) => {
+              const isSelected = selectedIndex === index;
+              const isPreviewed = previewIndex === index && !isSelected;
 
               return (
-                <button
-                  key={item.title}
+                <motion.button
+                  layout={!shouldReduceMotion}
+                  transition={{
+                    layout: shouldReduceMotion
+                      ? { duration: 0 }
+                      : { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+                  }}
+                  key={index}
                   type="button"
                   className="why-nextaura-card"
-                  data-active={isActive ? "true" : "false"}
+                  data-active={isSelected ? "true" : "false"}
+                  data-preview={isPreviewed ? "true" : "false"}
+                  data-card-index={index}
+                  data-position={displayPosition}
                   data-accent={visual.accent}
-                  aria-pressed={lockedIndex === index}
+                  aria-pressed={isSelected}
                   onPointerEnter={(event) => {
-                    if (event.pointerType === "mouse") setHoveredIndex(index);
+                    if (event.pointerType === "mouse") setPreviewIndex(index);
                   }}
                   onPointerLeave={(event) => {
-                    if (event.pointerType === "mouse") setHoveredIndex(null);
+                    if (event.pointerType === "mouse") setPreviewIndex(null);
                   }}
-                  onFocus={() => setFocusedIndex(index)}
-                  onBlur={() => setFocusedIndex(null)}
-                  onClick={() => setLockedIndex(index)}
+                  onFocus={() => setPreviewIndex(index)}
+                  onBlur={() => setPreviewIndex(null)}
+                  onClick={() => setSelectedIndex(index)}
                   onKeyDown={(event) => {
                     if (event.key !== "Escape") return;
-                    setLockedIndex(null);
-                    setHoveredIndex(null);
-                    setFocusedIndex(null);
+                    setSelectedIndex(0);
+                    setPreviewIndex(null);
                     event.currentTarget.blur();
                   }}
                 >
@@ -102,14 +123,21 @@ export function WhyChoose() {
                     alt=""
                     loading="lazy"
                     decoding="async"
+                    style={{ objectPosition: visual.imagePosition }}
                   />
                   <span className="why-nextaura-card-overlay" aria-hidden="true" />
                   <span className="why-nextaura-card-inner">
                     <span className="why-nextaura-card-topline">
                       <span className="why-nextaura-card-icon" aria-hidden="true">
-                        <Icon />
+                        <img
+                          className="why-nextaura-card-icon-image"
+                          src={visual.icon}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
                       </span>
-                      <span className="why-nextaura-card-number" aria-hidden="true">
+                      <span className="why-nextaura-card-number">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                     </span>
@@ -123,16 +151,10 @@ export function WhyChoose() {
                       </span>
                     </span>
                   </span>
-                </button>
+                </motion.button>
               );
             })}
           </div>
-        </div>
-
-        <div className="why-nextaura-visual-space" aria-hidden="true">
-          <span className="why-nextaura-orbit why-nextaura-orbit-one" />
-          <span className="why-nextaura-orbit why-nextaura-orbit-two" />
-          <span className="why-nextaura-visual-label">NEXT / AURA</span>
         </div>
       </div>
     </section>
