@@ -48,6 +48,9 @@ const countryCodes = [
   "FI",
   "FR",
   "GB",
+  "GB-ENG",
+  "GB-SCT",
+  "GB-WLS",
   "GE",
   "GH",
   "GN",
@@ -124,6 +127,12 @@ const countryCodes = [
   "ZA",
 ] as const;
 
+const specialCountryNames: Record<string, Record<string, string>> = {
+  en: { "GB-ENG": "England", "GB-SCT": "Scotland", "GB-WLS": "Wales" },
+  ar: { "GB-ENG": "إنجلترا", "GB-SCT": "اسكتلندا", "GB-WLS": "ويلز" },
+  es: { "GB-ENG": "Inglaterra", "GB-SCT": "Escocia", "GB-WLS": "Gales" },
+};
+
 const reachCopy = {
   en: {
     eyebrow: "GLOBAL DELIVERY",
@@ -173,7 +182,14 @@ export function ProjectPageTail() {
 
   useEffect(() => {
     const names = new Intl.DisplayNames([language], { type: "region" });
-    setCountryNames(Object.fromEntries(countryCodes.map((code) => [code, names.of(code) ?? code])));
+    setCountryNames(
+      Object.fromEntries(
+        countryCodes.map((code) => [
+          code,
+          specialCountryNames[language]?.[code] ?? names.of(code) ?? code,
+        ]),
+      ),
+    );
   }, [language]);
 
   const countries = useMemo(
