@@ -1,34 +1,54 @@
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Bot, MessageCircle, Send, X } from "lucide-react";
+import { ArrowUpRight, Bot, MessageCircle, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/translations";
-import { chatbotCopy, getChatbotResponse } from "@/lib/getChatbotResponse";
+import {
+  chatbotCopy,
+  getChatbotResponse,
+  type ChatbotAction,
+} from "@/lib/getChatbotResponse";
 import type { SupportedLanguage } from "@/data/siteKnowledge";
 
 type Message = {
   id: number;
   role: "assistant" | "user";
   content: string;
+  language: SupportedLanguage;
+  actions?: ChatbotAction[];
 };
 
 export function WebsiteAssistantChatbot() {
   const { language, dir } = useLanguage();
   const currentLanguage = language as SupportedLanguage;
-  const copy = chatbotCopy[currentLanguage] || chatbotCopy.en;
+  const [assistantLanguage, setAssistantLanguage] = useState<SupportedLanguage>(currentLanguage);
+  const copy = chatbotCopy[assistantLanguage] || chatbotCopy.en;
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => [
-    { id: 1, role: "assistant", content: copy.welcome },
+    {
+      id: 1,
+      role: "assistant",
+      content: chatbotCopy[currentLanguage].welcome,
+      language: currentLanguage,
+    },
   ]);
   const viewportRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(2);
 
   useEffect(() => {
-    setMessages([{ id: 1, role: "assistant", content: copy.welcome }]);
+    setAssistantLanguage(currentLanguage);
+    setMessages([
+      {
+        id: 1,
+        role: "assistant",
+        content: chatbotCopy[currentLanguage].welcome,
+        language: currentLanguage,
+      },
+    ]);
     nextId.current = 2;
-  }, [copy.welcome]);
+  }, [currentLanguage]);
 
   useEffect(() => {
     viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
@@ -46,22 +66,34 @@ export function WebsiteAssistantChatbot() {
   }, []);
 
   const assistantSide = dir === "rtl" ? "left-4 sm:left-6" : "right-4 sm:right-6";
-  const quickSuggestions = useMemo(() => copy.suggestions.slice(0, 6), [copy.suggestions]);
+  const quickSuggestions = useMemo(() => copy.suggestions.slice(0, 4), [copy.suggestions]);
 
   const sendMessage = (value: string) => {
     const trimmed = value.trim();
     if (!trimmed || loading) return;
 
-    const userMessage: Message = { id: nextId.current++, role: "user", content: trimmed };
+    const userMessage: Message = {
+      id: nextId.current++,
+      role: "user",
+      content: trimmed,
+      language: assistantLanguage,
+    };
     setMessages((current) => [...current, userMessage]);
     setInput("");
     setLoading(true);
 
     window.setTimeout(() => {
       const response = getChatbotResponse(trimmed, currentLanguage);
+      setAssistantLanguage(response.language);
       setMessages((current) => [
         ...current,
-        { id: nextId.current++, role: "assistant", content: response },
+        {
+          id: nextId.current++,
+          role: "assistant",
+          content: response.content,
+          language: response.language,
+          actions: response.actions,
+        },
       ]);
       setLoading(false);
     }, 420);
@@ -81,7 +113,7 @@ export function WebsiteAssistantChatbot() {
 
   return (
     <div
-      className={`fixed bottom-4 z-[80] flex-col items-end md:bottom-6 md:flex ${contactVisible ? "flex" : "hidden"} ${assistantSide}`}
+      className={`fixed z-[80] flex flex-col items-end transition-[bottom] duration-200 md:bottom-6 ${contactVisible ? "bottom-4" : "bottom-24"} ${assistantSide}`}
     >
       <AnimatePresence>
         {open ? (
@@ -91,7 +123,7 @@ export function WebsiteAssistantChatbot() {
             exit={{ opacity: 0, y: 14, scale: 0.96 }}
             transition={{ duration: 0.18 }}
             className="mb-3 flex h-[min(72vh,620px)] w-[calc(100vw-2rem)] max-w-[420px] flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0b1529]/98 shadow-[0_24px_70px_rgb(0_0_0_/_0.48)] backdrop-blur-md sm:w-[420px]"
-            dir={dir}
+            dir={assistantLanguage === "ar" ? "rtl" : "ltr"}
           >
             <header className="flex items-center justify-between border-b border-primary/20 bg-card/60 px-4 py-3">
               <div className="flex min-w-0 items-center gap-3">
@@ -106,31 +138,32 @@ export function WebsiteAssistantChatbot() {
                     NextAura Assistant
                   </h2>
                   <p className="truncate text-xs text-muted-foreground">
-                    {currentLanguage === "ar"
-                      ? "اسأل عن خدماتنا، مشاريعنا، الأسعار، والفريق"
-                      : currentLanguage === "es"
-                        ? "Pregunta sobre servicios, proyectos, precios y equipo"
-                        : "Ask about our services, projects, pricing, and team"}
+                    {copy.subtitle}
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close assistant"
+                aria-label={copy.placeholders.close}
                 className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border/70 bg-card/70 text-muted-foreground transition-colors hover:border-cyan/60 hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
             </header>
 
-            <div ref={viewportRef} className="flex-1 space-y-3 overflow-y-auto px-3 py-4 sm:px-4">
+            <div
+              ref={viewportRef}
+              aria-live="polite"
+              className="flex-1 space-y-3 overflow-y-auto px-3 py-4 sm:px-4"
+            >
               {messages.map((message) => (
                 <div
                   key={message.id}
                   className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
+                    dir={message.role === "user" ? "auto" : message.language === "ar" ? "rtl" : "ltr"}
                     className={`max-w-[84%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                       message.role === "user"
                         ? "bg-primary/80 text-primary-foreground shadow-[0_0_24px_oklch(0.58_0.24_315_/_0.18)]"
@@ -138,6 +171,23 @@ export function WebsiteAssistantChatbot() {
                     }`}
                   >
                     {message.content}
+                    {message.actions?.length ? (
+                      <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-3">
+                        {message.actions.map((action) => (
+                          <a
+                            key={`${message.id}-${action.href}`}
+                            href={action.href}
+                            target={action.external ? "_blank" : undefined}
+                            rel={action.external ? "noopener noreferrer" : undefined}
+                            onClick={() => setOpen(false)}
+                            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-cyan/35 bg-cyan/10 px-3 py-1.5 text-xs font-semibold text-cyan transition-colors duration-200 hover:border-cyan/70 hover:bg-cyan/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/70"
+                          >
+                            <span>{action.label}</span>
+                            <ArrowUpRight className="h-3.5 w-3.5 shrink-0 rtl:-scale-x-100" />
+                          </a>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               ))}
@@ -157,7 +207,7 @@ export function WebsiteAssistantChatbot() {
             </div>
 
             <div className="border-t border-primary/20 bg-background/70 p-3">
-              <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
+              <div className="mb-3 flex flex-wrap gap-2">
                 {quickSuggestions.map((suggestion) => (
                   <button
                     key={suggestion}
@@ -175,6 +225,7 @@ export function WebsiteAssistantChatbot() {
                   onChange={(event) => setInput(event.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={copy.placeholders.input}
+                  dir={assistantLanguage === "ar" ? "rtl" : "ltr"}
                   className="min-h-12 min-w-0 flex-1 rounded-2xl border border-border/80 bg-card/72 px-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-cyan/70"
                 />
                 <button
@@ -194,7 +245,7 @@ export function WebsiteAssistantChatbot() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        aria-label="Open NextAura Assistant"
+        aria-label={copy.placeholders.open}
         className="group relative flex min-h-14 min-w-14 cursor-pointer items-center justify-center rounded-2xl border border-primary/35 text-background shadow-[0_12px_34px_rgb(0_0_0_/_0.34)] transition-[border-color,filter] duration-200 hover:border-cyan/60 hover:brightness-110 md:min-h-16 md:min-w-16"
         style={{ background: "var(--gradient-primary)" }}
       >
