@@ -250,7 +250,7 @@ const en = {
       {
         title: "Web, Automation & AI in One Team",
         description:
-          "Strategy, design, software, automation, and AI move together without handoff gaps.",
+          "Strategy, product design, software, automation, and AI move together without handoff gaps.",
       },
       {
         title: "Clear Delivery & Communication",
@@ -597,7 +597,7 @@ const ar: Widen<typeof en> = {
       {
         title: "الويب والأتمتة والذكاء الاصطناعي في فريق واحد",
         description:
-          "تتحرك الاستراتيجية والتصميم والبرمجيات والأتمتة والذكاء الاصطناعي معًا دون فجوات في التسليم.",
+          "تتحرك الاستراتيجية وتصميم المنتجات والبرمجيات والأتمتة والذكاء الاصطناعي معًا دون فجوات في التسليم.",
       },
       {
         title: "تسليم وتواصل واضحان",
@@ -894,7 +894,7 @@ const es: Widen<typeof en> = {
       {
         title: "Web, automatización e IA en un equipo",
         description:
-          "Estrategia, diseño, software, automatización e IA avanzan sin brechas entre equipos.",
+          "Estrategia, diseño de producto, software, automatización e IA avanzan sin brechas entre equipos.",
       },
       {
         title: "Entrega y comunicación claras",
