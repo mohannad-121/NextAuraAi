@@ -4,9 +4,10 @@ import { usePrefersReducedMotion } from "@/hooks/use-viewport-activity";
 type ViewportVideoProps = {
   src: string;
   className?: string;
+  preload?: "none" | "metadata" | "auto";
 };
 
-export function ViewportVideo({ src, className = "" }: ViewportVideoProps) {
+export function ViewportVideo({ src, className = "", preload = "none" }: ViewportVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [isNearViewport, setIsNearViewport] = useState(false);
@@ -57,7 +58,7 @@ export function ViewportVideo({ src, className = "" }: ViewportVideoProps) {
       loop
       muted
       playsInline
-      preload="none"
+      preload={preload}
       controls={false}
       disablePictureInPicture
       aria-hidden="true"

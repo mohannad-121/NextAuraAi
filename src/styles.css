@@ -2974,26 +2974,38 @@
   z-index: 1;
 }
 
-.services-section-media {
+.space-section-media {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #020713;
+  background: #01040b;
 }
 
-.services-section-video {
+.space-section-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+  filter: brightness(0.66) contrast(1.16) saturate(0.78);
+  transform: scale(1.015);
 }
 
-.services-section-video-overlay {
+.space-section-video-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgb(2 7 19 / 0.56), rgb(2 8 20 / 0.72));
+  background:
+    radial-gradient(ellipse at 50% 44%, transparent 18%, rgb(1 5 15 / 0.34) 100%),
+    linear-gradient(180deg, rgb(2 7 18 / 0.54), rgb(3 7 20 / 0.35) 48%, rgb(2 6 17 / 0.62));
+}
+
+.foundation-section .foundation-bottom-fade {
+  display: none;
+}
+
+#depth-foundation::after {
+  opacity: 0;
 }
 
 .services-section-heading {
@@ -3108,24 +3120,39 @@
 }
 
 .service-planet-copy {
+  --planet-copy-accent: #67e8f9;
+  --planet-copy-secondary: #c4b5fd;
   position: relative;
   z-index: 2;
   display: grid;
-  width: min(25rem, 96%);
+  width: min(27rem, 96%);
   justify-items: center;
-  gap: 0.72rem;
+  gap: 0.68rem;
   margin-top: -0.15rem;
+  padding-inline: 0.75rem;
   text-align: center;
   text-shadow: 0 2px 20px rgb(0 0 0 / 0.9);
 }
 
+.service-planet-card[data-accent="violet"] .service-planet-copy {
+  --planet-copy-accent: #c4b5fd;
+  --planet-copy-secondary: #67e8f9;
+}
+
+.service-planet-card[data-accent="amber"] .service-planet-copy {
+  --planet-copy-accent: #fde68a;
+  --planet-copy-secondary: #7dd3fc;
+}
+
 .service-planet-kicker {
-  color: #a5f3fc;
-  font-size: 0.72rem;
-  font-weight: 750;
-  letter-spacing: 0.13em;
+  color: var(--planet-copy-accent);
+  font-family: "Exo 2", var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1.4;
   text-transform: uppercase;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--planet-copy-accent) 62%, transparent);
 }
 
 [dir="rtl"] .service-planet-kicker {
@@ -3134,12 +3161,32 @@
 }
 
 .service-planet-title {
-  font-family: var(--font-display);
+  max-width: 27rem;
+  font-family: "Exo 2", var(--font-display);
   color: #f8fafc;
-  font-size: 1.65rem;
-  font-weight: 720;
-  line-height: 1.16;
+  font-size: 1.78rem;
+  font-weight: 700;
+  line-height: 1.12;
   letter-spacing: 0;
+  text-wrap: balance;
+  text-shadow:
+    0 2px 18px rgb(0 0 0 / 0.9),
+    0 0 24px color-mix(in srgb, var(--planet-copy-accent) 28%, transparent);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .service-planet-card[data-active="true"] .service-planet-title {
+    color: transparent;
+    background-image: linear-gradient(
+      100deg,
+      #ffffff 0%,
+      var(--planet-copy-accent) 42%,
+      var(--planet-copy-secondary) 72%,
+      #ffffff 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
 }
 
 [dir="rtl"] .service-planet-title {
@@ -3147,11 +3194,13 @@
 }
 
 .service-planet-description {
-  max-width: 25rem;
-  color: rgb(226 232 240 / 0.92);
-  font-size: 0.98rem;
+  max-width: 26rem;
+  color: rgb(226 232 240 / 0.94);
+  font-family: "Exo 2", var(--font-sans);
+  font-size: 1rem;
   font-weight: 450;
-  line-height: 1.72;
+  letter-spacing: 0;
+  line-height: 1.68;
 }
 
 .service-planet-card:not([data-active="true"]) .service-planet-copy {
@@ -3203,7 +3252,7 @@
   }
 
   .service-planet-title {
-    font-size: 1.22rem;
+    font-size: 1.34rem;
   }
 
   .service-planet-description {
@@ -3214,7 +3263,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .services-section-video {
+  .space-section-video {
     display: none;
   }
 
