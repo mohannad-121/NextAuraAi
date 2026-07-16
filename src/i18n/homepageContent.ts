@@ -239,6 +239,8 @@ const en = {
   benefits: {
     eyebrow: "WHY NEXTAURA",
     title: "Why businesses choose us",
+    body: "We combine strategy, design, development, automation, and AI into one clear delivery process built around your business.",
+    activeLabel: "In focus",
     items: [
       {
         title: "Built Around Your Business",
@@ -248,12 +250,17 @@ const en = {
       {
         title: "Web, Automation & AI in One Team",
         description:
-          "Strategy, product design, software, automation, and AI move together without handoff gaps.",
+          "Strategy, design, software, automation, and AI move together without handoff gaps.",
       },
       {
-        title: "Clear Delivery & Long-Term Support",
+        title: "Clear Delivery & Communication",
         description:
-          "You get visible progress, realistic expectations, direct communication, and support after launch.",
+          "You get visible progress, realistic expectations, direct communication, and clear project stages.",
+      },
+      {
+        title: "Long-Term Support & Growth",
+        description:
+          "We continue improving, maintaining, optimizing, and scaling the product after launch.",
       },
     ],
   },
@@ -579,7 +586,9 @@ const ar: Widen<typeof en> = {
   },
   benefits: {
     eyebrow: "لماذا NextAura",
-    title: "لماذا تختارنا الأعمال",
+    title: "لماذا تختارنا الشركات",
+    body: "نجمع الاستراتيجية والتصميم والتطوير والأتمتة والذكاء الاصطناعي ضمن عملية تسليم واضحة مصممة حول أعمالك.",
+    activeLabel: "قيد العرض",
     items: [
       {
         title: "مبني حول أعمالك",
@@ -588,11 +597,15 @@ const ar: Widen<typeof en> = {
       {
         title: "الويب والأتمتة والذكاء الاصطناعي في فريق واحد",
         description:
-          "تتحرك الاستراتيجية والتصميم والبرمجيات والأتمتة والذكاء الاصطناعي معًا دون فجوات.",
+          "تتحرك الاستراتيجية والتصميم والبرمجيات والأتمتة والذكاء الاصطناعي معًا دون فجوات في التسليم.",
       },
       {
-        title: "تسليم واضح ودعم طويل المدى",
-        description: "تحصل على تقدم واضح وتوقعات واقعية وتواصل مباشر ودعم مستمر بعد الإطلاق.",
+        title: "تسليم وتواصل واضحان",
+        description: "تحصل على تقدم مرئي وتوقعات واقعية وتواصل مباشر ومراحل مشروع واضحة.",
+      },
+      {
+        title: "دعم ونمو طويل الأمد",
+        description: "نواصل تحسين المنتج وصيانته ورفع كفاءته وتوسيعه بعد الإطلاق.",
       },
     ],
   },
@@ -870,6 +883,8 @@ const es: Widen<typeof en> = {
   benefits: {
     eyebrow: "POR QUÉ NEXTAURA",
     title: "Por qué las empresas nos eligen",
+    body: "Unimos estrategia, diseño, desarrollo, automatización e IA en un proceso de entrega claro construido alrededor de tu negocio.",
+    activeLabel: "En detalle",
     items: [
       {
         title: "Creado alrededor de tu negocio",
@@ -882,9 +897,14 @@ const es: Widen<typeof en> = {
           "Estrategia, diseño, software, automatización e IA avanzan sin brechas entre equipos.",
       },
       {
-        title: "Entrega clara y soporte a largo plazo",
+        title: "Entrega y comunicación claras",
         description:
-          "Recibes progreso visible, expectativas realistas, comunicación directa y apoyo tras el lanzamiento.",
+          "Recibes progreso visible, expectativas realistas, comunicación directa y etapas de proyecto claras.",
+      },
+      {
+        title: "Soporte y crecimiento a largo plazo",
+        description:
+          "Seguimos mejorando, manteniendo, optimizando y escalando el producto después del lanzamiento.",
       },
     ],
   },
