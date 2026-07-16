@@ -271,142 +271,144 @@ export function ProjectRequestModal({
               )}
             </div>
 
-            <nav className="project-modal-steps" aria-label={tr.modal.title}>
-              {tr.modal.steps.map((label: string, index: number) => {
-                const Icon = stepIcons[index];
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => setStep(index + 1)}
-                    className="project-modal-step"
-                    data-active={step === index + 1}
-                    data-complete={step > index + 1}
-                    aria-current={step === index + 1 ? "step" : undefined}
-                  >
-                    <span className="project-modal-step-number">
-                      {step > index + 1 ? (
-                        <Check className="h-3.5 w-3.5" />
-                      ) : (
-                        <Icon className="h-3.5 w-3.5" />
-                      )}
-                    </span>
-                    <span className="project-modal-step-label">{label}</span>
-                  </button>
-                );
-              })}
-            </nav>
-            {isPage ? (
-              <div className="project-page-progress" aria-hidden="true">
-                <span style={{ width: `${step * 25}%` }} />
-              </div>
-            ) : null}
-
-            {success ? (
-              <div className="project-modal-success">
-                <Check className="mx-auto h-10 w-10" style={{ color: "var(--cyan)" }} />
-                <p className="mt-4 text-lg font-semibold">{tr.modal.success}</p>
-                <button
-                  type="button"
-                  onClick={resetAndClose}
-                  className="project-modal-button project-modal-button-primary mt-6"
-                >
-                  {tr.modal.actions.close}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={submit} className="project-modal-form">
-                <div className="project-modal-body">
-                  {isPage ? (
-                    <div className="project-page-form-heading">
-                      <span className="project-page-form-heading-icon">
-                        {(() => {
-                          const Icon = stepIcons[step - 1];
-                          return <Icon className="h-5 w-5" />;
-                        })()}
-                      </span>
-                      <span>
-                        <small>{String(step).padStart(2, "0")}</small>
-                        <strong>{tr.modal.steps[step - 1]}</strong>
-                      </span>
-                      <Sparkles className="project-page-form-heading-spark h-5 w-5" />
-                    </div>
-                  ) : null}
-                  <AnimatePresence initial={false} mode="wait">
-                    <motion.div
-                      key={step}
-                      className="project-step-motion"
-                      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.22 }}
+            <div className={isPage ? "project-page-workspace" : "project-modal-workspace"}>
+              <nav className="project-modal-steps" aria-label={tr.modal.title}>
+                {tr.modal.steps.map((label: string, index: number) => {
+                  const Icon = stepIcons[index];
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => setStep(index + 1)}
+                      className="project-modal-step"
+                      data-active={step === index + 1}
+                      data-complete={step > index + 1}
+                      aria-current={step === index + 1 ? "step" : undefined}
                     >
-                      {step === 1 ? (
-                        <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
-                      ) : null}
-                      {step === 2 ? (
-                        <ProjectDetails
-                          form={form}
-                          setField={setField}
-                          toggleFeature={toggleFeature}
-                          errors={errors}
-                          tr={tr}
-                        />
-                      ) : null}
-                      {step === 3 ? (
-                        <PackageStep
-                          form={form}
-                          setField={setField}
-                          error={errors.selectedPackage}
-                          tr={tr}
-                        />
-                      ) : null}
-                      {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
-                    </motion.div>
-                  </AnimatePresence>
+                      <span className="project-modal-step-number">
+                        {step > index + 1 ? (
+                          <Check className="h-3.5 w-3.5" />
+                        ) : (
+                          <Icon className="h-3.5 w-3.5" />
+                        )}
+                      </span>
+                      <span className="project-modal-step-label">{label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+              {isPage ? (
+                <div className="project-page-progress" aria-hidden="true">
+                  <span style={{ width: `${step * 25}%` }} />
                 </div>
+              ) : null}
 
-                <div className="project-modal-actions">
+              {success ? (
+                <div className="project-modal-success">
+                  <Check className="mx-auto h-10 w-10" style={{ color: "var(--cyan)" }} />
+                  <p className="mt-4 text-lg font-semibold">{tr.modal.success}</p>
                   <button
                     type="button"
-                    onClick={() => setStep(Math.max(1, step - 1))}
-                    disabled={step === 1}
-                    className="project-modal-button project-modal-button-secondary disabled:cursor-not-allowed disabled:opacity-35"
+                    onClick={resetAndClose}
+                    className="project-modal-button project-modal-button-primary mt-6"
                   >
-                    <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" />
-                    {tr.modal.actions.previous}
+                    {tr.modal.actions.close}
                   </button>
-                  <div className="project-modal-actions-primary">
-                    {step < 4 ? (
-                      <button
-                        type="button"
-                        onClick={() => setStep(Math.min(4, step + 1))}
-                        className="project-modal-button project-modal-button-primary"
+                </div>
+              ) : (
+                <form onSubmit={submit} className="project-modal-form">
+                  <div className="project-modal-body">
+                    {isPage ? (
+                      <div className="project-page-form-heading">
+                        <span className="project-page-form-heading-icon">
+                          {(() => {
+                            const Icon = stepIcons[step - 1];
+                            return <Icon className="h-5 w-5" />;
+                          })()}
+                        </span>
+                        <span>
+                          <small>{String(step).padStart(2, "0")}</small>
+                          <strong>{tr.modal.steps[step - 1]}</strong>
+                        </span>
+                        <Sparkles className="project-page-form-heading-spark h-5 w-5" />
+                      </div>
+                    ) : null}
+                    <AnimatePresence initial={false} mode="wait">
+                      <motion.div
+                        key={step}
+                        className="project-step-motion"
+                        initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
+                        transition={{ duration: reduceMotion ? 0 : 0.22 }}
                       >
-                        {tr.modal.actions.next}
-                        <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
-                      </button>
-                    ) : (
-                      <>
+                        {step === 1 ? (
+                          <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
+                        ) : null}
+                        {step === 2 ? (
+                          <ProjectDetails
+                            form={form}
+                            setField={setField}
+                            toggleFeature={toggleFeature}
+                            errors={errors}
+                            tr={tr}
+                          />
+                        ) : null}
+                        {step === 3 ? (
+                          <PackageStep
+                            form={form}
+                            setField={setField}
+                            error={errors.selectedPackage}
+                            tr={tr}
+                          />
+                        ) : null}
+                        {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="project-modal-actions">
+                    <button
+                      type="button"
+                      onClick={() => setStep(Math.max(1, step - 1))}
+                      disabled={step === 1}
+                      className="project-modal-button project-modal-button-secondary disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" />
+                      {tr.modal.actions.previous}
+                    </button>
+                    <div className="project-modal-actions-primary">
+                      {step < 4 ? (
                         <button
                           type="button"
-                          onClick={openWhatsApp}
-                          className="project-modal-button project-modal-button-secondary"
-                        >
-                          {tr.modal.actions.whatsapp} <Send className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="submit"
+                          onClick={() => setStep(Math.min(4, step + 1))}
                           className="project-modal-button project-modal-button-primary"
                         >
-                          {tr.modal.actions.submit} <Send className="h-4 w-4" />
+                          {tr.modal.actions.next}
+                          <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
                         </button>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={openWhatsApp}
+                            className="project-modal-button project-modal-button-secondary"
+                          >
+                            {tr.modal.actions.whatsapp} <Send className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="submit"
+                            className="project-modal-button project-modal-button-primary"
+                          >
+                            {tr.modal.actions.submit} <Send className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </form>
-            )}
+                </form>
+              )}
+            </div>
             {isPage ? <ProjectPageTail /> : null}
           </motion.div>
         </motion.div>

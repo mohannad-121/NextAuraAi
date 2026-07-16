@@ -1,14 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowUpRight,
-  Clock3,
-  Globe2,
-  Linkedin,
-  Mail,
-  MapPin,
-  MessageCircle,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowUpRight, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
@@ -25,7 +16,6 @@ const countryCodes = [
   "BG",
   "BH",
   "BR",
-  "BV",
   "CA",
   "CD",
   "CH",
@@ -48,15 +38,11 @@ const countryCodes = [
   "FI",
   "FR",
   "GB",
-  "GB-ENG",
-  "GB-SCT",
-  "GB-WLS",
   "GE",
   "GH",
   "GN",
   "GR",
   "GT",
-  "HM",
   "HN",
   "HR",
   "HT",
@@ -78,7 +64,6 @@ const countryCodes = [
   "LY",
   "MA",
   "MC",
-  "MF",
   "ML",
   "MR",
   "MX",
@@ -94,7 +79,6 @@ const countryCodes = [
   "PH",
   "PK",
   "PL",
-  "PR",
   "PS",
   "PT",
   "PY",
@@ -107,7 +91,6 @@ const countryCodes = [
   "SE",
   "SG",
   "SI",
-  "SJ",
   "SK",
   "SN",
   "SV",
@@ -127,69 +110,16 @@ const countryCodes = [
   "ZA",
 ] as const;
 
-const specialCountryNames: Record<string, Record<string, string>> = {
-  en: { "GB-ENG": "England", "GB-SCT": "Scotland", "GB-WLS": "Wales" },
-  ar: { "GB-ENG": "إنجلترا", "GB-SCT": "اسكتلندا", "GB-WLS": "ويلز" },
-  es: { "GB-ENG": "Inglaterra", "GB-SCT": "Escocia", "GB-WLS": "Gales" },
-};
-
-const reachCopy = {
-  en: {
-    eyebrow: "GLOBAL DELIVERY",
-    title: "Built in Jordan. Ready for the world.",
-    body: "One remote team, one clear process, and digital products shaped for businesses across every major market.",
-    regions: ["Arab world", "Asia", "Europe", "The Americas", "Australia & Oceania"],
-    stats: [
-      ["100+", "markets represented"],
-      ["One", "delivery standard"],
-      ["Flexible", "time-zone collaboration"],
-    ],
-    note: "Your location should never limit the quality of what you can build.",
-  },
-  ar: {
-    eyebrow: "خدمات بلا حدود",
-    title: "نبني من الأردن، ونصل إلى العالم.",
-    body: "فريق واحد عن بعد، عملية واضحة، ومنتجات رقمية مصممة للأعمال في أهم الأسواق حول العالم.",
-    regions: ["العالم العربي", "آسيا", "أوروبا", "الأمريكيتان", "أستراليا وأوقيانوسيا"],
-    stats: [
-      ["+100", "سوق نمثله"],
-      ["معيار واحد", "لجودة التسليم"],
-      ["مرنة", "مواعيد التواصل"],
-    ],
-    note: "موقعك لا يجب أن يحد من جودة المنتج الذي تستطيع بناءه.",
-  },
-  es: {
-    eyebrow: "ALCANCE GLOBAL",
-    title: "Creamos desde Jordania para todo el mundo.",
-    body: "Un equipo remoto, un proceso claro y productos digitales adaptados a empresas de los principales mercados.",
-    regions: ["Mundo arabe", "Asia", "Europa", "Las Americas", "Australia y Oceania"],
-    stats: [
-      ["100+", "mercados representados"],
-      ["Unico", "estandar de entrega"],
-      ["Flexible", "colaboracion horaria"],
-    ],
-    note: "Tu ubicacion nunca debe limitar la calidad de lo que puedes crear.",
-  },
-};
-
 export function ProjectPageTail() {
   const { language, dir } = useLanguage();
   const [countryNames, setCountryNames] = useState<Record<string, string>>({});
   const page = homepageContent[language];
-  const copy = reachCopy[language];
   const footer = page.footer;
   const nav = page.nav;
 
   useEffect(() => {
     const names = new Intl.DisplayNames([language], { type: "region" });
-    setCountryNames(
-      Object.fromEntries(
-        countryCodes.map((code) => [
-          code,
-          specialCountryNames[language]?.[code] ?? names.of(code) ?? code,
-        ]),
-      ),
-    );
+    setCountryNames(Object.fromEntries(countryCodes.map((code) => [code, names.of(code) ?? code])));
   }, [language]);
 
   const countries = useMemo(
@@ -201,7 +131,6 @@ export function ProjectPageTail() {
     [countryNames],
   );
 
-  const midpoint = Math.ceil(countries.length / 2);
   const navigation = [
     [nav.home, "/#home"],
     [nav.services, "/#services"],
@@ -215,45 +144,10 @@ export function ProjectPageTail() {
   return (
     <>
       <section className="project-global-reach" dir={dir} aria-labelledby="global-reach-title">
-        <div className="project-global-reach-heading">
-          <div>
-            <div className="project-global-reach-eyebrow">
-              <span aria-hidden="true">{"\u{1F30D}"}</span>
-              {copy.eyebrow}
-            </div>
-            <h2 id="global-reach-title">{copy.title}</h2>
-          </div>
-          <p>{copy.body}</p>
-        </div>
-
-        <div className="project-global-stats">
-          {copy.stats.map(([value, label], index) => {
-            const Icon = [Globe2, ShieldCheck, Clock3][index];
-            return (
-              <div key={label} className="project-global-stat">
-                <Icon className="h-5 w-5" />
-                <strong>{value}</strong>
-                <span>{label}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="project-global-regions" aria-label={copy.eyebrow}>
-          {copy.regions.map((region) => (
-            <span key={region}>{region}</span>
-          ))}
-        </div>
-
+        <h2 id="global-reach-title">Built in Jordan. Ready for the world.</h2>
         <div className="project-flag-field">
-          <FlagMarquee countries={countries.slice(0, midpoint)} />
-          <FlagMarquee countries={countries.slice(midpoint)} reverse />
+          <FlagMarquee countries={countries} />
         </div>
-
-        <p className="project-global-note">
-          <span aria-hidden="true">{"\u2728"}</span>
-          {copy.note}
-        </p>
       </section>
 
       <footer className="project-page-footer" dir={dir}>
@@ -320,26 +214,19 @@ export function ProjectPageTail() {
   );
 }
 
-function FlagMarquee({
-  countries,
-  reverse = false,
-}: {
-  countries: Array<{ code: string; name: string }>;
-  reverse?: boolean;
-}) {
+function FlagMarquee({ countries }: { countries: Array<{ code: string; name: string }> }) {
   const list = (
     <ul className="project-flag-list">
       {countries.map((country) => (
         <li key={country.code} className="project-flag-item" title={country.name}>
           <img
             src={`/flags/${country.code}.png`}
-            alt=""
+            alt={country.name}
             width="40"
             height="20"
             loading="lazy"
             decoding="async"
           />
-          <span>{country.name}</span>
         </li>
       ))}
     </ul>
@@ -347,7 +234,7 @@ function FlagMarquee({
 
   return (
     <div className="project-flag-marquee">
-      <div className="project-flag-track" data-reverse={reverse}>
+      <div className="project-flag-track">
         {list}
         <div aria-hidden="true">{list}</div>
       </div>

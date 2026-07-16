@@ -4986,3 +4986,313 @@
     flex-wrap: wrap;
   }
 }
+
+/* Project request page: focused workspace and simplified global reach */
+.project-modal-workspace {
+  display: contents;
+}
+
+.project-page-workspace {
+  display: grid;
+  grid-template-columns: 17.5rem minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem 1.5rem;
+}
+
+.project-page-workspace > .project-modal-steps {
+  position: sticky;
+  top: 1.25rem;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border: 1px solid rgb(103 232 249 / 0.18);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgb(12 27 51 / 0.94), rgb(5 13 29 / 0.96)), #071225;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.24), inset 0 1px rgb(255 255 255 / 0.04);
+}
+
+.project-page-workspace > .project-modal-steps::after {
+  position: absolute;
+  inset-block: 2.25rem;
+  inset-inline-start: 1.95rem;
+  width: 1px;
+  background: linear-gradient(180deg, #22d3ee, #3b82f6 52%, #8b5cf6);
+  content: "";
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.project-page-workspace .project-modal-step {
+  position: relative;
+  z-index: 1;
+  min-height: 4.6rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  justify-content: start;
+  gap: 0.85rem;
+  padding: 0.8rem 0.9rem;
+  border-color: transparent;
+  background: transparent;
+  text-align: start;
+}
+
+.project-page-workspace .project-modal-step:hover {
+  border-color: rgb(103 232 249 / 0.2);
+  background: rgb(15 36 65 / 0.7);
+}
+
+.project-page-workspace .project-modal-step[data-active="true"] {
+  border-color: rgb(103 232 249 / 0.45);
+  background: linear-gradient(100deg, rgb(8 47 73 / 0.84), rgb(30 41 89 / 0.58));
+  box-shadow: inset 3px 0 #22d3ee, 0 12px 30px rgb(0 0 0 / 0.2);
+}
+
+[dir="rtl"] .project-page-workspace .project-modal-step[data-active="true"] {
+  box-shadow: inset -3px 0 #22d3ee, 0 12px 30px rgb(0 0 0 / 0.2);
+}
+
+.project-page-workspace .project-modal-step[data-complete="true"] {
+  color: #c7f9ff;
+}
+
+.project-page-workspace .project-modal-step-number {
+  background: #061226;
+  box-shadow: 0 0 0 5px rgb(6 18 38 / 0.92);
+}
+
+.project-page-workspace .project-modal-step-label {
+  display: block;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.project-page-workspace > .project-page-progress {
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 0;
+  border-radius: 999px;
+}
+
+.project-page-workspace > .project-modal-form,
+.project-page-workspace > .project-modal-success {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: 0;
+}
+
+.project-page-workspace > .project-modal-form {
+  background: linear-gradient(150deg, rgb(8 20 42 / 0.97), rgb(5 13 30 / 0.98)), #071225;
+}
+
+.project-page-workspace .project-modal-body {
+  padding: 2.5rem;
+}
+
+.project-page-workspace .project-modal-actions {
+  padding-inline: 1.5rem;
+}
+
+.project-global-reach {
+  position: relative;
+  width: 100vw;
+  margin-top: 8rem;
+  margin-inline: calc(50% - 50vw);
+  padding: 5.5rem max(1.5rem, calc((100vw - 80rem) / 2));
+  overflow: hidden;
+  border-block: 1px solid rgb(103 232 249 / 0.15);
+  background:
+    linear-gradient(rgb(103 232 249 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(99 102 241 / 0.035) 1px, transparent 1px),
+    linear-gradient(115deg, rgb(3 19 39 / 0.98), rgb(6 10 31 / 0.98) 55%, rgb(12 8 35 / 0.98));
+  background-size: 64px 64px, 64px 64px, auto;
+  contain-intrinsic-size: 420px;
+}
+
+.project-global-reach::before {
+  position: absolute;
+  inset: 0 auto auto 50%;
+  width: min(34rem, 72vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #22d3ee 35%, #8b5cf6 68%, transparent);
+  box-shadow: 0 0 24px rgb(34 211 238 / 0.5);
+  content: "";
+  translate: -50% 0;
+}
+
+.project-global-reach h2 {
+  position: relative;
+  max-width: none;
+  margin: 0;
+  color: #f8fafc;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.25vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .project-global-reach h2 {
+    color: transparent;
+    background: linear-gradient(100deg, #fff 12%, #a5f3fc 38%, #93c5fd 60%, #c4b5fd 88%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+.project-flag-field {
+  position: relative;
+  display: block;
+  margin-top: 3rem;
+}
+
+.project-flag-marquee {
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.project-flag-track {
+  gap: 0.75rem;
+  animation-duration: 95s;
+}
+
+.project-flag-list {
+  gap: 0.75rem;
+}
+
+.project-flag-item {
+  display: grid;
+  width: 4.75rem;
+  min-width: 4.75rem;
+  height: 3.4rem;
+  place-items: center;
+  padding: 0.55rem;
+  border: 1px solid rgb(148 163 184 / 0.15);
+  border-radius: 6px;
+  background: linear-gradient(145deg, rgb(16 31 56 / 0.92), rgb(7 16 34 / 0.92));
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.045), 0 12px 24px rgb(0 0 0 / 0.16);
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.project-flag-item:hover {
+  border-color: rgb(103 232 249 / 0.48);
+  transform: translateY(-3px);
+}
+
+.project-flag-item img {
+  width: 3.2rem;
+  height: 1.9rem;
+  border-radius: 3px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.34);
+}
+
+@media (max-width: 1024px) {
+  .project-page-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  .project-page-workspace > .project-modal-steps {
+    position: static;
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .project-page-workspace > .project-modal-steps::after {
+    display: none;
+  }
+
+  .project-page-workspace .project-modal-step {
+    min-height: 4.25rem;
+    justify-content: center;
+    padding: 0.65rem;
+  }
+
+  .project-page-workspace .project-modal-step-number {
+    box-shadow: none;
+  }
+
+  .project-page-workspace > .project-page-progress {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .project-page-workspace > .project-modal-form,
+  .project-page-workspace > .project-modal-success {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .project-page .project-modal-header {
+    padding-top: 2.5rem;
+  }
+
+  .project-page-workspace .project-modal-step {
+    min-height: 3.25rem;
+    grid-template-columns: auto;
+    padding: 0.45rem;
+  }
+
+  .project-page-workspace .project-modal-step-label {
+    display: none;
+  }
+
+  .project-page-workspace .project-modal-body {
+    padding: 1.15rem;
+  }
+
+  .project-global-reach {
+    margin-top: 5.5rem;
+    padding-block: 4rem;
+  }
+
+  .project-global-reach h2 {
+    padding-inline: 0.4rem 3.5rem;
+    font-size: 2rem;
+    line-height: 1.12;
+    white-space: normal;
+  }
+
+  [dir="rtl"].project-global-reach h2 {
+    padding-inline: 3.5rem 0.4rem;
+  }
+
+  .project-flag-field {
+    margin-top: 2.25rem;
+  }
+
+  .project-flag-item {
+    width: 4.25rem;
+    min-width: 4.25rem;
+    height: 3.1rem;
+  }
+
+  .project-flag-item img {
+    width: 2.9rem;
+    height: 1.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-flag-marquee {
+    overflow-x: auto;
+  }
+
+  .project-flag-list {
+    flex-wrap: nowrap;
+  }
+}
