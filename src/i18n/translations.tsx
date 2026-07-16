@@ -235,6 +235,7 @@ export const translations = {
         timeline: "Choose timeline",
         contactMethod: "Choose contact method",
       },
+      contactMethods: ["WhatsApp", "Phone call", "Email"],
       actions: {
         next: "Next",
         previous: "Previous",
@@ -522,6 +523,7 @@ translations.ar = {
       timeline: "اختر المدة",
       contactMethod: "اختر طريقة التواصل",
     },
+    contactMethods: ["واتساب", "مكالمة هاتفية", "بريد إلكتروني"],
     actions: {
       next: "التالي",
       previous: "السابق",
@@ -832,6 +834,7 @@ translations.es = {
       timeline: "Elige el plazo",
       contactMethod: "Elige el método de contacto",
     },
+    contactMethods: ["WhatsApp", "Llamada telefónica", "Correo electrónico"],
     actions: {
       next: "Siguiente",
       previous: "Anterior",

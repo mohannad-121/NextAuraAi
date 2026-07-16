@@ -8,24 +8,38 @@ import {
   useRef,
   useState,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  Bot,
-  Check,
   ArrowLeft,
+  Bot,
+  BriefcaseBusiness,
+  Building2,
+  Check,
   ChevronLeft,
   ChevronRight,
+  Clock3,
+  FileText,
   Globe,
   LayoutDashboard,
+  Lightbulb,
+  Mail,
+  MessageCircle,
+  Phone,
   Send,
+  Sparkles,
+  StickyNote,
+  UserRound,
+  WalletCards,
   X,
+  type LucideIcon,
 } from "lucide-react";
 import { LanguageSwitcher, translations, useLanguage } from "@/i18n/translations";
+import { ProjectPageTail } from "@/components/landing/ProjectPageTail";
 
 const WHATSAPP_NUMBER = "962799195498";
 
-const contactMethods = ["WhatsApp", "Phone call", "Email"];
 const packageIcons = [Globe, LayoutDashboard, Bot];
+const stepIcons = [UserRound, Lightbulb, WalletCards, FileText];
 
 const emptyForm = {
   fullName: "",
@@ -57,6 +71,7 @@ export function ProjectRequestModal({
 }: ProjectRequestModalProps) {
   const { tr, dir } = useLanguage();
   const isPage = presentation === "page";
+  const reduceMotion = useReducedMotion();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<ProjectForm>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -257,22 +272,29 @@ export function ProjectRequestModal({
             </div>
 
             <nav className="project-modal-steps" aria-label={tr.modal.title}>
-              {tr.modal.steps.map((label: string, index: number) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => setStep(index + 1)}
-                  className="project-modal-step"
-                  data-active={step === index + 1}
-                  data-complete={step > index + 1}
-                  aria-current={step === index + 1 ? "step" : undefined}
-                >
-                  <span className="project-modal-step-number">
-                    {step > index + 1 ? <Check className="h-3.5 w-3.5" /> : index + 1}
-                  </span>
-                  <span className="project-modal-step-label">{label}</span>
-                </button>
-              ))}
+              {tr.modal.steps.map((label: string, index: number) => {
+                const Icon = stepIcons[index];
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => setStep(index + 1)}
+                    className="project-modal-step"
+                    data-active={step === index + 1}
+                    data-complete={step > index + 1}
+                    aria-current={step === index + 1 ? "step" : undefined}
+                  >
+                    <span className="project-modal-step-number">
+                      {step > index + 1 ? (
+                        <Check className="h-3.5 w-3.5" />
+                      ) : (
+                        <Icon className="h-3.5 w-3.5" />
+                      )}
+                    </span>
+                    <span className="project-modal-step-label">{label}</span>
+                  </button>
+                );
+              })}
             </nav>
             {isPage ? (
               <div className="project-page-progress" aria-hidden="true">
@@ -295,27 +317,53 @@ export function ProjectRequestModal({
             ) : (
               <form onSubmit={submit} className="project-modal-form">
                 <div className="project-modal-body">
-                  {step === 1 ? (
-                    <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
+                  {isPage ? (
+                    <div className="project-page-form-heading">
+                      <span className="project-page-form-heading-icon">
+                        {(() => {
+                          const Icon = stepIcons[step - 1];
+                          return <Icon className="h-5 w-5" />;
+                        })()}
+                      </span>
+                      <span>
+                        <small>{String(step).padStart(2, "0")}</small>
+                        <strong>{tr.modal.steps[step - 1]}</strong>
+                      </span>
+                      <Sparkles className="project-page-form-heading-spark h-5 w-5" />
+                    </div>
                   ) : null}
-                  {step === 2 ? (
-                    <ProjectDetails
-                      form={form}
-                      setField={setField}
-                      toggleFeature={toggleFeature}
-                      errors={errors}
-                      tr={tr}
-                    />
-                  ) : null}
-                  {step === 3 ? (
-                    <PackageStep
-                      form={form}
-                      setField={setField}
-                      error={errors.selectedPackage}
-                      tr={tr}
-                    />
-                  ) : null}
-                  {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
+                  <AnimatePresence initial={false} mode="wait">
+                    <motion.div
+                      key={step}
+                      className="project-step-motion"
+                      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.22 }}
+                    >
+                      {step === 1 ? (
+                        <ClientInfo form={form} setField={setField} errors={errors} tr={tr} />
+                      ) : null}
+                      {step === 2 ? (
+                        <ProjectDetails
+                          form={form}
+                          setField={setField}
+                          toggleFeature={toggleFeature}
+                          errors={errors}
+                          tr={tr}
+                        />
+                      ) : null}
+                      {step === 3 ? (
+                        <PackageStep
+                          form={form}
+                          setField={setField}
+                          error={errors.selectedPackage}
+                          tr={tr}
+                        />
+                      ) : null}
+                      {step === 4 ? <ReviewStep form={form} setField={setField} tr={tr} /> : null}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
 
                 <div className="project-modal-actions">
@@ -325,7 +373,8 @@ export function ProjectRequestModal({
                     disabled={step === 1}
                     className="project-modal-button project-modal-button-secondary disabled:cursor-not-allowed disabled:opacity-35"
                   >
-                    <ChevronRight className="h-4 w-4" /> {tr.modal.actions.previous}
+                    <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" />
+                    {tr.modal.actions.previous}
                   </button>
                   <div className="project-modal-actions-primary">
                     {step < 4 ? (
@@ -334,7 +383,8 @@ export function ProjectRequestModal({
                         onClick={() => setStep(Math.min(4, step + 1))}
                         className="project-modal-button project-modal-button-primary"
                       >
-                        {tr.modal.actions.next} <ChevronLeft className="h-4 w-4" />
+                        {tr.modal.actions.next}
+                        <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
                       </button>
                     ) : (
                       <>
@@ -357,6 +407,7 @@ export function ProjectRequestModal({
                 </div>
               </form>
             )}
+            {isPage ? <ProjectPageTail /> : null}
           </motion.div>
         </motion.div>
       ) : null}
@@ -377,7 +428,7 @@ function ClientInfo({
 }) {
   return (
     <div className="project-fields-grid">
-      <Field label={tr.modal.labels.fullName} error={errors.fullName}>
+      <Field label={tr.modal.labels.fullName} error={errors.fullName} icon={UserRound}>
         <input
           value={form.fullName}
           onChange={(e) => setField("fullName", e.target.value)}
@@ -386,7 +437,7 @@ function ClientInfo({
           autoComplete="name"
         />
       </Field>
-      <Field label={tr.modal.labels.phone} error={errors.phone}>
+      <Field label={tr.modal.labels.phone} error={errors.phone} icon={Phone}>
         <input
           value={form.phone}
           onChange={(e) => setField("phone", e.target.value)}
@@ -396,7 +447,7 @@ function ClientInfo({
           autoComplete="tel"
         />
       </Field>
-      <Field label={tr.modal.labels.email}>
+      <Field label={tr.modal.labels.email} icon={Mail}>
         <input
           value={form.email}
           onChange={(e) => setField("email", e.target.value)}
@@ -405,7 +456,7 @@ function ClientInfo({
           autoComplete="email"
         />
       </Field>
-      <Field label={tr.modal.labels.businessName}>
+      <Field label={tr.modal.labels.businessName} icon={Building2}>
         <input
           value={form.businessName}
           onChange={(e) => setField("businessName", e.target.value)}
@@ -432,7 +483,11 @@ function ProjectDetails({
 }) {
   return (
     <div className="project-step-content">
-      <Field label={tr.modal.labels.projectType} error={errors.projectType}>
+      <Field
+        label={tr.modal.labels.projectType}
+        error={errors.projectType}
+        icon={BriefcaseBusiness}
+      >
         <select
           value={form.projectType}
           onChange={(e) => setField("projectType", e.target.value)}
@@ -446,7 +501,12 @@ function ProjectDetails({
           ))}
         </select>
       </Field>
-      <Field label={tr.modal.labels.projectIdea} error={errors.projectIdea}>
+      <Field
+        label={tr.modal.labels.projectIdea}
+        error={errors.projectIdea}
+        icon={Lightbulb}
+        multiline
+      >
         <textarea
           value={form.projectIdea}
           onChange={(e) => setField("projectIdea", e.target.value)}
@@ -455,7 +515,10 @@ function ProjectDetails({
         />
       </Field>
       <div>
-        <div className="project-field-heading">{tr.modal.labels.features}</div>
+        <div className="project-field-heading project-field-heading-with-icon">
+          <Sparkles className="h-4 w-4" />
+          {tr.modal.labels.features}
+        </div>
         <div className="project-feature-grid">
           {tr.modal.features.map((feature: string) => {
             const selected = form.features.includes(feature);
@@ -496,20 +559,28 @@ function PackageStep({
         <div className="project-package-grid">
           {tr.modal.packages.map((pkg, index: number) => {
             const Icon = packageIcons[index];
+            const selected = form.selectedPackage === pkg.title;
             return (
               <button
                 key={pkg.title}
                 type="button"
                 onClick={() => setField("selectedPackage", pkg.title)}
                 className="project-package-card"
-                data-selected={form.selectedPackage === pkg.title}
-                aria-pressed={form.selectedPackage === pkg.title}
+                data-selected={selected}
+                aria-pressed={selected}
               >
                 <div className="project-package-topline">
                   <span className="project-package-icon">
                     <Icon className="h-5 w-5" />
                   </span>
-                  {pkg.badge ? <span className="project-package-badge">{pkg.badge}</span> : null}
+                  <span className="project-package-meta">
+                    {selected ? (
+                      <span className="project-package-selected">
+                        <Check className="h-3.5 w-3.5" />
+                      </span>
+                    ) : null}
+                    {pkg.badge ? <span className="project-package-badge">{pkg.badge}</span> : null}
+                  </span>
                 </div>
                 <h3 className="project-package-title">{pkg.title}</h3>
                 <div className="project-package-price">{pkg.price}</div>
@@ -529,7 +600,7 @@ function PackageStep({
         <p className="project-pricing-note">{tr.modal.pricingNote}</p>
       </div>
       <div className="project-fields-grid">
-        <Field label={tr.modal.labels.timeline}>
+        <Field label={tr.modal.labels.timeline} icon={Clock3}>
           <select
             value={form.timeline}
             onChange={(e) => setField("timeline", e.target.value)}
@@ -543,14 +614,14 @@ function PackageStep({
             ))}
           </select>
         </Field>
-        <Field label={tr.modal.labels.contactMethod}>
+        <Field label={tr.modal.labels.contactMethod} icon={MessageCircle}>
           <select
             value={form.contactMethod}
             onChange={(e) => setField("contactMethod", e.target.value)}
             className="form-input"
           >
             <option value="">{tr.modal.select.contactMethod}</option>
-            {contactMethods.map((method) => (
+            {tr.modal.contactMethods.map((method: string) => (
               <option key={method} value={method}>
                 {method}
               </option>
@@ -573,7 +644,7 @@ function ReviewStep({
 }) {
   return (
     <div className="project-step-content">
-      <Field label={tr.modal.labels.notes}>
+      <Field label={tr.modal.labels.notes} icon={StickyNote} multiline>
         <textarea
           value={form.notes}
           onChange={(e) => setField("notes", e.target.value)}
@@ -620,11 +691,26 @@ function ReviewStep({
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+  icon: Icon,
+  multiline = false,
+}: {
+  label: string;
+  error?: string;
+  children: ReactNode;
+  icon?: LucideIcon;
+  multiline?: boolean;
+}) {
   return (
     <label className="project-field">
       <span className="project-field-label">{label}</span>
-      {children}
+      <span className="project-field-control" data-multiline={multiline}>
+        {Icon ? <Icon className="project-field-control-icon h-4 w-4" /> : null}
+        {children}
+      </span>
       {error ? <span className="project-field-error">{error}</span> : null}
     </label>
   );
