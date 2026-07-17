@@ -1,4 +1,13 @@
-import { ArrowUpRight, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
+import {
+  ArrowUpRight,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Youtube,
+} from "lucide-react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
@@ -85,15 +94,60 @@ export function Contact({ onStartProject }: ContactProps) {
             <div>
               <BrandSymbol className="h-11 w-11" imageClassName="h-full w-full" />
               <p className="mt-6 max-w-sm text-sm leading-7 text-slate-400">{footer.description}</p>
-              <a
-                href="https://linkedin.com/company/nextaura-ai"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="NextAura AI on LinkedIn"
-                className="mt-6 grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition hover:border-cyan-300/50 hover:text-cyan-200"
-              >
-                <Linkedin className="h-4 w-4" />
-              </a>
+              <div className="mt-6 flex flex-wrap gap-2" aria-label="NextAura AI social media">
+                <a
+                  href="https://linkedin.com/company/nextaura-ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit NextAura AI on LinkedIn"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/nextauraai/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit NextAura AI on Instagram"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-fuchsia-300/50 hover:text-fuchsia-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.facebook.com/Nextauraai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit NextAura AI on Facebook"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-blue-300/50 hover:text-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.youtube.com/@NextAuraAI-Solutions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit NextAura AI on YouTube"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-red-300/50 hover:text-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                >
+                  <Youtube className="h-4 w-4" />
+                </a>
+                <a
+                  href="http://tiktok.com/@nextaura_ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit NextAura AI on TikTok"
+                  className="flex h-11 items-center justify-center rounded-full border border-white/12 px-3 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                >
+                  TikTok
+                </a>
+                <a
+                  href="mailto:info@next-aura-ai.com"
+                  aria-label="Email NextAura AI"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                >
+                  <Mail className="h-4 w-4" />
+                </a>
+              </div>
             </div>
             <FooterColumn title={footer.navigation} items={navigation} />
             <div>
