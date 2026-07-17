@@ -115,11 +115,15 @@ const en = {
     members: {
       mohannad: {
         role: "Founder & AI/Backend Lead",
-        description: "AI, backend systems, product development, and business direction.",
+        description:
+          "AI and backend developer leading product direction, business strategy, system logic, and intelligent digital solutions at NextAura AI.",
+        about: "About Mohannad",
       },
       moayad: {
         role: "Founder & Systems Architect",
-        description: "Software development, system architecture, and technical execution.",
+        description:
+          "AI engineer focused on LLMs, RAG, computer vision, machine-learning systems, and production-ready AI integrations.",
+        about: "About Moayad",
       },
     },
   },
@@ -518,11 +522,15 @@ const ar: Widen<typeof en> = {
     members: {
       mohannad: {
         role: "Founder & AI/Backend Lead",
-        description: "الذكاء الاصطناعي وأنظمة الباكند وتطوير المنتج واتجاه الأعمال.",
+        description:
+          "مطوّر ذكاء اصطناعي وباكند يقود اتجاه المنتج واستراتيجية الأعمال ومنطق الأنظمة والحلول الرقمية الذكية في NextAura AI.",
+        about: "عن مهند",
       },
       moayad: {
         role: "Founder & Systems Architect",
-        description: "تطوير البرمجيات وهيكلة الأنظمة والتنفيذ التقني.",
+        description:
+          "مهندس ذكاء اصطناعي يركّز على نماذج اللغة وRAG والرؤية الحاسوبية وأنظمة التعلّم الآلي وتكاملات الذكاء الاصطناعي الجاهزة للإنتاج.",
+        about: "عن مؤيد",
       },
     },
   },
@@ -860,11 +868,15 @@ const es: Widen<typeof en> = {
     members: {
       mohannad: {
         role: "Founder & AI/Backend Lead",
-        description: "IA, sistemas backend, desarrollo de producto y dirección de negocio.",
+        description:
+          "Desarrollador de IA y backend que lidera la dirección de producto, la estrategia de negocio, la lógica de sistemas y las soluciones digitales inteligentes en NextAura AI.",
+        about: "Sobre Mohannad",
       },
       moayad: {
         role: "Founder & Systems Architect",
-        description: "Desarrollo de software, arquitectura de sistemas y ejecución técnica.",
+        description:
+          "Ingeniero de IA centrado en LLM, RAG, visión por computadora, sistemas de aprendizaje automático e integraciones de IA listas para producción.",
+        about: "Sobre Moayad",
       },
     },
   },
