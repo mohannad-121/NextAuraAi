@@ -129,6 +129,9 @@ export type ProjectRequest = {
   packageId: PackageId;
   includedFeatureIds: FeatureId[];
   selectedFeatureIds: FeatureId[];
+  /** Localized, customer-readable names persisted with the request. */
+  includedFeatures: string[];
+  selectedFeatures: string[];
   customFeature?: string;
   languageCount: number;
   timeline: TimelineDetails;
@@ -176,6 +179,7 @@ export type ProjectRequestRecord = {
   is_rush: boolean;
   contact_method?: string | null;
   notes?: string | null;
+  additional_notes?: string | null;
   estimated_min_jod?: number | null;
   estimated_max_jod?: number | null;
   selected_currency?: string | null;
