@@ -165,12 +165,17 @@ export type ProjectRequestRecord = {
   email?: string | null;
   business_name?: string | null;
   project_type: string;
+  project_idea?: string | null;
   package_id: string;
+  included_features?: string[];
   selected_features: string[];
   custom_features?: string | null;
+  language_count?: number | null;
   timeline_option?: string | null;
   requested_date?: string | null;
   is_rush: boolean;
+  contact_method?: string | null;
+  notes?: string | null;
   estimated_min_jod?: number | null;
   estimated_max_jod?: number | null;
   selected_currency?: string | null;
@@ -180,6 +185,7 @@ export type ProjectRequestRecord = {
   maintenance_months?: number;
   status?: string;
   source_page?: string;
+  submitted_at?: string;
   created_at?: string;
 };
 

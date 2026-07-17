@@ -48,10 +48,12 @@ import {
 import { downloadProjectPdf, generateProjectRequestPdf } from "@/features/project-request/pdf";
 import {
   buildEstimateExplanation,
-  buildWhatsAppUrl,
+  buildWhatsAppConversationUrl,
+  buildWhatsAppMessage,
   convertEstimate,
   formatMoneyRange,
   loadExchangeRates,
+  WHATSAPP_URL_SAFE_LENGTH,
 } from "@/features/project-request/services";
 import {
   ProjectRequestPersistenceError,
@@ -130,6 +132,7 @@ export function ProjectRequestModal({
   const [submittedRequest, setSubmittedRequest] = useState<PersistedProjectRequest | null>(null);
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [fullRequestCopied, setFullRequestCopied] = useState(false);
   const submissionInFlightRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -165,6 +168,16 @@ export function ProjectRequestModal({
     : null;
   const showRecommendation = Boolean(
     recommendation && recommendationKey !== dismissedRecommendation,
+  );
+  const whatsappSummary = useMemo(
+    () =>
+      submittedRequest
+        ? buildWhatsAppMessage(submittedRequest, language, { hasPdf: Boolean(pdfBlob) })
+        : null,
+    [language, pdfBlob, submittedRequest],
+  );
+  const whatsappMessageTooLong = Boolean(
+    whatsappSummary && whatsappSummary.urlLength > WHATSAPP_URL_SAFE_LENGTH,
   );
 
   const setField = <Key extends keyof ProjectRequestDraft>(
@@ -422,6 +435,7 @@ export function ProjectRequestModal({
     setSubmission(null);
     setSubmittedRequest(null);
     setPdfBlob(null);
+    setFullRequestCopied(false);
     try {
       const saved = await submitProjectRequest(request);
       const persistedRequest: PersistedProjectRequest = {
@@ -464,13 +478,31 @@ export function ProjectRequestModal({
   };
 
   const openManualWhatsApp = () => {
-    if (!submittedRequest) return;
+    if (!whatsappSummary) return;
     const whatsappWindow = window.open(
-      buildWhatsAppUrl(submittedRequest, language, { hasPdf: Boolean(pdfBlob) }),
+      whatsappMessageTooLong ? buildWhatsAppConversationUrl() : whatsappSummary.url,
       "_blank",
       "noopener,noreferrer",
     );
     if (whatsappWindow && onSubmitted) window.setTimeout(onSubmitted, 1200);
+  };
+
+  const copyFullRequest = async () => {
+    if (!whatsappSummary) return;
+    try {
+      await navigator.clipboard.writeText(whatsappSummary.message);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = whatsappSummary.message;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    setFullRequestCopied(true);
   };
 
   const progress = ((step + 1) / STEP_COUNT) * 100;
@@ -554,6 +586,9 @@ export function ProjectRequestModal({
                         downloadProjectPdf(pdfBlob, submittedRequest.id);
                     }}
                     onWhatsApp={openManualWhatsApp}
+                    whatsappMessageTooLong={whatsappMessageTooLong}
+                    fullRequestCopied={fullRequestCopied}
+                    onCopyFullRequest={copyFullRequest}
                   />
                 ) : (
                   <form onSubmit={submit} noValidate>
@@ -1729,6 +1764,9 @@ function SubmissionState({
   request,
   onDownload,
   onWhatsApp,
+  whatsappMessageTooLong,
+  fullRequestCopied,
+  onCopyFullRequest,
 }: {
   copy: (typeof projectRequestCopy)["en"];
   submission: SubmissionResult;
@@ -1737,6 +1775,9 @@ function SubmissionState({
   request: PersistedProjectRequest | null;
   onDownload: () => void;
   onWhatsApp: () => void;
+  whatsappMessageTooLong: boolean;
+  fullRequestCopied: boolean;
+  onCopyFullRequest: () => void;
 }) {
   return (
     <div className="nxa-project-submission-state" role="status">
@@ -1753,6 +1794,11 @@ function SubmissionState({
         </p>
       ) : null}
       {submission.stored ? <p>{copy.success.stored}</p> : null}
+      {whatsappMessageTooLong ? (
+        <p className="nxa-project-submission-warning" role="alert">
+          <AlertTriangle /> {copy.success.messageTooLong}
+        </p>
+      ) : null}
       <p>{copy.success.manualBody}</p>
       <ol>
         {copy.success.manualSteps.map((item) => (
@@ -1771,6 +1817,17 @@ function SubmissionState({
         >
           <Download /> {copy.actions.downloadPdf}
         </button>
+        {whatsappMessageTooLong ? (
+          <button
+            type="button"
+            className="nxa-project-button nxa-project-button-secondary"
+            onClick={onCopyFullRequest}
+            disabled={!request}
+          >
+            <FileText />{" "}
+            {fullRequestCopied ? copy.success.copiedFullRequest : copy.actions.copyFullRequest}
+          </button>
+        ) : null}
         <button
           type="button"
           className={`nxa-project-button nxa-project-button-primary ${socialBrandClassName("https://wa.me/962799195498", "WhatsApp", "cta")}`}
