@@ -5,11 +5,14 @@ import { LanguageSwitcher, useLanguage } from "@/i18n/translations";
 import { homepageContent } from "@/i18n/homepageContent";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
 
-type NavProps = { onStartProject: () => void };
+type NavProps = {
+  onStartProject: () => void;
+  internalPage?: boolean;
+};
 
 const ids = ["home", "services", "projects", "process", "team", "contact"];
 
-export function Nav({ onStartProject }: NavProps) {
+export function Nav({ onStartProject, internalPage = false }: NavProps) {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].nav;
   const [scrolled, setScrolled] = useState(false);
@@ -66,13 +69,15 @@ export function Nav({ onStartProject }: NavProps) {
     onStartProject();
   };
 
+  const hrefFor = (id: string) => (internalPage ? `/#${id}` : `#${id}`);
+
   return (
     <header className="fixed inset-x-0 top-0 z-[70] px-3 sm:px-5">
       <div
         className={`mx-auto mt-3 flex max-w-[var(--homepage-container)] items-center justify-between rounded-2xl px-3 py-2.5 transition-[background-color,border-color,box-shadow] duration-200 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#081123]/92 shadow-[0_14px_40px_rgb(0_0_0_/_0.32)] backdrop-blur-md" : "border border-white/8 bg-[#081123]/32 backdrop-blur-[6px]"}`}
       >
         <a
-          href="#home"
+          href={hrefFor("home")}
           aria-label="NextAura AI home"
           className="relative z-10 inline-flex min-h-11 items-center"
         >
@@ -83,7 +88,7 @@ export function Nav({ onStartProject }: NavProps) {
           {links.map((link) => (
             <a
               key={link.id}
-              href={`#${link.id}`}
+              href={hrefFor(link.id)}
               className={`relative rounded-full px-3 py-2 text-[0.78rem] font-medium transition-colors ${active === link.id ? "text-white" : "text-slate-400 hover:text-white"}`}
             >
               {link.label}
@@ -133,7 +138,7 @@ export function Nav({ onStartProject }: NavProps) {
               {links.map((link, index) => (
                 <a
                   key={link.id}
-                  href={`#${link.id}`}
+                  href={hrefFor(link.id)}
                   onClick={() => setOpen(false)}
                   className={`flex min-h-12 items-center justify-between border-b border-white/6 px-2 text-lg ${active === link.id ? "text-cyan-300" : "text-white"}`}
                 >

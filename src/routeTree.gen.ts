@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StartProjectRouteImport } from './routes/start-project'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FoundersMohannadRouteImport } from './routes/founders/mohannad'
+import { Route as FoundersMoayadRouteImport } from './routes/founders/moayad'
 import { Route as ApiVisitorsRouteImport } from './routes/api/visitors'
 import { Route as ApiProjectRequestsRouteImport } from './routes/api/project-requests'
 import { Route as ApiExchangeRatesRouteImport } from './routes/api/exchange-rates'
@@ -24,6 +26,16 @@ const StartProjectRoute = StartProjectRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FoundersMohannadRoute = FoundersMohannadRouteImport.update({
+  id: '/founders/mohannad',
+  path: '/founders/mohannad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FoundersMoayadRoute = FoundersMoayadRouteImport.update({
+  id: '/founders/moayad',
+  path: '/founders/moayad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiVisitorsRoute = ApiVisitorsRouteImport.update({
@@ -54,6 +66,8 @@ export interface FileRoutesByFullPath {
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
   '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
+  '/founders/moayad': typeof FoundersMoayadRoute
+  '/founders/mohannad': typeof FoundersMohannadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +76,8 @@ export interface FileRoutesByTo {
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
   '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
+  '/founders/moayad': typeof FoundersMoayadRoute
+  '/founders/mohannad': typeof FoundersMohannadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +87,8 @@ export interface FileRoutesById {
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
   '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
+  '/founders/moayad': typeof FoundersMoayadRoute
+  '/founders/mohannad': typeof FoundersMohannadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +99,8 @@ export interface FileRouteTypes {
     | '/api/exchange-rates'
     | '/api/project-requests'
     | '/api/visitors'
+    | '/founders/moayad'
+    | '/founders/mohannad'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +109,8 @@ export interface FileRouteTypes {
     | '/api/exchange-rates'
     | '/api/project-requests'
     | '/api/visitors'
+    | '/founders/moayad'
+    | '/founders/mohannad'
   id:
     | '__root__'
     | '/'
@@ -97,6 +119,8 @@ export interface FileRouteTypes {
     | '/api/exchange-rates'
     | '/api/project-requests'
     | '/api/visitors'
+    | '/founders/moayad'
+    | '/founders/mohannad'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +130,8 @@ export interface RootRouteChildren {
   ApiExchangeRatesRoute: typeof ApiExchangeRatesRoute
   ApiProjectRequestsRoute: typeof ApiProjectRequestsRoute
   ApiVisitorsRoute: typeof ApiVisitorsRoute
+  FoundersMoayadRoute: typeof FoundersMoayadRoute
+  FoundersMohannadRoute: typeof FoundersMohannadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +148,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/founders/mohannad': {
+      id: '/founders/mohannad'
+      path: '/founders/mohannad'
+      fullPath: '/founders/mohannad'
+      preLoaderRoute: typeof FoundersMohannadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/founders/moayad': {
+      id: '/founders/moayad'
+      path: '/founders/moayad'
+      fullPath: '/founders/moayad'
+      preLoaderRoute: typeof FoundersMoayadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/visitors': {
@@ -162,6 +202,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiExchangeRatesRoute: ApiExchangeRatesRoute,
   ApiProjectRequestsRoute: ApiProjectRequestsRoute,
   ApiVisitorsRoute: ApiVisitorsRoute,
+  FoundersMoayadRoute: FoundersMoayadRoute,
+  FoundersMohannadRoute: FoundersMohannadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
