@@ -1,97 +1,135 @@
-import { Eye } from "lucide-react";
+import { Eye, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { usePrefersReducedMotion } from "@/hooks/use-viewport-activity";
+import { getAnonymousVisitorId } from "@/lib/anonymousVisitor";
+import { useLanguage } from "@/i18n/translations";
 
-const BASE_VISITOR_COUNT = 110;
-const COUNT_ANIMATION_DURATION = 650;
+const COUNT_CACHE_KEY = "nextaura-visitor-count-cache-v1";
+const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1_000;
 
-let visitorCountRequest: Promise<number> | undefined;
+let visitorCountRequest: Promise<number> | null = null;
 
-function loadVisitorCount() {
+function readCachedCount() {
+  try {
+    const cached = JSON.parse(window.localStorage.getItem(COUNT_CACHE_KEY) ?? "null") as {
+      count?: unknown;
+      timestamp?: unknown;
+    } | null;
+    if (
+      cached &&
+      Number.isSafeInteger(cached.count) &&
+      Number(cached.count) >= 0 &&
+      typeof cached.timestamp === "number" &&
+      Date.now() - cached.timestamp <= CACHE_MAX_AGE_MS
+    ) {
+      return Number(cached.count);
+    }
+  } catch {
+    // The confirmed server value will replace an unavailable or invalid cache.
+  }
+  return null;
+}
+
+function cacheCount(count: number) {
+  try {
+    window.localStorage.setItem(COUNT_CACHE_KEY, JSON.stringify({ count, timestamp: Date.now() }));
+  } catch {
+    // Counting remains functional when browser storage is unavailable.
+  }
+}
+
+function requestVisitorCount(force = false) {
+  if (force) visitorCountRequest = null;
   if (!visitorCountRequest) {
     visitorCountRequest = fetch("/api/visitors", {
       method: "POST",
       cache: "no-store",
       credentials: "same-origin",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ page: window.location.pathname }),
+      body: JSON.stringify({
+        visitorId: getAnonymousVisitorId(),
+        page: window.location.pathname,
+      }),
       keepalive: true,
-    })
-      .then(async (response) => {
-        const data = (await response.json()) as {
-          displayedCount?: unknown;
-          error?: unknown;
-        };
+    }).then(async (response) => {
+      const data = (await response.json().catch(() => null)) as {
+        success?: unknown;
+        uniqueCount?: unknown;
+      } | null;
 
-        if (!response.ok) {
-          if (import.meta.env.DEV) {
-            console.error(
-              "Visitor count request failed",
-              typeof data.error === "string" ? data.error : `HTTP ${response.status}`,
-            );
-          }
-          throw new Error("Visitor count request failed");
-        }
+      if (
+        !response.ok ||
+        data?.success !== true ||
+        !Number.isSafeInteger(data.uniqueCount) ||
+        Number(data.uniqueCount) < 0
+      ) {
+        throw new Error("VISITOR_COUNT_UNAVAILABLE");
+      }
 
-        return typeof data.displayedCount === "number" && Number.isFinite(data.displayedCount)
-          ? Math.max(BASE_VISITOR_COUNT, Math.floor(data.displayedCount))
-          : BASE_VISITOR_COUNT;
-      })
-      .catch((error: unknown) => {
-        if (import.meta.env.DEV) console.error("Using the visitor counter fallback", error);
-        return BASE_VISITOR_COUNT;
-      });
+      const count = Number(data.uniqueCount);
+      cacheCount(count);
+      return count;
+    });
   }
-
   return visitorCountRequest;
 }
 
 type VisitorCounterProps = {
   accessibleLabel: string;
+  retryLabel: string;
+  unavailableLabel: string;
 };
 
-export function VisitorCounter({ accessibleLabel }: VisitorCounterProps) {
-  const [displayedCount, setDisplayedCount] = useState(BASE_VISITOR_COUNT);
-  const prefersReducedMotion = usePrefersReducedMotion();
+export function VisitorCounter({
+  accessibleLabel,
+  retryLabel,
+  unavailableLabel,
+}: VisitorCounterProps) {
+  const { language } = useLanguage();
+  const [count, setCount] = useState<number | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  const load = (force = false) => {
+    setFailed(false);
+    void requestVisitorCount(force)
+      .then(setCount)
+      .catch(() => setFailed(true));
+  };
 
   useEffect(() => {
-    let isCancelled = false;
-    let animationFrame = 0;
+    setCount(readCachedCount());
+    load();
+  }, []);
 
-    void loadVisitorCount().then((targetCount) => {
-      if (isCancelled || targetCount === BASE_VISITOR_COUNT) return;
+  const locale = language === "ar" ? "ar-JO" : language === "es" ? "es-ES" : "en-JO";
+  const formattedCount = count === null ? null : new Intl.NumberFormat(locale).format(count);
+  const content = (
+    <>
+      <Eye aria-hidden="true" className="h-4 w-4" strokeWidth={1.9} />
+      <span aria-live="polite">{formattedCount ?? "—"}</span>
+      {failed ? <RotateCcw aria-hidden="true" className="hero-visitor-retry-icon" /> : null}
+    </>
+  );
 
-      if (prefersReducedMotion) {
-        setDisplayedCount(targetCount);
-        return;
-      }
-
-      const startedAt = performance.now();
-      const animate = (now: number) => {
-        if (isCancelled) return;
-
-        const progress = Math.min((now - startedAt) / COUNT_ANIMATION_DURATION, 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        setDisplayedCount(
-          Math.round(BASE_VISITOR_COUNT + (targetCount - BASE_VISITOR_COUNT) * easedProgress),
-        );
-
-        if (progress < 1) animationFrame = requestAnimationFrame(animate);
-      };
-
-      animationFrame = requestAnimationFrame(animate);
-    });
-
-    return () => {
-      isCancelled = true;
-      cancelAnimationFrame(animationFrame);
-    };
-  }, [prefersReducedMotion]);
+  if (failed) {
+    return (
+      <button
+        type="button"
+        className="hero-visitor-counter hero-visitor-counter-retry"
+        aria-label={`${retryLabel}. ${formattedCount ?? unavailableLabel}`}
+        title={retryLabel}
+        onClick={() => load(true)}
+      >
+        {content}
+      </button>
+    );
+  }
 
   return (
-    <span className="hero-visitor-counter" aria-label={`${displayedCount}+ ${accessibleLabel}`}>
-      <Eye aria-hidden="true" className="h-4 w-4" strokeWidth={1.9} />
-      <span aria-hidden="true">{displayedCount}+</span>
+    <span
+      className="hero-visitor-counter"
+      aria-label={formattedCount ? `${formattedCount} ${accessibleLabel}` : unavailableLabel}
+    >
+      {content}
     </span>
   );
 }

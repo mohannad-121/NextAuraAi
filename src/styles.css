@@ -1277,6 +1277,16 @@
     0 0 22px rgb(99 102 241 / 0.22);
 }
 
+.hero-visitor-counter-retry {
+  cursor: pointer;
+}
+
+.hero-visitor-retry-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+  color: rgb(148 163 184);
+}
+
 .hero-start-project {
   position: relative;
   isolation: isolate;

@@ -5,6 +5,7 @@ import { ServicesUniverse } from "@/components/landing/ServicesUniverse";
 import { Process } from "@/components/landing/Process";
 import { FeaturedProject } from "@/components/landing/FeaturedProject";
 import { WhyChoose } from "@/components/landing/WhyChoose";
+import { CustomerReviewsSection } from "@/components/landing/CustomerReviewsSection";
 import { Team } from "@/components/landing/Team";
 import { Contact } from "@/components/landing/Contact";
 import { MobileCTA } from "@/components/landing/MobileCTA";
@@ -67,6 +68,7 @@ function LandingPage() {
       <Process />
       <Team />
       <WhyChoose />
+      <CustomerReviewsSection />
       <Contact onStartProject={startProject} />
       <MobileCTA onStartProject={startProject} />
       <WebsiteAssistantChatbot />
