@@ -82,7 +82,11 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
               >
                 {copy.secondary}
               </a>
-              <VisitorCounter accessibleLabel={copy.visitors} />
+              <VisitorCounter
+                accessibleLabel={copy.visitors}
+                retryLabel={copy.visitorsRetry}
+                unavailableLabel={copy.visitorsUnavailable}
+              />
             </div>
           </div>
         </div>
