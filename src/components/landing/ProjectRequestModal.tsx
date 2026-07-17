@@ -52,7 +52,10 @@ import {
   formatMoneyRange,
   loadExchangeRates,
 } from "@/features/project-request/services";
-import { submitProjectRequest } from "@/features/project-request/projectRequests";
+import {
+  ProjectRequestPersistenceError,
+  submitProjectRequest,
+} from "@/features/project-request/projectRequests";
 import type {
   ContactMethod,
   FeatureId,
@@ -126,6 +129,7 @@ export function ProjectRequestModal({
   const [submittedRequest, setSubmittedRequest] = useState<PersistedProjectRequest | null>(null);
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const submissionInFlightRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -391,6 +395,7 @@ export function ProjectRequestModal({
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
+    if (submissionInFlightRef.current) return;
     const allValidationErrors: FieldErrors = {};
     const invalidSteps: number[] = [];
     for (const validationStep of [0, 1, 2, 4]) {
@@ -410,6 +415,7 @@ export function ProjectRequestModal({
     const request = buildRequest();
     if (!request) return;
 
+    submissionInFlightRef.current = true;
     setSubmitting(true);
     setSubmissionError(null);
     setSubmission(null);
@@ -439,9 +445,19 @@ export function ProjectRequestModal({
         pdfStored: Boolean(generatedPdf),
         requestId: saved.requestId,
       });
-    } catch {
-      setSubmissionError(copy.errors.submission);
+    } catch (error) {
+      const code = error instanceof ProjectRequestPersistenceError ? error.code : undefined;
+      if (code === "42883" || code === "PGRST202") {
+        setSubmissionError(copy.errors.submissionFunction);
+      } else if (code === "22023" || code === "22P02") {
+        setSubmissionError(copy.errors.submissionValidation);
+      } else if (code === "42501" || code === "PGRST301" || code === "SUPABASE_CONFIG_MISSING") {
+        setSubmissionError(copy.errors.submissionUnavailable);
+      } else {
+        setSubmissionError(copy.errors.submission);
+      }
     } finally {
+      submissionInFlightRef.current = false;
       setSubmitting(false);
     }
   };
@@ -541,9 +557,17 @@ export function ProjectRequestModal({
                 ) : (
                   <form onSubmit={submit} noValidate>
                     {submissionError ? (
-                      <p className="nxa-project-submission-warning" role="alert">
-                        <AlertTriangle /> {submissionError}
-                      </p>
+                      <div className="nxa-project-submission-warning" role="alert">
+                        <AlertTriangle />
+                        <span>{submissionError}</span>
+                        <button
+                          type="submit"
+                          className="nxa-project-text-button"
+                          disabled={submitting}
+                        >
+                          {copy.actions.retry}
+                        </button>
+                      </div>
                     ) : null}
                     <div className="nxa-project-step-heading">
                       <span className="nxa-project-step-emoji" aria-hidden="true">

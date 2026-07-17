@@ -23,6 +23,8 @@ export class ProjectRequestPersistenceError extends Error {
   }
 }
 
+const PROJECT_REQUEST_RPC = "submit_project_request";
+
 function nullableText(value: string | undefined) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : null;
@@ -88,20 +90,34 @@ export async function submitProjectRequest(request: ProjectRequest): Promise<Sav
     );
   }
 
+  const rpcPayload = mapProjectRequestToRpcPayload(request);
+  const payloadFields = Object.keys(rpcPayload);
+
   if (import.meta.env.DEV) {
-    console.info("[project-request] Calling Supabase RPC", { projectHost });
+    console.info("[project-request] Calling Supabase RPC", {
+      projectHost,
+      rpcName: PROJECT_REQUEST_RPC,
+      payloadFields,
+    });
   }
 
-  const { data, error } = await client.rpc(
-    "submit_project_request",
-    mapProjectRequestToRpcPayload(request),
-  );
+  const { data, error } = await client.rpc(PROJECT_REQUEST_RPC, rpcPayload);
   const result = Array.isArray(data)
     ? (data[0] as SubmitProjectRequestRpcResponse | undefined)
     : undefined;
 
   if (error) {
     logSupabaseError("project-request RPC failed", error);
+    if (import.meta.env.DEV) {
+      console.error("[project-request] RPC diagnostics", {
+        rpcName: PROJECT_REQUEST_RPC,
+        payloadFields,
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
+    }
     throw new ProjectRequestPersistenceError(error.message, error.code);
   }
 
@@ -127,4 +143,58 @@ export async function submitProjectRequest(request: ProjectRequest): Promise<Sav
     requestId: result.request_id,
     createdAt: result.created_at,
   };
+}
+
+/**
+ * Development-only connection check. It deliberately creates one clearly labelled
+ * dummy request so the RPC, anon grant, and returned fields can be verified end-to-end.
+ */
+export async function runProjectRequestConnectionTest(): Promise<SavedProjectRequest> {
+  if (!import.meta.env.DEV) {
+    throw new Error("Project request connection tests are available only in development.");
+  }
+
+  return submitProjectRequest({
+    locale: "en",
+    customer: {
+      fullName: "NextAura RPC test",
+      phone: "+962000000000",
+      email: "rpc-test@example.invalid",
+      businessName: "NextAura test",
+    },
+    projectType: "businessWebsite",
+    projectIdea: "Development-only RPC connection test. Safe to delete after verification.",
+    packageId: "basic",
+    includedFeatureIds: ["responsiveDesign"],
+    selectedFeatureIds: ["responsiveDesign"],
+    languageCount: 1,
+    timeline: { option: "flexible", isRush: false },
+    estimate: {
+      packageId: "basic",
+      isRush: false,
+      allowedMinJod: 100,
+      allowedMaxJod: 300,
+      estimatedMinJod: 100,
+      estimatedMaxJod: 300,
+      complexityScore: 1,
+      complexityPosition: 0,
+      impactingFeatureIds: [],
+      currencyBase: "JOD",
+      selectedCurrency: "JOD",
+      approximateConversion: false,
+      explanation: "Development-only RPC connection test.",
+    },
+    maintenance: { freeMonths: 8 },
+    submittedAt: new Date().toISOString(),
+  });
+}
+
+declare global {
+  interface Window {
+    nextAuraProjectRequestTest?: () => Promise<SavedProjectRequest>;
+  }
+}
+
+if (import.meta.env.DEV && typeof window !== "undefined") {
+  window.nextAuraProjectRequestTest = runProjectRequestConnectionTest;
 }
