@@ -5,13 +5,11 @@ type BrandLogoProps = {
 
 export function BrandLogo({ className = "", imageClassName = "" }: BrandLogoProps) {
   return (
-    <span
-      className={`inline-flex items-center overflow-hidden rounded-xl bg-black/90 shadow-[0_0_34px_rgb(14_165_233_/_0.18)] ring-1 ring-sky-300/15 ${className}`}
-    >
+    <span className={`inline-flex max-w-full items-center overflow-visible ${className}`}>
       <img
-        src="/brand/nextaura-logo.svg"
-        alt="NextAura AI Logo"
-        className={`block h-auto w-full select-none ${imageClassName}`}
+        src="/images/cinematic/logo-no-background.png"
+        alt="NextAura AI"
+        className={`block max-w-none object-contain select-none ${imageClassName}`}
       />
     </span>
   );

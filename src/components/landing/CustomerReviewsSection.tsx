@@ -12,13 +12,13 @@ import { motion, useReducedMotion } from "framer-motion";
 import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import type {
   CustomerReview,
-  ReviewErrorResponse,
   ReviewListResponse,
   ReviewSubmissionResponse,
 } from "@/features/reviews/types";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { getAnonymousVisitorId } from "@/lib/anonymousVisitor";
+import { getSupabaseClient } from "@/lib/supabase";
 import "./customer-reviews.css";
 
 const PAGE_SIZE = 4;
@@ -26,6 +26,14 @@ const MAX_COMMENT_LENGTH = 800;
 const STAR_VALUES = [1, 2, 3, 4, 5] as const;
 
 let initialReviewRequest: Promise<ReviewListResponse> | null = null;
+
+type ReviewRow = {
+  id: string;
+  display_name: string | null;
+  rating: number;
+  comment: string;
+  created_at: string;
+};
 
 function formatCopy(template: string, values: Record<string, string | number>) {
   return Object.entries(values).reduce(
@@ -35,23 +43,91 @@ function formatCopy(template: string, values: Record<string, string | number>) {
 }
 
 async function requestReviewPage(offset: number) {
-  const response = await fetch(`/api/customer-reviews?offset=${offset}&limit=${PAGE_SIZE}`, {
-    headers: { accept: "application/json" },
-    cache: "no-store",
-    credentials: "same-origin",
-  });
-  const payload = (await response.json().catch(() => null)) as
-    ReviewListResponse | ReviewErrorResponse | null;
-  if (!response.ok || !payload || payload.success !== true) {
-    throw new Error(payload && "code" in payload ? payload.code : "REVIEW_LOAD_FAILED");
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("SUPABASE_CONFIG_MISSING");
+
+  const [reviewsResult, summary] = await Promise.all([
+    supabase
+      .from("customer_reviews")
+      .select("id, display_name, rating, comment, created_at")
+      .eq("is_visible", true)
+      .order("created_at", { ascending: false })
+      .range(offset, offset + PAGE_SIZE - 1),
+    requestReviewSummary(),
+  ]);
+
+  if (reviewsResult.error) throw new Error(reviewsResult.error.code || "REVIEW_LOAD_FAILED");
+  const reviews = ((reviewsResult.data ?? []) as ReviewRow[]).map(toCustomerReview);
+
+  return {
+    success: true as const,
+    reviews,
+    ...summary,
+    hasMore: offset + reviews.length < summary.totalCount,
+  };
+}
+
+async function requestReviewSummary() {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("SUPABASE_CONFIG_MISSING");
+
+  const { data, error } = await supabase.rpc("get_customer_review_summary");
+  if (error) throw new Error(error.code || "REVIEW_SUMMARY_FAILED");
+
+  const row = (Array.isArray(data) ? data[0] : data) as {
+    total_reviews?: unknown;
+    average_rating?: unknown;
+  } | null;
+  const totalCount = Number(row?.total_reviews);
+  const averageRating = Number(row?.average_rating);
+  if (!Number.isSafeInteger(totalCount) || totalCount < 0 || !Number.isFinite(averageRating)) {
+    throw new Error("REVIEW_SUMMARY_INVALID");
   }
-  return payload;
+  return { totalCount, averageRating };
+}
+
+function toCustomerReview(row: ReviewRow): CustomerReview {
+  return {
+    id: row.id,
+    displayName: row.display_name,
+    rating: Number(row.rating),
+    comment: row.comment,
+    createdAt: row.created_at,
+  };
+}
+
+async function submitCustomerReview(input: {
+  displayName: string | null;
+  rating: number;
+  comment: string;
+  visitorId: string;
+}): Promise<ReviewSubmissionResponse> {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("SUPABASE_CONFIG_MISSING");
+
+  const { data, error } = await supabase.rpc("submit_customer_review", {
+    p_display_name: input.displayName,
+    p_rating: input.rating,
+    p_comment: input.comment,
+    p_visitor_id: input.visitorId,
+  });
+  if (error) {
+    const message = `${error.code ?? ""} ${error.message ?? ""}`.toLowerCase();
+    if (message.includes("review_rate_limited")) throw new Error("REVIEW_RATE_LIMITED");
+    if (message.includes("review_duplicate")) throw new Error("REVIEW_DUPLICATE");
+    throw new Error(error.code || "REVIEW_SUBMIT_FAILED");
+  }
+
+  const row = (Array.isArray(data) ? data[0] : data) as ReviewRow | null;
+  if (!row) throw new Error("REVIEW_RESPONSE_INVALID");
+  const summary = await requestReviewSummary();
+  return { success: true as const, review: toCustomerReview(row), ...summary };
 }
 
 function requestInitialReviews(force = false) {
   if (force) initialReviewRequest = null;
   initialReviewRequest ??= requestReviewPage(0);
-  return initialReviewRequest;
+  return initialReviewRequest!;
 }
 
 export function CustomerReviewsSection() {
@@ -92,7 +168,14 @@ export function CustomerReviewsSection() {
         setHasMore(payload.hasMore);
         setLoadError(false);
       })
-      .catch(() => setLoadError(true))
+      .catch((error) => {
+        if (import.meta.env.DEV) {
+          console.error("[customer-reviews] loading failed", {
+            code: error instanceof Error ? error.message : "REVIEW_LOAD_FAILED",
+          });
+        }
+        setLoadError(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -134,6 +217,7 @@ export function CustomerReviewsSection() {
       setAverageRating(payload.averageRating);
       setHasMore(payload.hasMore);
     } catch {
+      if (import.meta.env.DEV) console.error("[customer-reviews] load more failed");
       setLoadError(true);
     } finally {
       setLoadingMore(false);
@@ -159,6 +243,12 @@ export function CustomerReviewsSection() {
     }
     if (invalid) return;
 
+    if (website.trim()) {
+      setSubmissionState("error");
+      setSubmissionMessage(copy.submitError);
+      return;
+    }
+
     const fingerprint = `${rating}:${cleanComment.toLocaleLowerCase()}`;
     if (
       lastSubmission.current?.fingerprint === fingerprint &&
@@ -172,24 +262,12 @@ export function CustomerReviewsSection() {
     setSubmissionState("submitting");
     setSubmissionMessage("");
     try {
-      const response = await fetch("/api/customer-reviews", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify({
-          visitorId: getAnonymousVisitorId(),
-          displayName: displayName.trim(),
-          rating,
-          comment: cleanComment,
-          website,
-        }),
+      const payload = await submitCustomerReview({
+        visitorId: getAnonymousVisitorId(),
+        displayName: displayName.trim() || null,
+        rating,
+        comment: cleanComment,
       });
-      const payload = (await response.json().catch(() => null)) as
-        ReviewSubmissionResponse | ReviewErrorResponse | null;
-      if (!response.ok || !payload || payload.success !== true) {
-        const code = payload && "code" in payload ? payload.code : "REVIEW_SUBMIT_FAILED";
-        throw new Error(code);
-      }
 
       lastSubmission.current = { fingerprint, timestamp: Date.now() };
       setReviews((current) => [
@@ -208,6 +286,7 @@ export function CustomerReviewsSection() {
       setSubmissionMessage(copy.success);
     } catch (error) {
       const code = error instanceof Error ? error.message : "REVIEW_SUBMIT_FAILED";
+      if (import.meta.env.DEV) console.error("[customer-reviews] submission failed", { code });
       setSubmissionState("error");
       setSubmissionMessage(
         code === "REVIEW_RATE_LIMITED"
