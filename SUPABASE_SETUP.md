@@ -1,8 +1,8 @@
 # Supabase setup for reviews and unique visitors
 
-This website uses the Supabase **Project URL** and **anon public key** in the browser. These values are intended to be public. Do not add a service-role key to the website or to Vercel for these features.
+This React + Vite website uses the Supabase **Project URL** and **Publishable Key** in the browser. These values are intended to be public. Do not add a service-role key to the website or to Vercel for these features.
 
-The existing Start Project integration still uses the server-only `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` variables. Keep those configured in Vercel if that feature already uses Supabase; they are separate from the reviews/counter browser flow and must never be used in frontend code.
+The Start Project form also uses the browser-safe `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` variables through a restricted database RPC. Full setup steps are in [SUPABASE_VITE_SETUP.md](SUPABASE_VITE_SETUP.md).
 
 ## 1. Run the database migration
 
@@ -29,12 +29,12 @@ To verify, open **Table Editor** and confirm both tables exist. In **Database �
 
 1. Open **Project Settings → API** in Supabase.
 2. Copy the **Project URL**.
-3. Copy the **anon public** key. Do not copy the `service_role` secret.
+3. Copy the **Publishable Key**. Do not copy a secret/service-role key.
 4. Create a local `.env` file in the project root. It is ignored by Git.
 
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
 Use the same variable names exactly. Restart the local development server after saving the file.
@@ -43,7 +43,7 @@ Use the same variable names exactly. Restart the local development server after 
 
 1. Open the NextAura AI project in Vercel.
 2. Go to **Settings → Environment Variables**.
-3. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+3. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
 4. Select **Production** and **Preview**. Add **Development** too if you use Vercel's development environment.
 5. Save the variables and create a new deployment. Vite exposes `VITE_` variables at build time, so redeployment is required.
 
@@ -84,13 +84,13 @@ Hidden reviews do not appear in public queries or in the average/count summary.
 
 ## Common errors
 
-| Symptom                             | Likely fix                                                                               |
-| ----------------------------------- | ---------------------------------------------------------------------------------------- |
-| `Invalid API key`                   | Re-copy the anon public key and ensure it is assigned to the correct Vercel environment. |
-| `relation ... does not exist`       | Run the complete migration file in the correct Supabase project.                         |
-| `function ... does not exist`       | Run the migration again, then wait a few seconds for the schema reload.                  |
-| RLS or permission error             | Confirm the complete migration ran; do not add public table insert/update/delete grants. |
-| Reviews/counter unavailable locally | Check both `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, then restart `npm run dev`. |
-| Works locally but not Vercel        | Add both variables to Preview and Production, then redeploy.                             |
+| Symptom                             | Likely fix                                                                                      |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `Invalid API key`                   | Re-copy the Publishable Key and ensure it is assigned to the correct Vercel environment.        |
+| `relation ... does not exist`       | Run the complete migration file in the correct Supabase project.                                |
+| `function ... does not exist`       | Run the migration again, then wait a few seconds for the schema reload.                         |
+| RLS or permission error             | Confirm the complete migration ran; do not add public table insert/update/delete grants.        |
+| Reviews/counter unavailable locally | Check both `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`, then restart `npm run dev`. |
+| Works locally but not Vercel        | Add both variables to Preview and Production, then redeploy.                                    |
 
 Supabase CLI is optional. The SQL Editor method above is sufficient for this project.

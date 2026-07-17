@@ -18,7 +18,7 @@ import type {
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { getAnonymousVisitorId } from "@/lib/anonymousVisitor";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseClient, logSupabaseError } from "@/lib/supabase";
 import "./customer-reviews.css";
 
 const PAGE_SIZE = 4;
@@ -56,7 +56,10 @@ async function requestReviewPage(offset: number) {
     requestReviewSummary(),
   ]);
 
-  if (reviewsResult.error) throw new Error(reviewsResult.error.code || "REVIEW_LOAD_FAILED");
+  if (reviewsResult.error) {
+    logSupabaseError("customer reviews query failed", reviewsResult.error);
+    throw new Error(reviewsResult.error.code || "REVIEW_LOAD_FAILED");
+  }
   const reviews = ((reviewsResult.data ?? []) as ReviewRow[]).map(toCustomerReview);
 
   return {
@@ -72,7 +75,10 @@ async function requestReviewSummary() {
   if (!supabase) throw new Error("SUPABASE_CONFIG_MISSING");
 
   const { data, error } = await supabase.rpc("get_customer_review_summary");
-  if (error) throw new Error(error.code || "REVIEW_SUMMARY_FAILED");
+  if (error) {
+    logSupabaseError("customer review summary RPC failed", error);
+    throw new Error(error.code || "REVIEW_SUMMARY_FAILED");
+  }
 
   const row = (Array.isArray(data) ? data[0] : data) as {
     total_reviews?: unknown;
@@ -112,6 +118,7 @@ async function submitCustomerReview(input: {
     p_visitor_id: input.visitorId,
   });
   if (error) {
+    logSupabaseError("customer review submission RPC failed", error);
     const message = `${error.code ?? ""} ${error.message ?? ""}`.toLowerCase();
     if (message.includes("review_rate_limited")) throw new Error("REVIEW_RATE_LIMITED");
     if (message.includes("review_duplicate")) throw new Error("REVIEW_DUPLICATE");

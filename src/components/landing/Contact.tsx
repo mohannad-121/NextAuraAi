@@ -83,10 +83,7 @@ export function Contact({ onStartProject }: ContactProps) {
         <footer className="relative pb-28 pt-16 md:pb-10 lg:pt-24">
           <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-2 lg:grid-cols-[1.3fr_0.7fr_1fr_0.9fr]">
             <div>
-              <BrandSymbol
-                className="h-14 w-24"
-                imageClassName="absolute left-1/2 top-[57%] h-32 w-32 -translate-x-1/2 -translate-y-1/2"
-              />
+              <BrandSymbol className="h-11 w-11" imageClassName="h-full w-full" />
               <p className="mt-6 max-w-sm text-sm leading-7 text-slate-400">{footer.description}</p>
               <a
                 href="https://linkedin.com/company/nextaura-ai"

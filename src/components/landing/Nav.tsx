@@ -76,10 +76,7 @@ export function Nav({ onStartProject }: NavProps) {
           aria-label="NextAura AI home"
           className="relative z-10 inline-flex min-h-11 items-center"
         >
-          <BrandSymbol
-            className="h-11 w-16 sm:h-12 sm:w-[4.5rem]"
-            imageClassName="absolute left-1/2 top-[57%] h-24 w-24 -translate-x-1/2 -translate-y-1/2 sm:h-28 sm:w-28"
-          />
+          <BrandSymbol className="h-10 w-10 sm:h-11 sm:w-11" imageClassName="h-full w-full" />
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-1 xl:flex">
