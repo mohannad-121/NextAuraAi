@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { type ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { SpaceAmbientAudio } from "@/components/landing/SpaceAmbientAudio";
 import { LanguageProvider } from "@/i18n/translations";
 
@@ -163,6 +164,7 @@ function RootComponent() {
         <SpaceAmbientAudio />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
+        <Analytics />
       </LanguageProvider>
     </QueryClientProvider>
   );
