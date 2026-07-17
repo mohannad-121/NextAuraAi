@@ -77,11 +77,11 @@
 }
 
 .nxa-project-brand img {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid rgb(103 232 249 / 0.24);
-  border-radius: 0.65rem;
-  background: #071327;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   object-fit: contain;
 }
 

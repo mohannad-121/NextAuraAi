@@ -39,3 +39,8 @@ export function getSupabaseClient() {
 export function getSupabaseConfigurationError() {
   return configuration ? null : "SUPABASE_CONFIG_MISSING";
 }
+
+/** Safe diagnostic value for development logs; it never includes the anon key. */
+export function getSupabaseProjectHostname() {
+  return configuration ? new URL(configuration.url).hostname : null;
+}

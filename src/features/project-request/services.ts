@@ -5,8 +5,8 @@ import type {
   CurrencyCode,
   EstimateResult,
   ExchangeRateSnapshot,
-  ProjectRequest,
   ProjectRequestDraft,
+  PersistedProjectRequest,
   TimelineDetails,
 } from "./types";
 
@@ -109,19 +109,17 @@ export function buildEstimateExplanation(
   return `This estimate reflects the ${packageTitle} package${featureNames.length ? ` and the main complexity factors: ${featureNames.join(", ")}` : ""} ${customMention}, ${rushMention}.`;
 }
 
-export function createRequestId(now = new Date()) {
-  const date = now.toISOString().slice(0, 10).replaceAll("-", "");
-  const random = Array.from(crypto.getRandomValues(new Uint8Array(4)))
-    .map((value) => value.toString(16).padStart(2, "0"))
-    .join("")
-    .toUpperCase();
-  return `NXA-${date}-${random}`;
-}
-
-export function buildWhatsAppUrl(request: ProjectRequest, language: Language) {
+export function buildWhatsAppUrl(
+  request: PersistedProjectRequest,
+  language: Language,
+  options: { hasPdf: boolean } = { hasPdf: true },
+) {
   const copy = projectRequestCopy[language];
   const projectPackage = getPackage(request.packageId);
   const timelineLabel = request.timeline.requestedDate ?? request.timeline.option;
+  const selectedFeatures = request.selectedFeatureIds
+    .map((featureId) => getFeature(featureId)?.title[language])
+    .filter((title): title is string => Boolean(title));
   const converted =
     request.estimate.convertedMin != null && request.estimate.convertedMax != null
       ? formatMoneyRange(
@@ -144,55 +142,11 @@ export function buildWhatsAppUrl(request: ProjectRequest, language: Language) {
     `${copy.review.originalEstimate}: ${formatMoneyRange(request.estimate.estimatedMinJod, request.estimate.estimatedMaxJod, "JOD", language)}`,
     `${copy.review.convertedEstimate}: ${converted}`,
     `${copy.review.requestedTimeline}: ${timelineLabel}`,
-    "PDF generated. Please attach the downloaded project-request PDF to this message.",
+    `${copy.summary.features}: ${selectedFeatures.join(", ") || copy.review.notProvided}`,
+    "Eight months free maintenance included.",
   ];
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-}
-
-export type SubmissionResult = {
-  success: boolean;
-  stored: boolean;
-  pdfStored: boolean;
-  whatsappDelivered: boolean;
-  manualFallback: boolean;
-  requestId: string;
-  error?: string;
-};
-
-export async function submitProjectRequest(
-  request: ProjectRequest,
-  pdfBlob: Blob,
-): Promise<SubmissionResult> {
-  const pdfBase64 = await blobToBase64(pdfBlob);
-  const response = await fetch("/api/project-requests", {
-    method: "POST",
-    headers: { "content-type": "application/json", accept: "application/json" },
-    body: JSON.stringify({ request, pdfBase64 }),
-    keepalive: false,
-  });
-  const payload = (await response.json().catch(() => null)) as SubmissionResult | null;
-  if (!response.ok || !payload) {
-    return {
-      success: false,
-      stored: false,
-      pdfStored: false,
-      whatsappDelivered: false,
-      manualFallback: true,
-      requestId: request.id,
-      error: payload?.error ?? "SUBMISSION_FAILED",
-    };
+  if (options.hasPdf) {
+    lines.push("PDF generated. Please attach the downloaded project-request PDF to this message.");
   }
-  return payload;
-}
-
-async function blobToBase64(blob: Blob) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const value = String(reader.result ?? "");
-      resolve(value.split(",", 2)[1] ?? "");
-    };
-    reader.onerror = () => reject(reader.error ?? new Error("PDF_ENCODING_FAILED"));
-    reader.readAsDataURL(blob);
-  });
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
 }

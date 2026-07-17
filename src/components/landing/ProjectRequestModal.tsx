@@ -49,16 +49,15 @@ import {
   buildEstimateExplanation,
   buildWhatsAppUrl,
   convertEstimate,
-  createRequestId,
   formatMoneyRange,
   loadExchangeRates,
-  submitProjectRequest,
-  type SubmissionResult,
 } from "@/features/project-request/services";
+import { submitProjectRequest } from "@/features/project-request/projectRequests";
 import type {
   ContactMethod,
   FeatureId,
   PackageId,
+  PersistedProjectRequest,
   ProjectRequest,
   ProjectRequestDraft,
   ProjectTypeId,
@@ -96,6 +95,12 @@ type ProjectRequestModalProps = {
 
 type FieldErrors = Partial<Record<keyof ProjectRequestDraft | "consent", string>>;
 
+type SubmissionResult = {
+  stored: true;
+  pdfStored: boolean;
+  requestId: string;
+};
+
 export function ProjectRequestModal({
   open,
   onClose,
@@ -118,7 +123,7 @@ export function ProjectRequestModal({
   const [dismissedRecommendation, setDismissedRecommendation] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submission, setSubmission] = useState<SubmissionResult | null>(null);
-  const [submittedRequest, setSubmittedRequest] = useState<ProjectRequest | null>(null);
+  const [submittedRequest, setSubmittedRequest] = useState<PersistedProjectRequest | null>(null);
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -257,12 +262,6 @@ export function ProjectRequestModal({
       .finally(() => setRatesLoading(false));
   }, [rates, ratesLoading, step]);
 
-  useEffect(() => {
-    if (!submission?.success || submission.manualFallback || !onSubmitted) return;
-    const timer = window.setTimeout(onSubmitted, 5500);
-    return () => window.clearTimeout(timer);
-  }, [onSubmitted, submission]);
-
   const getErrorsForStep = (targetStep: number) => {
     const next: FieldErrors = {};
     if (targetStep === 0) {
@@ -356,7 +355,6 @@ export function ProjectRequestModal({
     const converted = convertEstimate(estimate, draft.currency, rates);
     const explanation = buildEstimateExplanation(draft, estimate, timeline, language);
     return {
-      id: createRequestId(),
       locale: language,
       customer: {
         fullName: draft.fullName.trim(),
@@ -415,24 +413,34 @@ export function ProjectRequestModal({
     setSubmitting(true);
     setSubmissionError(null);
     setSubmission(null);
+    setSubmittedRequest(null);
+    setPdfBlob(null);
     try {
-      const generatedPdf = await generateProjectRequestPdf(request, language);
-      setPdfBlob(generatedPdf);
-      setSubmittedRequest(request);
-      const result = await submitProjectRequest(request, generatedPdf);
-      setSubmission(result);
-      if (!result.success) setSubmissionError(copy.errors.submission);
-    } catch {
-      setSubmissionError(copy.errors.pdf);
+      const saved = await submitProjectRequest(request);
+      const persistedRequest: PersistedProjectRequest = {
+        ...request,
+        id: saved.requestId,
+        databaseId: saved.id,
+        createdAt: saved.createdAt,
+      };
+      setSubmittedRequest(persistedRequest);
+
+      let generatedPdf: Blob | null = null;
+      try {
+        generatedPdf = await generateProjectRequestPdf(persistedRequest, language);
+        setPdfBlob(generatedPdf);
+      } catch {
+        setPdfBlob(null);
+        setSubmissionError(copy.errors.pdf);
+      }
+
       setSubmission({
-        success: false,
-        stored: false,
-        pdfStored: false,
-        whatsappDelivered: false,
-        manualFallback: true,
-        requestId: request.id,
-        error: "PDF_GENERATION_FAILED",
+        stored: true,
+        pdfStored: Boolean(generatedPdf),
+        requestId: saved.requestId,
       });
+    } catch {
+      setSubmissionError(copy.errors.submission);
     } finally {
       setSubmitting(false);
     }
@@ -440,8 +448,12 @@ export function ProjectRequestModal({
 
   const openManualWhatsApp = () => {
     if (!submittedRequest) return;
-    window.open(buildWhatsAppUrl(submittedRequest, language), "_blank", "noopener,noreferrer");
-    if (onSubmitted) window.setTimeout(onSubmitted, 1200);
+    const whatsappWindow = window.open(
+      buildWhatsAppUrl(submittedRequest, language, { hasPdf: Boolean(pdfBlob) }),
+      "_blank",
+      "noopener,noreferrer",
+    );
+    if (whatsappWindow && onSubmitted) window.setTimeout(onSubmitted, 1200);
   };
 
   const progress = ((step + 1) / STEP_COUNT) * 100;
@@ -470,7 +482,7 @@ export function ProjectRequestModal({
           >
             <header className="nxa-project-topbar">
               <button type="button" className="nxa-project-brand" onClick={requestClose}>
-                <img src="/favicon-48.png" alt="" />
+                <img src="/images/cinematic/logo-no-background.png" alt="NextAura AI" />
                 <span>NextAura AI</span>
               </button>
               <div className="nxa-project-top-actions">
@@ -525,10 +537,14 @@ export function ProjectRequestModal({
                         downloadProjectPdf(pdfBlob, submittedRequest.id);
                     }}
                     onWhatsApp={openManualWhatsApp}
-                    onContact={onSubmitted}
                   />
                 ) : (
                   <form onSubmit={submit} noValidate>
+                    {submissionError ? (
+                      <p className="nxa-project-submission-warning" role="alert">
+                        <AlertTriangle /> {submissionError}
+                      </p>
+                    ) : null}
                     <div className="nxa-project-step-heading">
                       <span className="nxa-project-step-emoji" aria-hidden="true">
                         {STEP_EMOJIS[step]}
@@ -1688,95 +1704,57 @@ function SubmissionState({
   request,
   onDownload,
   onWhatsApp,
-  onContact,
 }: {
   copy: (typeof projectRequestCopy)["en"];
   submission: SubmissionResult;
   error: string | null;
   pdfBlob: Blob | null;
-  request: ProjectRequest | null;
+  request: PersistedProjectRequest | null;
   onDownload: () => void;
   onWhatsApp: () => void;
-  onContact?: () => void;
 }) {
-  const manual = submission.manualFallback;
   return (
     <div className="nxa-project-submission-state" role="status">
-      <div className="nxa-project-success-icon" data-manual={manual}>
-        {manual ? <FileText /> : <Check />}
+      <div className="nxa-project-success-icon" data-manual="true">
+        <FileText />
       </div>
       <span className="nxa-project-estimate-badge">
         ✅ {copy.success.requestId}: {submission.requestId}
       </span>
-      <h2>{manual ? copy.success.manualTitle : copy.success.title}</h2>
+      <h2>{copy.success.manualTitle}</h2>
       {error ? (
         <p className="nxa-project-submission-warning">
           <AlertTriangle /> {error}
         </p>
       ) : null}
       {submission.stored ? <p>{copy.success.stored}</p> : null}
-      {submission.whatsappDelivered ? <p>{copy.success.whatsappDelivered}</p> : null}
-      {manual ? (
-        <>
-          <p>{copy.success.manualBody}</p>
-          <ol>
-            {copy.success.manualSteps.map((item) => (
-              <li key={item}>
-                <span>{copy.success.manualSteps.indexOf(item) + 1}</span>
-                {item}
-              </li>
-            ))}
-          </ol>
-          <div className="nxa-project-submission-actions">
-            <button
-              type="button"
-              className="nxa-project-button nxa-project-button-secondary"
-              onClick={onDownload}
-              disabled={!pdfBlob}
-            >
-              <Download /> {copy.actions.downloadPdf}
-            </button>
-            <button
-              type="button"
-              className="nxa-project-button nxa-project-button-primary"
-              onClick={onWhatsApp}
-              disabled={!request}
-            >
-              <MessageCircle /> {copy.actions.openWhatsapp}
-            </button>
-          </div>
-          {onContact ? (
-            <button type="button" className="nxa-project-text-button" onClick={onContact}>
-              {copy.actions.contact} <ArrowRight className="rtl:-scale-x-100" />
-            </button>
-          ) : null}
-        </>
-      ) : (
-        <>
-          <div className="nxa-project-submission-actions">
-            <button
-              type="button"
-              className="nxa-project-button nxa-project-button-secondary"
-              onClick={onDownload}
-              disabled={!pdfBlob}
-            >
-              <Download /> {copy.actions.downloadPdf}
-            </button>
-            {onContact ? (
-              <button
-                type="button"
-                className="nxa-project-button nxa-project-button-primary"
-                onClick={onContact}
-              >
-                {copy.actions.contact} <ArrowRight className="rtl:-scale-x-100" />
-              </button>
-            ) : null}
-          </div>
-          <p className="nxa-project-redirecting">
-            <LoaderCircle className="nxa-project-spinner" /> {copy.success.redirecting}
-          </p>
-        </>
-      )}
+      <p>{copy.success.manualBody}</p>
+      <ol>
+        {copy.success.manualSteps.map((item) => (
+          <li key={item}>
+            <span>{copy.success.manualSteps.indexOf(item) + 1}</span>
+            {item}
+          </li>
+        ))}
+      </ol>
+      <div className="nxa-project-submission-actions">
+        <button
+          type="button"
+          className="nxa-project-button nxa-project-button-secondary"
+          onClick={onDownload}
+          disabled={!pdfBlob || !submission.pdfStored}
+        >
+          <Download /> {copy.actions.downloadPdf}
+        </button>
+        <button
+          type="button"
+          className="nxa-project-button nxa-project-button-primary"
+          onClick={onWhatsApp}
+          disabled={!request}
+        >
+          <MessageCircle /> {copy.actions.openWhatsapp}
+        </button>
+      </div>
     </div>
   );
 }

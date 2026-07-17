@@ -117,7 +117,6 @@ export type ExchangeRateSnapshot = {
 };
 
 export type ProjectRequest = {
-  id: string;
   locale: Language;
   customer: {
     fullName: string;
@@ -150,4 +149,43 @@ export type ProjectRequest = {
     freeMonths: 8;
   };
   submittedAt: string;
+};
+
+/**
+ * The database-facing shape for `public.project_requests`.
+ *
+ * Administrative values such as `request_id`, `status`, `source_page`, and
+ * `maintenance_months` are assigned by the database RPC, not the browser.
+ */
+export type ProjectRequestRecord = {
+  id?: string;
+  request_id?: string;
+  full_name: string;
+  phone: string;
+  email?: string | null;
+  business_name?: string | null;
+  project_type: string;
+  package_id: string;
+  selected_features: string[];
+  custom_features?: string | null;
+  timeline_option?: string | null;
+  requested_date?: string | null;
+  is_rush: boolean;
+  estimated_min_jod?: number | null;
+  estimated_max_jod?: number | null;
+  selected_currency?: string | null;
+  converted_min?: number | null;
+  converted_max?: number | null;
+  estimate_explanation?: string | null;
+  maintenance_months?: number;
+  status?: string;
+  source_page?: string;
+  created_at?: string;
+};
+
+export type PersistedProjectRequest = ProjectRequest & {
+  /** The confirmed database-generated `request_id` used in the PDF and WhatsApp summary. */
+  id: string;
+  databaseId: string;
+  createdAt: string;
 };

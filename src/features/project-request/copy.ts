@@ -371,7 +371,7 @@ export const projectRequestCopy = {
     },
     success: {
       title: "Your project brief is ready",
-      stored: "The structured request and PDF were saved securely.",
+      stored: "Your structured project request was saved securely.",
       whatsappDelivered:
         "A PDF copy was delivered to the configured NextAura WhatsApp Business account.",
       redirecting: "Taking you to Contact…",
@@ -397,7 +397,7 @@ export const projectRequestCopy = {
       pastDate: "The delivery date cannot be in the past.",
       consent: "Confirm the details before submitting.",
       submission:
-        "We could not save the request automatically. Use the PDF and WhatsApp fallback below.",
+        "We could not save the request. Your details are still here, so please try again.",
       pdf: "We could not generate the PDF. Please try again.",
     },
   },
@@ -588,7 +588,7 @@ export const projectRequestCopy = {
     },
     success: {
       title: "ملخص مشروعك جاهز",
-      stored: "تم حفظ الطلب المنظم وملف PDF بشكل آمن.",
+      stored: "تم حفظ طلب مشروعك المنظم بشكل آمن.",
       whatsappDelivered: "تم تسليم نسخة PDF إلى حساب واتساب الأعمال المُعد لفريق NextAura.",
       redirecting: "جارٍ نقلك إلى قسم التواصل…",
       manualTitle: "تبقت خطوة يدوية واحدة",
@@ -612,7 +612,7 @@ export const projectRequestCopy = {
       invalidDate: "اختر تاريخ تسليم صحيحاً.",
       pastDate: "لا يمكن أن يكون تاريخ التسليم في الماضي.",
       consent: "أكد صحة التفاصيل قبل الإرسال.",
-      submission: "تعذر حفظ الطلب تلقائياً. استخدم ملف PDF وخيار واتساب أدناه.",
+      submission: "تعذر حفظ الطلب. بقيت بياناتك هنا، لذا يُرجى المحاولة مرة أخرى.",
       pdf: "تعذر إنشاء ملف PDF. حاول مرة أخرى.",
     },
   },
@@ -815,7 +815,7 @@ export const projectRequestCopy = {
     },
     success: {
       title: "El brief de tu proyecto está listo",
-      stored: "La solicitud estructurada y el PDF se guardaron de forma segura.",
+      stored: "Tu solicitud estructurada se guardó de forma segura.",
       whatsappDelivered: "Se entregó una copia PDF a la cuenta de WhatsApp Business configurada.",
       redirecting: "Te llevamos a Contacto…",
       manualTitle: "Falta un paso manual",
@@ -840,7 +840,7 @@ export const projectRequestCopy = {
       pastDate: "La fecha de entrega no puede estar en el pasado.",
       consent: "Confirma los datos antes de enviar.",
       submission:
-        "No pudimos guardar la solicitud automáticamente. Usa el PDF y WhatsApp a continuación.",
+        "No pudimos guardar la solicitud. Tus datos siguen aquí, así que vuelve a intentarlo.",
       pdf: "No pudimos generar el PDF. Inténtalo de nuevo.",
     },
   },

@@ -2,7 +2,7 @@
 
 This website uses the Supabase **Project URL** and **anon public key** in the browser. These values are intended to be public. Do not add a service-role key to the website or to Vercel for these features.
 
-The existing Start Project integration still uses the server-only `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` variables. Keep those configured in Vercel if that feature already uses Supabase; they are separate from the reviews/counter browser flow and must never be used in frontend code.
+The Start Project form also uses the browser-safe `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` variables through a restricted database RPC. Its separate migration and setup steps are in [SUPABASE_PROJECT_REQUESTS_SETUP.md](SUPABASE_PROJECT_REQUESTS_SETUP.md).
 
 ## 1. Run the database migration
 

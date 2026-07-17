@@ -3,7 +3,7 @@ import type { Language } from "@/i18n/translations";
 import { getFeature, getPackage, PROJECT_TYPE_OPTIONS, TIMELINE_OPTIONS } from "./config";
 import { projectRequestCopy } from "./copy";
 import { formatMoneyRange } from "./services";
-import type { ProjectRequest } from "./types";
+import type { PersistedProjectRequest } from "./types";
 
 const ARABIC_FONT_URL =
   "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansarabic/NotoSansArabic%5Bwdth%2Cwght%5D.ttf";
@@ -43,7 +43,10 @@ async function addLogo(doc: JsPdfDocument) {
   }
 }
 
-export async function generateProjectRequestPdf(request: ProjectRequest, language: Language) {
+export async function generateProjectRequestPdf(
+  request: PersistedProjectRequest,
+  language: Language,
+) {
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
   const copy = projectRequestCopy[language];
