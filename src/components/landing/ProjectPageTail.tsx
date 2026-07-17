@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
+import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 
 const countryCodes = [
   "AE",
@@ -163,9 +164,9 @@ export function ProjectPageTail() {
             <a
               href="https://linkedin.com/company/nextaura-ai"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               aria-label="NextAura AI on LinkedIn"
-              className="project-page-social"
+              className={`mt-6 ${socialBrandClassName("https://linkedin.com/company/nextaura-ai", "LinkedIn")}`}
             >
               <Linkedin className="h-4 w-4" />
             </a>
@@ -184,11 +185,19 @@ export function ProjectPageTail() {
 
           <div className="project-page-footer-column project-page-footer-contact">
             <h3>{footer.contact}</h3>
-            <a href="mailto:info@next-aura-ai.com">
+            <a
+              href="mailto:info@next-aura-ai.com"
+              className={socialBrandClassName("mailto:info@next-aura-ai.com", "Email", "text")}
+            >
               <Mail className="h-4 w-4" />
               info@next-aura-ai.com
             </a>
-            <a href="https://wa.me/962799195498">
+            <a
+              href="https://wa.me/962799195498"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={socialBrandClassName("https://wa.me/962799195498", "WhatsApp", "text")}
+            >
               <MessageCircle className="h-4 w-4" />
               +962 7 9919 5498
             </a>

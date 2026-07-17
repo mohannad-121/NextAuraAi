@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { LanguageSwitcher, useLanguage } from "@/i18n/translations";
 import { ProjectPageTail } from "@/components/landing/ProjectPageTail";
+import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 import {
   CURRENCIES,
   FEATURES,
@@ -1772,7 +1773,7 @@ function SubmissionState({
         </button>
         <button
           type="button"
-          className="nxa-project-button nxa-project-button-primary"
+          className={`nxa-project-button nxa-project-button-primary ${socialBrandClassName("https://wa.me/962799195498", "WhatsApp", "cta")}`}
           onClick={onWhatsApp}
           disabled={!request}
         >

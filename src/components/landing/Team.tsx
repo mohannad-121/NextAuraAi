@@ -4,6 +4,7 @@ import { CinematicCard } from "@/components/landing/CinematicCard";
 import { SectionHeading } from "@/components/landing/SectionHeading";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
+import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 
 const people = [
   {
@@ -85,10 +86,10 @@ export function Team() {
                         key={social.label}
                         href={social.href}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         aria-label={`${person.name} on ${social.label}`}
                         title={social.label}
-                        className="grid h-11 w-11 cursor-pointer place-items-center rounded-full border border-white/15 bg-white/5 text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200"
+                        className={`${socialBrandClassName(social.href, social.label)} cursor-pointer`}
                       >
                         <social.icon className="h-4 w-4" />
                       </a>
