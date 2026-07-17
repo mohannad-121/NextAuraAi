@@ -34,6 +34,44 @@ function requestedDate(value: string | undefined) {
   return value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
 }
 
+type RequestPersistenceDiagnostics = {
+  hasProjectIdea: boolean;
+  projectIdeaLength: number;
+  additionalNotesLength: number;
+  includedFeaturesCount: number;
+  selectedFeaturesCount: number;
+  customFeatureLength: number;
+};
+
+function getPersistenceDiagnostics(request: ProjectRequest): RequestPersistenceDiagnostics {
+  return {
+    hasProjectIdea: Boolean(request.projectIdea.trim()),
+    projectIdeaLength: request.projectIdea.length,
+    additionalNotesLength: request.notes?.length ?? 0,
+    includedFeaturesCount: request.includedFeatures.length,
+    selectedFeaturesCount: request.selectedFeatures.length,
+    customFeatureLength: request.customFeature?.length ?? 0,
+  };
+}
+
+/** Stops a submission instead of silently creating a row with known lost form data. */
+function assertRequestReadyForPersistence(request: ProjectRequest) {
+  const problems: string[] = [];
+  if (!request.projectIdea.trim()) problems.push("project idea");
+  if (request.includedFeatureIds.length > 0 && request.includedFeatures.length === 0) {
+    problems.push("package-included features");
+  }
+  if (request.selectedFeatureIds.length > 0 && request.selectedFeatures.length === 0) {
+    problems.push("selected features");
+  }
+  if (problems.length) {
+    throw new ProjectRequestPersistenceError(
+      `Project request mapping failed for: ${problems.join(", ")}`,
+      "PROJECT_REQUEST_MAPPING_INVALID",
+    );
+  }
+}
+
 /** Maps the form model once, immediately before calling the controlled RPC. */
 export function mapProjectRequestToRpcPayload(request: ProjectRequest) {
   const payload: Omit<
@@ -47,8 +85,8 @@ export function mapProjectRequestToRpcPayload(request: ProjectRequest) {
     project_type: request.projectType,
     project_idea: nullableText(request.projectIdea),
     package_id: request.packageId,
-    included_features: [...new Set(request.includedFeatureIds)],
-    selected_features: [...new Set(request.selectedFeatureIds)],
+    included_features: request.includedFeatures,
+    selected_features: request.selectedFeatures,
     custom_features: nullableText(request.customFeature),
     language_count: request.languageCount,
     timeline_option: request.timeline.option,
@@ -100,6 +138,7 @@ export async function submitProjectRequest(request: ProjectRequest): Promise<Sav
     );
   }
 
+  assertRequestReadyForPersistence(request);
   const rpcPayload = mapProjectRequestToRpcPayload(request);
   const payloadFields = Object.keys(rpcPayload);
 
@@ -108,6 +147,7 @@ export async function submitProjectRequest(request: ProjectRequest): Promise<Sav
       projectHost,
       rpcName: PROJECT_REQUEST_RPC,
       payloadFields,
+      ...getPersistenceDiagnostics(request),
     });
   }
 
@@ -177,6 +217,8 @@ export async function runProjectRequestConnectionTest(): Promise<SavedProjectReq
     packageId: "basic",
     includedFeatureIds: ["responsiveDesign"],
     selectedFeatureIds: ["responsiveDesign"],
+    includedFeatures: ["Responsive design"],
+    selectedFeatures: ["Responsive design"],
     languageCount: 1,
     timeline: { option: "flexible", isRush: false },
     estimate: {

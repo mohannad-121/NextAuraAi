@@ -46,6 +46,7 @@ import {
   preserveFeatureSelections,
 } from "@/features/project-request/pricingEngine";
 import { downloadProjectPdf, generateProjectRequestPdf } from "@/features/project-request/pdf";
+import { normalizeProjectRequest } from "@/features/project-request/normalizer";
 import {
   buildEstimateExplanation,
   buildWhatsAppConversationUrl,
@@ -372,39 +373,15 @@ export function ProjectRequestModal({
     if (!draft.packageId || !draft.projectType || !timeline || !estimate) return null;
     const converted = convertEstimate(estimate, draft.currency, rates);
     const explanation = buildEstimateExplanation(draft, estimate, timeline, language);
-    return {
-      locale: language,
-      customer: {
-        fullName: draft.fullName.trim(),
-        phone: draft.phone.trim(),
-        email: draft.email.trim() || undefined,
-        businessName: draft.businessName.trim() || undefined,
-      },
-      projectType: draft.projectType,
-      projectIdea: draft.projectIdea.trim(),
-      packageId: draft.packageId,
-      includedFeatureIds: getPackage(draft.packageId).includedFeatureIds,
-      selectedFeatureIds: draft.selectedFeatureIds,
-      customFeature: draft.customFeature.trim() || undefined,
-      languageCount: draft.languageCount,
+    return normalizeProjectRequest({
+      draft,
+      language,
       timeline,
-      contactMethod: draft.contactMethod || undefined,
-      notes: draft.notes.trim() || undefined,
-      estimate: {
-        ...estimate,
-        currencyBase: "JOD",
-        selectedCurrency: draft.currency,
-        convertedMin: converted?.min,
-        convertedMax: converted?.max,
-        exchangeRate: converted?.rate,
-        exchangeRateTimestamp: rates?.timestamp,
-        exchangeRateSource: rates?.source,
-        approximateConversion: rates?.approximate ?? draft.currency !== "JOD",
-        explanation,
-      },
-      maintenance: { freeMonths: 8 },
-      submittedAt: new Date().toISOString(),
-    };
+      estimate,
+      converted,
+      rates,
+      explanation,
+    });
   };
 
   const submit = async (event: FormEvent) => {
