@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Nav } from "@/components/landing/Nav";
 import { ProjectPageTail } from "@/components/landing/ProjectPageTail";
+import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 import { founderProfiles, founderUi, type FounderId } from "@/features/founders/founderProfiles";
 import { useLanguage } from "@/i18n/translations";
 
@@ -26,7 +27,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
 
       <main className="pt-28 sm:pt-32">
         <section className="relative border-b border-white/10 bg-[radial-gradient(circle_at_85%_15%,rgba(34,211,238,0.14),transparent_28%),radial-gradient(circle_at_10%_22%,rgba(139,92,246,0.16),transparent_30%)]">
-          <div className="homepage-container grid gap-10 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.96fr)_minmax(20rem,0.8fr)] lg:items-center lg:gap-16 lg:py-20">
+          <div className="homepage-container grid gap-8 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.96fr)_minmax(20rem,0.8fr)] lg:items-center lg:gap-14 lg:py-20">
             <div className="order-2 lg:order-1">
               <Link
                 to="/"
@@ -70,8 +71,8 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="homepage-container grid gap-6 py-12 sm:py-16 lg:grid-cols-[minmax(0,1.35fr)_minmax(17rem,0.65fr)]">
-          <article className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+        <section className="homepage-container grid gap-5 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(17rem,0.65fr)] lg:items-stretch">
+          <article className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
             <SectionTitle icon={BriefcaseBusiness} title={copy.currentRole} />
             <h2 className="mt-5 text-2xl font-semibold text-white">
               {profile.currentRole.title[language]}
@@ -90,7 +91,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
             </ul>
           </article>
 
-          <aside className="rounded-3xl border border-cyan-200/15 bg-cyan-200/[0.045] p-6 sm:p-8">
+          <aside className="h-full rounded-3xl border border-cyan-200/15 bg-cyan-200/[0.045] p-6 sm:p-8">
             <h2 className="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-200">
               {copy.capabilities}
             </h2>
@@ -103,9 +104,9 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
         </section>
 
         <section className="border-y border-white/10 bg-[#071226]">
-          <div className="homepage-container py-12 sm:py-16">
+          <div className="homepage-container py-14 sm:py-20">
             <SectionTitle title={copy.projects} />
-            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            <div className="mt-7 grid auto-rows-fr gap-5 lg:grid-cols-2">
               {profile.projects.map((project) => (
                 <article
                   key={project.name}
@@ -140,8 +141,8 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
                     <a
                       href={project.repository}
                       target="_blank"
-                      rel="noreferrer"
-                      className="mt-6 inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-cyan-200 underline decoration-cyan-300/35 underline-offset-4 transition-colors hover:text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200"
+                      rel="noopener noreferrer"
+                      className={`${socialBrandClassName(project.repository, "GitHub", "compact")} mt-6 w-fit`}
                     >
                       {copy.viewRepository}
                       <ExternalLink className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
@@ -153,11 +154,11 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="homepage-container py-12 sm:py-16">
-          <div className="grid gap-10 lg:grid-cols-2">
+        <section className="homepage-container py-14 sm:py-20">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-start">
             <div>
               <SectionTitle title={copy.experience} />
-              <div className="mt-7 grid gap-4">
+              <div className="mt-6 grid gap-5">
                 {profile.experience.map((role) => (
                   <article
                     key={`${role.organization}-${role.period.en}`}
@@ -181,11 +182,11 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
             </div>
             <div>
               <SectionTitle title={copy.skills} />
-              <div className="mt-7 grid gap-4">
+              <div className="mt-6 grid auto-rows-fr gap-4 sm:grid-cols-2">
                 {profile.skills.map((group) => (
                   <article
                     key={group.title.en}
-                    className="rounded-3xl border border-white/10 bg-white/[0.035] p-5"
+                    className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-5"
                   >
                     <h3 className="text-sm font-semibold text-cyan-100">{group.title[language]}</h3>
                     <div className="mt-4 flex flex-wrap gap-2">
@@ -201,8 +202,8 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
         </section>
 
         <section className="border-y border-white/10 bg-[#071226]">
-          <div className="homepage-container grid gap-8 py-12 sm:py-16 lg:grid-cols-2">
-            <article className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+          <div className="homepage-container grid gap-5 py-14 sm:py-20 lg:grid-cols-2 lg:items-stretch">
+            <article className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
               <SectionTitle title={copy.education} />
               <h3 className="mt-5 text-2xl font-semibold text-white">
                 {profile.education.degree[language]}
@@ -217,7 +218,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
                 ))}
               </div>
             </article>
-            <article className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+            <article className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
               <SectionTitle title={copy.achievements} />
               <ul className="mt-5 grid gap-3 text-sm leading-7 text-slate-300">
                 {profile.achievements[language].map((item) => (
@@ -228,14 +229,14 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="homepage-container grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.2fr_0.8fr]">
+        <section className="homepage-container grid gap-8 py-14 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
           <article>
             <SectionTitle title={copy.certifications} />
-            <div className="mt-7 grid gap-4">
+            <div className="mt-6 grid auto-rows-fr gap-4 sm:grid-cols-2">
               {profile.certifications.map((certification) => (
                 <article
                   key={certification.provider}
-                  className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
+                  className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-6"
                 >
                   <h3 className="font-semibold text-white">{certification.provider}</h3>
                   <ul className="mt-4 grid gap-2 text-sm leading-6 text-slate-300">
@@ -247,7 +248,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
               ))}
             </div>
           </article>
-          <div className="grid content-start gap-8">
+          <div className="grid content-start gap-5">
             <article className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
               <SectionTitle title={copy.languages} />
               <dl className="mt-5 grid gap-3">
@@ -282,7 +283,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
         </section>
 
         <section className="border-t border-white/10 bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.13),transparent_52%)]">
-          <div className="homepage-container flex flex-col items-start justify-between gap-6 py-12 sm:flex-row sm:items-center sm:py-16">
+          <div className="homepage-container flex flex-col items-start justify-between gap-6 py-14 sm:flex-row sm:items-center sm:py-16">
             <div>
               <p className="font-mono text-xs font-semibold tracking-[0.2em] text-cyan-200">
                 NEXAURA AI
@@ -324,10 +325,10 @@ function ProfileLinks({
           key={link.label}
           href={link.href}
           target={link.href.startsWith("http") ? "_blank" : undefined}
-          rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 text-sm font-semibold text-white transition-colors duration-200 hover:border-cyan-200/60 hover:text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
+          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+          className={socialBrandClassName(link.href, link.label, "pill")}
         >
-          <link.icon className="h-4 w-4 text-cyan-200" aria-hidden="true" />
+          <link.icon className="h-4 w-4" aria-hidden="true" />
           {link.label}
         </a>
       ))}

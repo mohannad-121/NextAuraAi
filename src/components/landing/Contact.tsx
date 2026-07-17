@@ -11,6 +11,7 @@ import {
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
+import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 
 type ContactProps = { onStartProject: () => void };
 
@@ -60,8 +61,8 @@ export function Contact({ onStartProject }: ContactProps) {
                 <a
                   href="https://wa.me/962799195498"
                   target="_blank"
-                  rel="noreferrer"
-                  className="premium-button premium-button-secondary justify-center"
+                  rel="noopener noreferrer"
+                  className={`${socialBrandClassName("https://wa.me/962799195498", "WhatsApp", "cta")} justify-center`}
                 >
                   <MessageCircle className="h-4 w-4" />
                   {copy.whatsapp}
@@ -100,7 +101,10 @@ export function Contact({ onStartProject }: ContactProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit NextAura AI on LinkedIn"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                  className={socialBrandClassName(
+                    "https://linkedin.com/company/nextaura-ai",
+                    "LinkedIn",
+                  )}
                 >
                   <Linkedin className="h-4 w-4" />
                 </a>
@@ -109,7 +113,10 @@ export function Contact({ onStartProject }: ContactProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit NextAura AI on Instagram"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-fuchsia-300/50 hover:text-fuchsia-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                  className={socialBrandClassName(
+                    "https://www.instagram.com/nextauraai/",
+                    "Instagram",
+                  )}
                 >
                   <Instagram className="h-4 w-4" />
                 </a>
@@ -118,7 +125,10 @@ export function Contact({ onStartProject }: ContactProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit NextAura AI on Facebook"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-blue-300/50 hover:text-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                  className={socialBrandClassName(
+                    "https://www.facebook.com/Nextauraai",
+                    "Facebook",
+                  )}
                 >
                   <Facebook className="h-4 w-4" />
                 </a>
@@ -127,7 +137,10 @@ export function Contact({ onStartProject }: ContactProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit NextAura AI on YouTube"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-red-300/50 hover:text-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                  className={socialBrandClassName(
+                    "https://www.youtube.com/@NextAuraAI-Solutions",
+                    "YouTube",
+                  )}
                 >
                   <Youtube className="h-4 w-4" />
                 </a>
@@ -136,14 +149,14 @@ export function Contact({ onStartProject }: ContactProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit NextAura AI on TikTok"
-                  className="flex h-11 items-center justify-center rounded-full border border-white/12 px-3 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                  className={`${socialBrandClassName("http://tiktok.com/@nextaura_ai", "TikTok")} flex w-auto justify-center px-3 text-[0.65rem] uppercase tracking-[0.08em]`}
                 >
                   TikTok
                 </a>
                 <a
                   href="mailto:info@next-aura-ai.com"
                   aria-label="Email NextAura AI"
-                  className="grid h-11 w-11 place-items-center rounded-full border border-white/12 text-slate-300 transition-colors duration-200 hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+                  className={socialBrandClassName("mailto:info@next-aura-ai.com", "Email")}
                 >
                   <Mail className="h-4 w-4" />
                 </a>
@@ -161,10 +174,18 @@ export function Contact({ onStartProject }: ContactProps) {
             <div>
               <h3 className="text-sm font-semibold text-white">{footer.contact}</h3>
               <div className="mt-5 space-y-3 text-sm text-slate-400">
-                <a className="block hover:text-white" href="mailto:info@next-aura-ai.com">
+                <a
+                  className={socialBrandClassName("mailto:info@next-aura-ai.com", "Email", "text")}
+                  href="mailto:info@next-aura-ai.com"
+                >
                   info@next-aura-ai.com
                 </a>
-                <a className="block hover:text-white" href="https://wa.me/962799195498">
+                <a
+                  className={socialBrandClassName("https://wa.me/962799195498", "WhatsApp", "text")}
+                  href="https://wa.me/962799195498"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   +962 7 9919 5498
                 </a>
                 <p>{footer.location}</p>
@@ -200,11 +221,11 @@ function ContactLink({
     <a
       href={href}
       target={href.startsWith("http") ? "_blank" : undefined}
-      rel={href.startsWith("http") ? "noreferrer" : undefined}
-      className="group flex items-center justify-between gap-4 border-t border-white/10 py-4 text-slate-300"
+      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+      className={socialBrandClassName(href, label, "row")}
     >
       <span className="flex items-center gap-4">
-        <Icon className="h-5 w-5 text-cyan-300" />
+        <Icon className="h-5 w-5" />
         <span>
           <span className="block text-xs uppercase tracking-[0.14em] text-slate-500">{label}</span>
           <span className="mt-1 block text-sm">{value}</span>

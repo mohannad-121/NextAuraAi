@@ -2,12 +2,9 @@ import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "
 import { ArrowUpRight, Bot, MessageCircle, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/translations";
-import {
-  chatbotCopy,
-  getChatbotResponse,
-  type ChatbotAction,
-} from "@/lib/getChatbotResponse";
+import { chatbotCopy, getChatbotResponse, type ChatbotAction } from "@/lib/getChatbotResponse";
 import type { SupportedLanguage } from "@/data/siteKnowledge";
+import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 
 type Message = {
   id: number;
@@ -137,9 +134,7 @@ export function WebsiteAssistantChatbot() {
                   <h2 className="truncate font-display text-base font-bold text-foreground">
                     NextAura Assistant
                   </h2>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {copy.subtitle}
-                  </p>
+                  <p className="truncate text-xs text-muted-foreground">{copy.subtitle}</p>
                 </div>
               </div>
               <button
@@ -163,7 +158,9 @@ export function WebsiteAssistantChatbot() {
                   className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    dir={message.role === "user" ? "auto" : message.language === "ar" ? "rtl" : "ltr"}
+                    dir={
+                      message.role === "user" ? "auto" : message.language === "ar" ? "rtl" : "ltr"
+                    }
                     className={`max-w-[84%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                       message.role === "user"
                         ? "bg-primary/80 text-primary-foreground shadow-[0_0_24px_oklch(0.58_0.24_315_/_0.18)]"
@@ -180,7 +177,7 @@ export function WebsiteAssistantChatbot() {
                             target={action.external ? "_blank" : undefined}
                             rel={action.external ? "noopener noreferrer" : undefined}
                             onClick={() => setOpen(false)}
-                            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-cyan/35 bg-cyan/10 px-3 py-1.5 text-xs font-semibold text-cyan transition-colors duration-200 hover:border-cyan/70 hover:bg-cyan/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/70"
+                            className={socialBrandClassName(action.href, action.label, "compact")}
                           >
                             <span>{action.label}</span>
                             <ArrowUpRight className="h-3.5 w-3.5 shrink-0 rtl:-scale-x-100" />
