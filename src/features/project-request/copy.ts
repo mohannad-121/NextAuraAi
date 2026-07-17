@@ -23,6 +23,7 @@ type ProjectRequestCopy = {
     downloadPdf: string;
     openWhatsapp: string;
     contact: string;
+    retry: string;
   };
   summary: {
     eyebrow: string;
@@ -171,6 +172,9 @@ type ProjectRequestCopy = {
     pastDate: string;
     consent: string;
     submission: string;
+    submissionFunction: string;
+    submissionUnavailable: string;
+    submissionValidation: string;
     pdf: string;
   };
 };
@@ -216,6 +220,7 @@ export const projectRequestCopy = {
       downloadPdf: "Download PDF",
       openWhatsapp: "Open WhatsApp",
       contact: "Continue to Contact",
+      retry: "Retry",
     },
     summary: {
       eyebrow: "Your request",
@@ -398,6 +403,10 @@ export const projectRequestCopy = {
       consent: "Confirm the details before submitting.",
       submission:
         "We could not save the request. Your details are still here, so please try again.",
+      submissionFunction: "The submission function is not configured yet.",
+      submissionUnavailable: "The database service is temporarily unavailable.",
+      submissionValidation:
+        "Your request could not be validated. Please review the required fields.",
       pdf: "We could not generate the PDF. Please try again.",
     },
   },
@@ -440,6 +449,7 @@ export const projectRequestCopy = {
       downloadPdf: "تنزيل PDF",
       openWhatsapp: "فتح واتساب",
       contact: "الانتقال إلى التواصل",
+      retry: "إعادة المحاولة",
     },
     summary: {
       eyebrow: "طلبك",
@@ -613,6 +623,9 @@ export const projectRequestCopy = {
       pastDate: "لا يمكن أن يكون تاريخ التسليم في الماضي.",
       consent: "أكد صحة التفاصيل قبل الإرسال.",
       submission: "تعذر حفظ الطلب. بقيت بياناتك هنا، لذا يُرجى المحاولة مرة أخرى.",
+      submissionFunction: "لم يتم إعداد دالة الإرسال بعد.",
+      submissionUnavailable: "خدمة قاعدة البيانات غير متاحة مؤقتًا.",
+      submissionValidation: "تعذر التحقق من صحة طلبك. يُرجى مراجعة الحقول المطلوبة.",
       pdf: "تعذر إنشاء ملف PDF. حاول مرة أخرى.",
     },
   },
@@ -656,6 +669,7 @@ export const projectRequestCopy = {
       downloadPdf: "Descargar PDF",
       openWhatsapp: "Abrir WhatsApp",
       contact: "Continuar a Contacto",
+      retry: "Reintentar",
     },
     summary: {
       eyebrow: "Tu solicitud",
@@ -841,6 +855,9 @@ export const projectRequestCopy = {
       consent: "Confirma los datos antes de enviar.",
       submission:
         "No pudimos guardar la solicitud. Tus datos siguen aquí, así que vuelve a intentarlo.",
+      submissionFunction: "La función de envío aún no está configurada.",
+      submissionUnavailable: "El servicio de base de datos no está disponible temporalmente.",
+      submissionValidation: "No se pudo validar tu solicitud. Revisa los campos obligatorios.",
       pdf: "No pudimos generar el PDF. Inténtalo de nuevo.",
     },
   },

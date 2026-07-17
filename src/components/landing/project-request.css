@@ -1916,6 +1916,17 @@ button.nxa-project-feature-card:hover {
   flex: none;
 }
 
+.nxa-project-submission-warning > span {
+  flex: 1;
+}
+
+.nxa-project-submission-warning .nxa-project-text-button {
+  min-height: 2rem;
+  margin: 0;
+  margin-inline-start: auto;
+  padding: 0.35rem 0.6rem;
+}
+
 .nxa-project-submission-state ol {
   display: grid;
   width: min(100%, 30rem);
