@@ -154,8 +154,8 @@ export function ProjectPageTail() {
         <div className="project-page-footer-grid">
           <div className="project-page-footer-brand">
             <a href="/" className="project-page-footer-identity" aria-label="NextAura AI">
-              <span className="project-page-mark" aria-hidden="true">
-                <img src="/favicon-48.png" alt="" />
+              <span className="project-page-mark project-page-mark-logo" aria-hidden="true">
+                <img src="/images/cinematic/logo-no-background.png" alt="" />
               </span>
               <span>NextAura AI</span>
             </a>
