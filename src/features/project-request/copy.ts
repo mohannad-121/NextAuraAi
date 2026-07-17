@@ -22,6 +22,7 @@ type ProjectRequestCopy = {
     returnToFeatures: string;
     downloadPdf: string;
     openWhatsapp: string;
+    copyFullRequest: string;
     contact: string;
     retry: string;
   };
@@ -159,6 +160,8 @@ type ProjectRequestCopy = {
     manualBody: string;
     manualSteps: string[];
     requestId: string;
+    messageTooLong: string;
+    copiedFullRequest: string;
   };
   errors: {
     required: string;
@@ -219,6 +222,7 @@ export const projectRequestCopy = {
       returnToFeatures: "Review features",
       downloadPdf: "Download PDF",
       openWhatsapp: "Open WhatsApp",
+      copyFullRequest: "Copy full request",
       contact: "Continue to Contact",
       retry: "Retry",
     },
@@ -389,6 +393,9 @@ export const projectRequestCopy = {
         "Attach the downloaded PDF before sending.",
       ],
       requestId: "Request ID",
+      messageTooLong:
+        "Your complete request is ready, but it is too long for one prefilled WhatsApp link. Copy it, then open WhatsApp and paste it manually.",
+      copiedFullRequest: "Full request copied. Paste it into WhatsApp.",
     },
     errors: {
       required: "This field is required.",
@@ -448,6 +455,7 @@ export const projectRequestCopy = {
       returnToFeatures: "مراجعة الميزات",
       downloadPdf: "تنزيل PDF",
       openWhatsapp: "فتح واتساب",
+      copyFullRequest: "نسخ الطلب كاملاً",
       contact: "الانتقال إلى التواصل",
       retry: "إعادة المحاولة",
     },
@@ -610,6 +618,9 @@ export const projectRequestCopy = {
         "أرفق ملف PDF الذي نزلته قبل الإرسال.",
       ],
       requestId: "رقم الطلب",
+      messageTooLong:
+        "طلبك الكامل جاهز، لكنه طويل جداً لرابط واتساب واحد مُعبأ مسبقاً. انسخه ثم افتح واتساب والصقه يدوياً.",
+      copiedFullRequest: "تم نسخ الطلب الكامل. الصقه في واتساب.",
     },
     errors: {
       required: "هذا الحقل مطلوب.",
@@ -668,6 +679,7 @@ export const projectRequestCopy = {
       returnToFeatures: "Revisar funciones",
       downloadPdf: "Descargar PDF",
       openWhatsapp: "Abrir WhatsApp",
+      copyFullRequest: "Copiar solicitud completa",
       contact: "Continuar a Contacto",
       retry: "Reintentar",
     },
@@ -841,6 +853,9 @@ export const projectRequestCopy = {
         "Adjunta el PDF descargado antes de enviar.",
       ],
       requestId: "ID de solicitud",
+      messageTooLong:
+        "Tu solicitud completa está lista, pero es demasiado larga para un único enlace de WhatsApp prellenado. Cópiala, abre WhatsApp y pégala manualmente.",
+      copiedFullRequest: "Solicitud completa copiada. Pégala en WhatsApp.",
     },
     errors: {
       required: "Este campo es obligatorio.",

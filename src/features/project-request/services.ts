@@ -1,6 +1,7 @@
 import type { Language } from "@/i18n/translations";
 import { FALLBACK_EXCHANGE_RATES, FALLBACK_RATE_METADATA, getFeature, getPackage } from "./config";
 import { projectRequestCopy } from "./copy";
+import { createProjectRequestSummary } from "./summary";
 import type {
   CurrencyCode,
   EstimateResult,
@@ -11,6 +12,7 @@ import type {
 } from "./types";
 
 const WHATSAPP_NUMBER = "962799195498";
+export const WHATSAPP_URL_SAFE_LENGTH = 7600;
 
 export function formatMoney(value: number, currency: CurrencyCode, language: Language) {
   return new Intl.NumberFormat(
@@ -114,12 +116,97 @@ export function buildWhatsAppUrl(
   language: Language,
   options: { hasPdf: boolean } = { hasPdf: true },
 ) {
+  return buildWhatsAppMessage(request, language, options).url;
+}
+
+export function buildWhatsAppConversationUrl() {
+  return `https://wa.me/${WHATSAPP_NUMBER}`;
+}
+
+export function buildWhatsAppMessage(
+  request: PersistedProjectRequest,
+  language: Language,
+  options: { hasPdf: boolean } = { hasPdf: true },
+) {
   const copy = projectRequestCopy[language];
-  const projectPackage = getPackage(request.packageId);
-  const timelineLabel = request.timeline.requestedDate ?? request.timeline.option;
-  const selectedFeatures = request.selectedFeatureIds
-    .map((featureId) => getFeature(featureId)?.title[language])
-    .filter((title): title is string => Boolean(title));
+  const labels =
+    language === "ar"
+      ? {
+          title: "🚀 طلب مشروع جديد — NEXTAURA AI",
+          request: "معلومات الطلب",
+          customer: "بيانات العميل",
+          overview: "نظرة عامة على المشروع",
+          included: "الميزات المشمولة",
+          selected: "الميزات الإضافية",
+          custom: "المتطلب المخصص",
+          timeline: "المدة الزمنية",
+          estimate: "السعر التقديري",
+          explanation: "شرح التقدير",
+          notes: "ملاحظات إضافية",
+          maintenance: "الصيانة",
+          disclaimer: "تنبيه التقدير",
+          pdf: "تم إنشاء ملخص PDF تفصيلي أيضاً.",
+        }
+      : language === "es"
+        ? {
+            title: "🚀 NUEVA SOLICITUD DE PROYECTO — NEXTAURA AI",
+            request: "INFORMACIÓN DE LA SOLICITUD",
+            customer: "DATOS DEL CLIENTE",
+            overview: "RESUMEN DEL PROYECTO",
+            included: "FUNCIONES INCLUIDAS",
+            selected: "FUNCIONES ADICIONALES",
+            custom: "REQUISITO PERSONALIZADO",
+            timeline: "PLAZO",
+            estimate: "PRECIO ESTIMADO",
+            explanation: "EXPLICACIÓN DE LA ESTIMACIÓN",
+            notes: "NOTAS ADICIONALES",
+            maintenance: "MANTENIMIENTO",
+            disclaimer: "AVISO DE ESTIMACIÓN",
+            pdf: "También se ha generado un resumen detallado en PDF.",
+          }
+        : {
+            title: "🚀 NEW PROJECT REQUEST — NEXTAURA AI",
+            request: "REQUEST INFORMATION",
+            customer: "CUSTOMER DETAILS",
+            overview: "PROJECT OVERVIEW",
+            included: "PACKAGE-INCLUDED FEATURES",
+            selected: "ADDITIONAL SELECTED FEATURES",
+            custom: "CUSTOM REQUIREMENT",
+            timeline: "TIMELINE",
+            estimate: "ESTIMATED PRICE",
+            explanation: "ESTIMATE EXPLANATION",
+            notes: "ADDITIONAL NOTES",
+            maintenance: "MAINTENANCE",
+            disclaimer: "ESTIMATE DISCLAIMER",
+            pdf: "A detailed PDF summary has also been generated.",
+          };
+  const categoryTitle: Record<string, string> =
+    language === "ar"
+      ? {
+          intelligence: "ميزات الذكاء الاصطناعي والأتمتة",
+          commerce: "التكاملات والتجارة",
+          business: "ميزات الأعمال",
+          essentials: "الأساسيات",
+        }
+      : language === "es"
+        ? {
+            intelligence: "IA y automatización",
+            commerce: "Integraciones y comercio",
+            business: "Funciones de negocio",
+            essentials: "Elementos esenciales",
+          }
+        : {
+            intelligence: "AI & AUTOMATION",
+            commerce: "INTEGRATIONS & COMMERCE",
+            business: "BUSINESS FEATURES",
+            essentials: "ESSENTIALS",
+          };
+  const summary = createProjectRequestSummary(request, language);
+  const list = (items: string[]) => items.map((item) => `• ${item}`);
+  const section = (title: string, values: Array<string | undefined>) => {
+    const populated = values.filter((value): value is string => Boolean(value?.trim()));
+    return populated.length ? [title, ...populated, ""] : [];
+  };
   const converted =
     request.estimate.convertedMin != null && request.estimate.convertedMax != null
       ? formatMoneyRange(
@@ -134,19 +221,59 @@ export function buildWhatsAppUrl(
           "JOD",
           language,
         );
-  const lines = [
-    "New project request — NextAura AI",
-    `${copy.success.requestId}: ${request.id}`,
-    `${copy.review.fullName}: ${request.customer.fullName}`,
-    `${copy.review.package}: ${projectPackage.title[language]}`,
-    `${copy.review.originalEstimate}: ${formatMoneyRange(request.estimate.estimatedMinJod, request.estimate.estimatedMaxJod, "JOD", language)}`,
-    `${copy.review.convertedEstimate}: ${converted}`,
-    `${copy.review.requestedTimeline}: ${timelineLabel}`,
-    `${copy.summary.features}: ${selectedFeatures.join(", ") || copy.review.notProvided}`,
-    "Eight months free maintenance included.",
-  ];
-  if (options.hasPdf) {
-    lines.push("PDF generated. Please attach the downloaded project-request PDF to this message.");
-  }
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+  const submittedAt = new Intl.DateTimeFormat(
+    language === "ar" ? "ar-JO" : language === "es" ? "es-ES" : "en-GB",
+    { dateStyle: "medium", timeStyle: "short" },
+  ).format(new Date(request.createdAt || request.submittedAt));
+  const fullMessage = [
+    labels.title,
+    "",
+    ...section(`🆔 ${labels.request}`, [
+      `${copy.success.requestId}: ${request.id}`,
+      `${copy.review.submittedAt}: ${submittedAt}`,
+    ]),
+    ...section(`👤 ${labels.customer}`, [
+      `${copy.review.fullName}: ${request.customer.fullName}`,
+      request.customer.businessName
+        ? `${copy.review.businessName}: ${request.customer.businessName}`
+        : undefined,
+      `${copy.review.phone}: ${request.customer.phone}`,
+      request.customer.email ? `${copy.review.email}: ${request.customer.email}` : undefined,
+      request.contactMethod
+        ? `${copy.review.contactMethod}: ${copy.timeline.contactOptions[request.contactMethod]}`
+        : undefined,
+    ]),
+    ...section(`🌐 ${labels.overview}`, [
+      `${copy.review.projectType}: ${summary.projectTypeTitle}`,
+      `${copy.review.package}: ${summary.packageTitle}`,
+      `${copy.review.projectIdea}:\n${request.projectIdea}`,
+      `${copy.review.languages}: ${request.languageCount}`,
+    ]),
+    ...section(`✨ ${labels.included}`, list(summary.includedFeatureNames)),
+    ...Object.entries(summary.selectedFeaturesByCategory).flatMap(([category, features]) =>
+      section(`🧩 ${categoryTitle[category]}`, list(features ?? [])),
+    ),
+    ...section(`🧩 ${labels.custom}`, request.customFeature ? [request.customFeature] : []),
+    ...section(`⏱️ ${labels.timeline}`, [
+      `${copy.review.requestedTimeline}: ${summary.timelineTitle}`,
+      `${copy.review.deliveryMode}: ${request.timeline.isRush ? copy.review.rush : copy.review.normal}`,
+      request.timeline.days ? `${request.timeline.days} days` : undefined,
+    ]),
+    ...section(`💰 ${labels.estimate}`, [
+      `${copy.review.originalEstimate}: ${formatMoneyRange(request.estimate.estimatedMinJod, request.estimate.estimatedMaxJod, "JOD", language)}`,
+      `${copy.review.convertedEstimate}: ${converted}`,
+      `${copy.estimate.currency}: ${request.estimate.selectedCurrency}`,
+    ]),
+    ...section(`🤖 ${labels.explanation}`, [request.estimate.explanation]),
+    ...section(`📝 ${labels.notes}`, request.notes ? [request.notes] : []),
+    ...section(`🛠️ ${labels.maintenance}`, [copy.maintenance.title, copy.maintenance.body]),
+    ...section(`⚠️ ${labels.disclaimer}`, [copy.disclaimer]),
+    ...(options.hasPdf ? ["📎 PDF", labels.pdf] : []),
+  ]
+    .join("\n")
+    .trim();
+
+  const encodedMessage = encodeURIComponent(fullMessage);
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+  return { message: fullMessage, url, urlLength: url.length };
 }

@@ -1,8 +1,8 @@
 import type { jsPDF as JsPdfDocument } from "jspdf";
 import type { Language } from "@/i18n/translations";
-import { getFeature, getPackage, PROJECT_TYPE_OPTIONS, TIMELINE_OPTIONS } from "./config";
 import { projectRequestCopy } from "./copy";
 import { formatMoneyRange } from "./services";
+import { createProjectRequestSummary } from "./summary";
 import type { PersistedProjectRequest } from "./types";
 
 const ARABIC_FONT_URL =
@@ -161,17 +161,9 @@ export async function generateProjectRequestPdf(
   doc.text(request.id, textX, y + 8, textOptions(request.id, { align }));
   y += 21;
 
-  const projectPackage = getPackage(request.packageId);
-  const projectType = PROJECT_TYPE_OPTIONS.find((item) => item.id === request.projectType);
-  const timeline = TIMELINE_OPTIONS.find((item) => item.id === request.timeline.option);
-  const includedNames = request.includedFeatureIds
-    .map((id) => getFeature(id)?.title[language])
-    .filter(Boolean)
-    .join(" · ");
-  const selectedNames = request.selectedFeatureIds
-    .map((id) => getFeature(id)?.title[language])
-    .filter(Boolean)
-    .join(" · ");
+  const summary = createProjectRequestSummary(request, language);
+  const includedNames = summary.includedFeatureNames.join(" · ");
+  const selectedNames = summary.selectedFeatureNames.join(" · ");
 
   section(copy.review.customer);
   field(copy.review.fullName, request.customer.fullName);
@@ -180,18 +172,18 @@ export async function generateProjectRequestPdf(
   field(copy.review.businessName, request.customer.businessName);
 
   section(copy.review.project);
-  field(copy.review.projectType, projectType?.label[language]);
+  field(copy.review.projectType, summary.projectTypeTitle);
   field(copy.review.projectIdea, request.projectIdea);
 
   section(copy.review.scope);
-  field(copy.review.package, projectPackage.title[language]);
+  field(copy.review.package, summary.packageTitle);
   field(copy.review.includedFeatures, includedNames);
   field(copy.review.selectedFeatures, selectedNames);
   field(copy.review.customFeature, request.customFeature);
   field(copy.review.languages, String(request.languageCount));
 
   section(copy.review.timeline);
-  field(copy.review.requestedTimeline, request.timeline.requestedDate || timeline?.label[language]);
+  field(copy.review.requestedTimeline, summary.timelineTitle);
   field(copy.review.deliveryMode, request.timeline.isRush ? copy.review.rush : copy.review.normal);
   field(
     copy.review.contactMethod,
