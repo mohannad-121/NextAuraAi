@@ -1,4 +1,4 @@
-import { getSupabaseClient, getSupabaseProjectHostname } from "@/lib/supabase";
+import { getSupabaseClient, getSupabaseProjectHostname, logSupabaseError } from "@/lib/supabase";
 import type { ProjectRequest, ProjectRequestRecord } from "./types";
 
 type SubmitProjectRequestRpcResponse = {
@@ -101,13 +101,7 @@ export async function submitProjectRequest(request: ProjectRequest): Promise<Sav
     : undefined;
 
   if (error) {
-    if (import.meta.env.DEV) {
-      console.error("[project-request] Supabase RPC failed", {
-        projectHost,
-        code: error.code,
-        message: error.message,
-      });
-    }
+    logSupabaseError("project-request RPC failed", error);
     throw new ProjectRequestPersistenceError(error.message, error.code);
   }
 

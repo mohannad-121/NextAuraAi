@@ -16,6 +16,9 @@ dist-ssr
 .nitro
 .codex-run
 *.local
+.env
+.env.*
+!.env.example
 
 # Wrangler / Cloudflare
 .wrangler/

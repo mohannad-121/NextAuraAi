@@ -26,12 +26,12 @@ The function is the only anonymous write path. It generates IDs such as `NA-2026
 In Supabase, open **Project Settings → API**:
 
 1. Copy the **Project URL**.
-2. Copy the **anon public** key. Do not use the `service_role` secret in the browser or in this form.
+2. Copy the **Publishable Key**. Do not use any secret or service-role key in the browser or in this form.
 3. Create a local `.env` file in the repository root (it is ignored by Git):
 
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
 Restart `npm run dev` after changing local variables. The development console logs only the configured project hostname and RPC outcome, never the key.
@@ -39,7 +39,7 @@ Restart `npm run dev` after changing local variables. The development console lo
 ## 4. Configure Vercel
 
 1. In Vercel, open the NextAura AI project → **Settings → Environment Variables**.
-2. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` with the values from the exact Supabase project open in your dashboard.
+2. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` with the values from the exact Supabase project open in your dashboard.
 3. Add them to **Production** and **Preview** (and Development if you use it).
 4. Redeploy after saving. Vite replaces `VITE_` variables at build time.
 
@@ -65,6 +65,6 @@ If saving fails, the form remains open with all entered values and a Retry optio
 | `Invalid API key`                | Copy the anon/public key again and redeploy Vercel.                                                              |
 | Wrong project receives rows      | Compare the Vercel `VITE_SUPABASE_URL` hostname with the Supabase dashboard project URL.                         |
 | `Failed to fetch`                | Check browser Network for the RPC request, deployment status, internet access, and the two VITE variables.       |
-| Missing variables                | Set both `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, then restart locally or redeploy Vercel.              |
+| Missing variables                | Set both `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`, then restart locally or redeploy Vercel.       |
 
 For any failed test, open DevTools → **Network**, click the `submit_project_request` RPC request, and inspect its status and response. Do not paste API keys into screenshots or messages.
