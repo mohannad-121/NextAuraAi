@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StartProjectRouteImport } from './routes/start-project'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiVisitorsRouteImport } from './routes/api/visitors'
+import { Route as ApiProjectRequestsRouteImport } from './routes/api/project-requests'
+import { Route as ApiExchangeRatesRouteImport } from './routes/api/exchange-rates'
 
 const StartProjectRoute = StartProjectRouteImport.update({
   id: '/start-project',
@@ -28,34 +30,68 @@ const ApiVisitorsRoute = ApiVisitorsRouteImport.update({
   path: '/api/visitors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiProjectRequestsRoute = ApiProjectRequestsRouteImport.update({
+  id: '/api/project-requests',
+  path: '/api/project-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExchangeRatesRoute = ApiExchangeRatesRouteImport.update({
+  id: '/api/exchange-rates',
+  path: '/api/exchange-rates',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/start-project': typeof StartProjectRoute
+  '/api/exchange-rates': typeof ApiExchangeRatesRoute
+  '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/start-project': typeof StartProjectRoute
+  '/api/exchange-rates': typeof ApiExchangeRatesRoute
+  '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/start-project': typeof StartProjectRoute
+  '/api/exchange-rates': typeof ApiExchangeRatesRoute
+  '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/start-project' | '/api/visitors'
+  fullPaths:
+    | '/'
+    | '/start-project'
+    | '/api/exchange-rates'
+    | '/api/project-requests'
+    | '/api/visitors'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/start-project' | '/api/visitors'
-  id: '__root__' | '/' | '/start-project' | '/api/visitors'
+  to:
+    | '/'
+    | '/start-project'
+    | '/api/exchange-rates'
+    | '/api/project-requests'
+    | '/api/visitors'
+  id:
+    | '__root__'
+    | '/'
+    | '/start-project'
+    | '/api/exchange-rates'
+    | '/api/project-requests'
+    | '/api/visitors'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   StartProjectRoute: typeof StartProjectRoute
+  ApiExchangeRatesRoute: typeof ApiExchangeRatesRoute
+  ApiProjectRequestsRoute: typeof ApiProjectRequestsRoute
   ApiVisitorsRoute: typeof ApiVisitorsRoute
 }
 
@@ -82,12 +118,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiVisitorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/project-requests': {
+      id: '/api/project-requests'
+      path: '/api/project-requests'
+      fullPath: '/api/project-requests'
+      preLoaderRoute: typeof ApiProjectRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/exchange-rates': {
+      id: '/api/exchange-rates'
+      path: '/api/exchange-rates'
+      fullPath: '/api/exchange-rates'
+      preLoaderRoute: typeof ApiExchangeRatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   StartProjectRoute: StartProjectRoute,
+  ApiExchangeRatesRoute: ApiExchangeRatesRoute,
+  ApiProjectRequestsRoute: ApiProjectRequestsRoute,
   ApiVisitorsRoute: ApiVisitorsRoute,
 }
 export const routeTree = rootRouteImport

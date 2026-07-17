@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ProjectRequestModal } from "@/components/landing/ProjectRequestModal";
-import { WebsiteAssistantChatbot } from "@/components/landing/WebsiteAssistantChatbot";
 
 export const Route = createFileRoute("/start-project")({
   head: () => ({
@@ -28,9 +27,11 @@ function StartProjectPage() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <ProjectRequestModal open presentation="page" onClose={() => navigate({ to: "/" })} />
-      <WebsiteAssistantChatbot />
-    </>
+    <ProjectRequestModal
+      open
+      presentation="page"
+      onClose={() => navigate({ to: "/" })}
+      onSubmitted={() => navigate({ to: "/", hash: "contact" })}
+    />
   );
 }
