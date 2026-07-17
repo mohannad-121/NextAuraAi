@@ -1,9 +1,10 @@
 import { Eye, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAnonymousVisitorId } from "@/lib/anonymousVisitor";
+import { getSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/i18n/translations";
 
-const COUNT_CACHE_KEY = "nextaura-visitor-count-cache-v1";
+const COUNT_CACHE_KEY = "nextaura-last-confirmed-visitor-count";
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1_000;
 
 let visitorCountRequest: Promise<number> | null = null;
@@ -40,37 +41,28 @@ function cacheCount(count: number) {
 function requestVisitorCount(force = false) {
   if (force) visitorCountRequest = null;
   if (!visitorCountRequest) {
-    visitorCountRequest = fetch("/api/visitors", {
-      method: "POST",
-      cache: "no-store",
-      credentials: "same-origin",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        visitorId: getAnonymousVisitorId(),
-        page: window.location.pathname,
-      }),
-      keepalive: true,
-    }).then(async (response) => {
-      const data = (await response.json().catch(() => null)) as {
-        success?: unknown;
-        uniqueCount?: unknown;
-      } | null;
+    const supabase = getSupabaseClient();
+    if (!supabase) return Promise.reject(new Error("SUPABASE_CONFIG_MISSING"));
 
-      if (
-        !response.ok ||
-        data?.success !== true ||
-        !Number.isSafeInteger(data.uniqueCount) ||
-        Number(data.uniqueCount) < 0
-      ) {
-        throw new Error("VISITOR_COUNT_UNAVAILABLE");
+    visitorCountRequest = Promise.resolve(
+      supabase.rpc("register_site_visitor", {
+        p_visitor_id: getAnonymousVisitorId(),
+        p_path: window.location.pathname,
+      }),
+    ).then(({ data, error }) => {
+      if (error) throw new Error(error.code || "VISITOR_DATABASE_FAILED");
+
+      const row = Array.isArray(data) ? data[0] : data;
+      const count = Number((row as { total_count?: unknown } | null)?.total_count);
+      if (!Number.isSafeInteger(count) || count < 0) {
+        throw new Error("VISITOR_RESPONSE_INVALID");
       }
 
-      const count = Number(data.uniqueCount);
       cacheCount(count);
       return count;
     });
   }
-  return visitorCountRequest;
+  return visitorCountRequest!;
 }
 
 type VisitorCounterProps = {
@@ -92,7 +84,14 @@ export function VisitorCounter({
     setFailed(false);
     void requestVisitorCount(force)
       .then(setCount)
-      .catch(() => setFailed(true));
+      .catch((error) => {
+        if (import.meta.env.DEV) {
+          console.error("[visitor-counter] registration failed", {
+            code: error instanceof Error ? error.message : "VISITOR_COUNT_UNAVAILABLE",
+          });
+        }
+        setFailed(true);
+      });
   };
 
   useEffect(() => {

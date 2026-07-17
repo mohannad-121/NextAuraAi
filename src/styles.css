@@ -429,34 +429,7 @@
 .why-nextaura-card-topline {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.why-nextaura-card-icon {
-  display: inline-flex;
-  width: 3.25rem;
-  height: 3.25rem;
-  flex: 0 0 3.25rem;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgb(var(--why-card-accent) / 0.3);
-  border-radius: 0.95rem;
-  background: rgb(5 12 27 / 0.78);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.12),
-    0 8px 24px rgb(0 0 0 / 0.18);
-  transition:
-    border-color 260ms ease,
-    background-color 260ms ease,
-    box-shadow 260ms ease;
-}
-
-.why-nextaura-card-icon-image {
-  display: block;
-  width: 2rem;
-  height: 2rem;
-  object-fit: contain;
+  justify-content: flex-end;
 }
 
 .why-nextaura-card-number {
@@ -542,14 +515,6 @@
   opacity: var(--why-card-active-overlay-opacity);
 }
 
-.why-nextaura-card[data-active="true"] .why-nextaura-card-icon {
-  border-color: rgb(var(--why-card-accent) / 0.78);
-  background: rgb(5 12 27 / 0.9);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.16),
-    0 0 1.4rem rgb(var(--why-card-accent) / 0.24);
-}
-
 .why-nextaura-card[data-active="true"] .why-nextaura-card-title {
   max-width: 24rem;
   font-size: clamp(1.45rem, 2.6vw, 2rem);
@@ -601,7 +566,6 @@
   .why-nextaura-content {
     max-width: 40rem;
   }
-
 }
 
 @media (max-width: 56.24rem) {
@@ -694,7 +658,6 @@
   .why-nextaura-card,
   .why-nextaura-card-media,
   .why-nextaura-card-overlay,
-  .why-nextaura-card-icon,
   .why-nextaura-card-title,
   .why-nextaura-card-description,
   .why-nextaura-card-status {
@@ -2292,22 +2255,25 @@
 }
 
 .project-page-mark {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
+  position: relative;
+  display: inline-flex;
+  width: 3.25rem;
+  height: 2.5rem;
   flex: none;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid rgb(103 232 249 / 0.26);
-  border-radius: 8px;
-  background: #071225;
-  box-shadow: 0 0 24px rgb(34 211 238 / 0.1);
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
 
-.project-page-mark img {
-  width: 2.15rem;
-  height: 2.15rem;
+.project-page-mark-logo img {
+  position: absolute;
+  top: 57%;
+  left: 50%;
+  width: 5.8rem;
+  height: 5.8rem;
+  max-width: none;
   object-fit: contain;
+  transform: translate(-50%, -50%);
 }
 
 .project-page-topbar-actions {
@@ -4160,8 +4126,7 @@
   height: 5rem;
   padding: 0.2rem;
   place-items: center;
-  filter:
-    drop-shadow(0 10px 12px rgb(0 0 0 / 0.52))
+  filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.52))
     drop-shadow(0 0 10px color-mix(in srgb, var(--planet-orbit-accent) 30%, transparent));
   transform: translate(-50%, -50%) rotate(var(--orbit-counter-angle));
   animation: service-planet-orbit-counter var(--planet-orbit-speed) linear infinite;
@@ -5686,7 +5651,9 @@
   border: 1px solid rgb(103 232 249 / 0.18);
   border-radius: 8px;
   background: linear-gradient(145deg, rgb(12 27 51 / 0.94), rgb(5 13 29 / 0.96)), #071225;
-  box-shadow: 0 24px 64px rgb(0 0 0 / 0.24), inset 0 1px rgb(255 255 255 / 0.04);
+  box-shadow:
+    0 24px 64px rgb(0 0 0 / 0.24),
+    inset 0 1px rgb(255 255 255 / 0.04);
 }
 
 .project-page-workspace > .project-modal-steps::after {
@@ -5721,11 +5688,15 @@
 .project-page-workspace .project-modal-step[data-active="true"] {
   border-color: rgb(103 232 249 / 0.45);
   background: linear-gradient(100deg, rgb(8 47 73 / 0.84), rgb(30 41 89 / 0.58));
-  box-shadow: inset 3px 0 #22d3ee, 0 12px 30px rgb(0 0 0 / 0.2);
+  box-shadow:
+    inset 3px 0 #22d3ee,
+    0 12px 30px rgb(0 0 0 / 0.2);
 }
 
 [dir="rtl"] .project-page-workspace .project-modal-step[data-active="true"] {
-  box-shadow: inset -3px 0 #22d3ee, 0 12px 30px rgb(0 0 0 / 0.2);
+  box-shadow:
+    inset -3px 0 #22d3ee,
+    0 12px 30px rgb(0 0 0 / 0.2);
 }
 
 .project-page-workspace .project-modal-step[data-complete="true"] {
@@ -5781,7 +5752,10 @@
     linear-gradient(rgb(103 232 249 / 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgb(99 102 241 / 0.035) 1px, transparent 1px),
     linear-gradient(115deg, rgb(3 19 39 / 0.98), rgb(6 10 31 / 0.98) 55%, rgb(12 8 35 / 0.98));
-  background-size: 64px 64px, 64px 64px, auto;
+  background-size:
+    64px 64px,
+    64px 64px,
+    auto;
   contain-intrinsic-size: 420px;
 }
 
@@ -5850,8 +5824,13 @@
   border: 1px solid rgb(148 163 184 / 0.15);
   border-radius: 6px;
   background: linear-gradient(145deg, rgb(16 31 56 / 0.92), rgb(7 16 34 / 0.92));
-  box-shadow: inset 0 1px rgb(255 255 255 / 0.045), 0 12px 24px rgb(0 0 0 / 0.16);
-  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.045),
+    0 12px 24px rgb(0 0 0 / 0.16);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
 }
 
 .project-flag-item:hover {

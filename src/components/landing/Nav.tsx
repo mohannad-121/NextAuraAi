@@ -77,8 +77,8 @@ export function Nav({ onStartProject }: NavProps) {
           className="relative z-10 inline-flex min-h-11 items-center"
         >
           <BrandSymbol
-            className="!rounded-xl !bg-[#0b1326]/72 !p-1.5"
-            imageClassName="w-11 sm:w-12"
+            className="h-11 w-16 sm:h-12 sm:w-[4.5rem]"
+            imageClassName="absolute left-1/2 top-[57%] h-24 w-24 -translate-x-1/2 -translate-y-1/2 sm:h-28 sm:w-28"
           />
         </a>
 

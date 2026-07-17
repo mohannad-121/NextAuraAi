@@ -5,7 +5,6 @@ import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
 type BenefitVisual = {
-  icon: string;
   image: string;
   accent: "violet" | "cyan" | "blue";
   imagePosition: string;
@@ -13,25 +12,21 @@ type BenefitVisual = {
 
 const benefitVisuals: BenefitVisual[] = [
   {
-    icon: "/icons/business011.ico",
     image: "/images/cinematic/business01.png",
     accent: "violet",
     imagePosition: "center",
   },
   {
-    icon: "/icons/WAA1.ico",
     image: "/images/cinematic/WAA.png",
     accent: "cyan",
     imagePosition: "center 46%",
   },
   {
-    icon: "/icons/CDC1.ico",
     image: "/images/cinematic/CDC.png",
     accent: "blue",
     imagePosition: "center 42%",
   },
   {
-    icon: "/icons/LSG1.ico",
     image: "/images/cinematic/LSG.png",
     accent: "violet",
     imagePosition: "center",
@@ -128,15 +123,6 @@ export function WhyChoose() {
                   <span className="why-nextaura-card-overlay" aria-hidden="true" />
                   <span className="why-nextaura-card-inner">
                     <span className="why-nextaura-card-topline">
-                      <span className="why-nextaura-card-icon" aria-hidden="true">
-                        <img
-                          className="why-nextaura-card-icon-image"
-                          src={visual.icon}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </span>
                       <span className="why-nextaura-card-number">
                         {String(index + 1).padStart(2, "0")}
                       </span>
