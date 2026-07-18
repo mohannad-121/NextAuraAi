@@ -5,8 +5,8 @@ import { formatMoneyRange } from "./services";
 import { createProjectRequestSummary } from "./summary";
 import type { PersistedProjectRequest } from "./types";
 
-const ARABIC_FONT_URL =
-  "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansarabic/NotoSansArabic%5Bwdth%2Cwght%5D.ttf";
+const ARABIC_FONT_URL = "/fonts/NotoSansArabic.ttf";
+let arabicFontBase64Promise: Promise<string | null> | null = null;
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   const bytes = new Uint8Array(buffer);
@@ -18,18 +18,24 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
+function loadArabicFont() {
+  arabicFontBase64Promise ??= fetch(ARABIC_FONT_URL, { cache: "force-cache" })
+    .then(async (response) => {
+      if (!response.ok) return null;
+      return arrayBufferToBase64(await response.arrayBuffer());
+    })
+    .catch(() => null);
+  return arabicFontBase64Promise;
+}
+
 async function addArabicFont(doc: JsPdfDocument) {
-  try {
-    const response = await fetch(ARABIC_FONT_URL, { cache: "force-cache" });
-    if (!response.ok) return false;
-    const font = arrayBufferToBase64(await response.arrayBuffer());
-    doc.addFileToVFS("NotoSansArabic.ttf", font);
-    doc.addFont("NotoSansArabic.ttf", "NotoSansArabic", "normal");
-    doc.setFont("NotoSansArabic", "normal");
-    return true;
-  } catch {
-    return false;
-  }
+  const font = await loadArabicFont();
+  if (!font) return false;
+
+  doc.addFileToVFS("NotoSansArabic.ttf", font);
+  doc.addFont("NotoSansArabic.ttf", "NotoSansArabic", "normal");
+  doc.setFont("NotoSansArabic", "normal");
+  return true;
 }
 
 async function addLogo(doc: JsPdfDocument) {
@@ -51,7 +57,9 @@ export async function generateProjectRequestPdf(
   const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
   const copy = projectRequestCopy[language];
   const isRtl = language === "ar";
-  if (isRtl) await addArabicFont(doc);
+  if (isRtl && !(await addArabicFont(doc))) {
+    throw new Error("Arabic PDF font could not be loaded");
+  }
   await addLogo(doc);
 
   const pageWidth = doc.internal.pageSize.getWidth();
