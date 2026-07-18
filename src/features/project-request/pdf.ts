@@ -5,8 +5,15 @@ import { formatMoneyRange } from "./services";
 import { createProjectRequestSummary } from "./summary";
 import type { PersistedProjectRequest } from "./types";
 
-const ARABIC_FONT_URL = "/fonts/NotoSansArabic.ttf";
+const ARABIC_FONT_URL = "/fonts/Amiri-Regular.ttf";
+const ARABIC_FONT_FILE = "Amiri-Regular.ttf";
+const ARABIC_FONT_FAMILY = "Amiri";
+const ARABIC_SCRIPT_PATTERN = /[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff]/;
 let arabicFontBase64Promise: Promise<string | null> | null = null;
+
+function hasArabicScript(value: string) {
+  return ARABIC_SCRIPT_PATTERN.test(value);
+}
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   const bytes = new Uint8Array(buffer);
@@ -32,9 +39,9 @@ async function addArabicFont(doc: JsPdfDocument) {
   const font = await loadArabicFont();
   if (!font) return false;
 
-  doc.addFileToVFS("NotoSansArabic.ttf", font);
-  doc.addFont("NotoSansArabic.ttf", "NotoSansArabic", "normal");
-  doc.setFont("NotoSansArabic", "normal");
+  doc.addFileToVFS(ARABIC_FONT_FILE, font);
+  doc.addFont(ARABIC_FONT_FILE, ARABIC_FONT_FAMILY, "normal");
+  doc.setFont(ARABIC_FONT_FAMILY, "normal");
   return true;
 }
 
@@ -57,9 +64,13 @@ export async function generateProjectRequestPdf(
   const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
   const copy = projectRequestCopy[language];
   const isRtl = language === "ar";
-  if (isRtl && !(await addArabicFont(doc))) {
+  // A request may be submitted from an English page while its customer data is Arabic.
+  // Detect the text itself so those PDFs never fall back to Helvetica/WinAnsi encoding.
+  const hasArabicContent = isRtl || hasArabicScript(JSON.stringify(request));
+  if (hasArabicContent && !(await addArabicFont(doc))) {
     throw new Error("Arabic PDF font could not be loaded");
   }
+  if (hasArabicContent) doc.setLanguage("ar");
   await addLogo(doc);
 
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -68,23 +79,23 @@ export async function generateProjectRequestPdf(
   const contentWidth = pageWidth - margin * 2;
   const align: "right" | "left" = isRtl ? "right" : "left";
   const textX = isRtl ? pageWidth - margin : margin;
-  const bidiOptions = isRtl
-    ? {
-        isInputVisual: false,
-        isInputRtl: true,
-        isOutputVisual: true,
-        isOutputRtl: false,
-        isSymmetricSwapping: true,
-      }
-    : {};
+  const bidiOptions = {
+    isInputVisual: false,
+    isInputRtl: true,
+    isOutputVisual: true,
+    isOutputRtl: false,
+    isSymmetricSwapping: true,
+  };
   const textOptions = <Options extends object>(value: string | string[], options: Options) => {
     const logicalText = Array.isArray(value) ? value.join(" ") : value;
     return {
       ...options,
-      ...(isRtl && /[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff]/.test(logicalText)
-        ? bidiOptions
-        : {}),
+      ...(hasArabicScript(logicalText) ? bidiOptions : {}),
     };
+  };
+  const textAlignment = (value: string | string[]) => {
+    const logicalText = Array.isArray(value) ? value.join(" ") : value;
+    return hasArabicScript(logicalText) ? "right" : align;
   };
   let y = 18;
 
@@ -95,7 +106,8 @@ export async function generateProjectRequestPdf(
   ) => {
     doc.setFontSize(size);
     doc.setTextColor(...color);
-    if (!isRtl) doc.setFont("helvetica", style);
+    if (hasArabicContent) doc.setFont(ARABIC_FONT_FAMILY, "normal");
+    else doc.setFont("helvetica", style);
   };
 
   const drawPageChrome = () => {
@@ -126,7 +138,12 @@ export async function generateProjectRequestPdf(
     setText(size, color);
     const lines = doc.splitTextToSize(value || copy.review.notProvided, maxWidth) as string[];
     ensureSpace(lines.length * 5 + 2);
-    doc.text(lines, textX, y, textOptions(lines, { align, lineHeightFactor: 1.45 }));
+    doc.text(
+      lines,
+      textX,
+      y,
+      textOptions(lines, { align: textAlignment(lines), lineHeightFactor: 1.45 }),
+    );
     y += lines.length * 5 + 2;
   };
 
@@ -136,14 +153,14 @@ export async function generateProjectRequestPdf(
     doc.setFillColor(240, 244, 252);
     doc.roundedRect(margin, y - 5, contentWidth, 10, 2, 2, "F");
     setText(10, [21, 37, 66], "bold");
-    doc.text(title, textX, y + 1.5, textOptions(title, { align }));
+    doc.text(title, textX, y + 1.5, textOptions(title, { align: textAlignment(title) }));
     y += 10;
   };
 
   const field = (label: string, value?: string) => {
     ensureSpace(13);
     setText(7.5, [91, 107, 134], "bold");
-    doc.text(label, textX, y, textOptions(label, { align }));
+    doc.text(label, textX, y, textOptions(label, { align: textAlignment(label) }));
     y += 4.5;
     addWrapped(value || copy.review.notProvided, 9, [25, 35, 54]);
   };
