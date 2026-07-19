@@ -162,7 +162,7 @@ export function SpaceAmbientAudio() {
         ref={audioRef}
         src={AMBIENT_AUDIO_SRC}
         loop
-        preload="metadata"
+        preload="none"
         aria-hidden="true"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}

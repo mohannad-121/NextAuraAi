@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
-import { usePrefersReducedMotion } from "@/hooks/use-viewport-activity";
+import { ViewportVideo } from "@/components/landing/ViewportVideo";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
@@ -30,59 +29,6 @@ const portfolioProjects = [
 
 type PortfolioProject = (typeof portfolioProjects)[number];
 
-function PortfolioBackgroundVideo({ reducedMotion }: { reducedMotion: boolean }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isNearViewport, setIsNearViewport] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (!("IntersectionObserver" in window)) {
-      setIsNearViewport(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsNearViewport(entry?.isIntersecting ?? false),
-      { rootMargin: "400px 0px", threshold: 0.01 },
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (reducedMotion || !isNearViewport) {
-      video.pause();
-      return;
-    }
-
-    void video.play().catch(() => {
-      // Muted autoplay may still be rejected by a browser or device policy.
-    });
-  }, [isNearViewport, reducedMotion]);
-
-  return (
-    <video
-      ref={videoRef}
-      src="/videos/our-websites.mp4"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      controls={false}
-      disablePictureInPicture
-      aria-hidden="true"
-      className="portfolio-background-video"
-    />
-  );
-}
-
 function ProjectLink({
   project,
   label,
@@ -109,7 +55,6 @@ function ProjectLink({
 export function FeaturedProject(_: { onStartProject: () => void }) {
   const { language, dir } = useLanguage();
   const content = homepageContent[language].featured;
-  const reducedMotion = usePrefersReducedMotion();
   const [featuredProject, ...supportingProjects] = portfolioProjects;
   const featuredCopy = content.projects[featuredProject.id];
 
@@ -122,7 +67,7 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
       dir={dir}
     >
       <div className="portfolio-media-layer" aria-hidden="true">
-        <PortfolioBackgroundVideo reducedMotion={reducedMotion} />
+        <ViewportVideo src="/videos/our-websites.mp4" className="portfolio-background-video" />
       </div>
       <div className="portfolio-readability-layer" aria-hidden="true" />
       <div className="portfolio-atmosphere" aria-hidden="true">
@@ -155,6 +100,7 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
               <img
                 src={featuredProject.image}
                 alt={featuredCopy.imageAlt}
+                loading="lazy"
                 decoding="async"
                 className="portfolio-fitcoach-image"
               />

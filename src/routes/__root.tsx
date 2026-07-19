@@ -7,12 +7,15 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
-import { Analytics } from "@vercel/analytics/react";
+import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
 import { SpaceAmbientAudio } from "@/components/landing/SpaceAmbientAudio";
 import { LanguageProvider } from "@/i18n/translations";
 
 import appCss from "../styles.css?url";
+
+const Analytics = lazy(() =>
+  import("@vercel/analytics/react").then((module) => ({ default: module.Analytics })),
+);
 
 function NotFoundComponent() {
   return (
@@ -122,7 +125,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/site.webmanifest" },
       {
         rel: "preload",
-        href: "/images/cinematic/nextaura-ai-hero.webp",
+        href: "/images/cinematic/hero-robot-poster.webp",
         as: "image",
         type: "image/webp",
       },
@@ -171,6 +174,20 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [analyticsReady, setAnalyticsReady] = useState(false);
+
+  useEffect(() => {
+    const activate = () => setAnalyticsReady(true);
+    const idle =
+      "requestIdleCallback" in window
+        ? window.requestIdleCallback(activate, { timeout: 4000 })
+        : window.setTimeout(activate, 2500);
+
+    return () => {
+      if ("cancelIdleCallback" in window) window.cancelIdleCallback(idle as number);
+      else window.clearTimeout(idle as number);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -178,7 +195,11 @@ function RootComponent() {
         <SpaceAmbientAudio />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
-        <Analytics />
+        {analyticsReady ? (
+          <Suspense fallback={null}>
+            <Analytics />
+          </Suspense>
+        ) : null}
       </LanguageProvider>
     </QueryClientProvider>
   );

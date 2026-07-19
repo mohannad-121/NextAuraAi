@@ -32,6 +32,7 @@ export function SelectedWork({ onStartProject }: { onStartProject: () => void })
                 src={project.image}
                 alt=""
                 loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover transition duration-1000 group-hover:scale-[1.04]"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(2_6_23_/_0.06),rgb(2_6_23_/_0.2)_38%,rgb(2_6_23_/_0.96)_100%)]" />

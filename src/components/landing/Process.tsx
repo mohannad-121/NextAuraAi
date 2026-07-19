@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { SectionHeading } from "@/components/landing/SectionHeading";
-import { usePrefersReducedMotion } from "@/hooks/use-viewport-activity";
+import { ViewportVideo } from "@/components/landing/ViewportVideo";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
@@ -15,40 +15,11 @@ const processImages = [
 export function Process() {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].process;
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
   const [activeStep, setActiveStep] = useState(0);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (prefersReducedMotion) {
-      video.pause();
-      return;
-    }
-
-    void video.play().catch(() => {
-      // The fallback background remains visible if autoplay is blocked by the browser.
-    });
-  }, [prefersReducedMotion]);
 
   return (
     <section id="process" className="process-video-section homepage-section" dir={dir}>
-      <video
-        ref={videoRef}
-        className="process-background-video"
-        src="/videos/our-process.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        controls={false}
-        disablePictureInPicture
-        tabIndex={-1}
-        aria-hidden="true"
-      />
+      <ViewportVideo className="process-background-video" src="/videos/our-process.mp4" />
       <div className="process-video-overlay" aria-hidden="true" />
 
       <div className="homepage-container process-content">
@@ -74,6 +45,8 @@ export function Process() {
                 <img
                   className="process-step-image"
                   src={processImages[index]}
+                  loading="lazy"
+                  decoding="async"
                   alt=""
                   aria-hidden="true"
                 />

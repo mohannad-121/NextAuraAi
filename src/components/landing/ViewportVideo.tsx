@@ -4,21 +4,40 @@ import { usePrefersReducedMotion } from "@/hooks/use-viewport-activity";
 type ViewportVideoProps = {
   src: string;
   className?: string;
-  preload?: "none" | "metadata" | "auto";
+  poster?: string;
+  rootMargin?: string;
+  disableOnMobile?: boolean;
 };
 
-export function ViewportVideo({ src, className = "", preload = "none" }: ViewportVideoProps) {
+export function ViewportVideo({
+  src,
+  className = "",
+  poster,
+  rootMargin = "160px 0px",
+  disableOnMobile = true,
+}: ViewportVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [isNearViewport, setIsNearViewport] = useState(false);
+  // Start conservatively so a mobile browser cannot begin a video request before
+  // the media-query effect has established the device category.
+  const [isMobile, setIsMobile] = useState(true);
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     if (!("IntersectionObserver" in window)) {
-      setShouldLoad(true);
+      setShouldLoad(!(disableOnMobile && isMobile));
       setIsNearViewport(true);
       return;
     }
@@ -27,20 +46,20 @@ export function ViewportVideo({ src, className = "", preload = "none" }: Viewpor
       ([entry]) => {
         const isNear = entry?.isIntersecting ?? false;
         setIsNearViewport(isNear);
-        if (isNear) setShouldLoad(true);
+        if (isNear && !(disableOnMobile && isMobile)) setShouldLoad(true);
       },
-      { rootMargin: "600px 0px", threshold: 0.01 },
+      { rootMargin, threshold: 0.01 },
     );
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [disableOnMobile, isMobile, rootMargin]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (prefersReducedMotion || !isNearViewport) {
+    if (prefersReducedMotion || isMobile || !isNearViewport || !shouldLoad) {
       video.pause();
       return;
     }
@@ -48,17 +67,17 @@ export function ViewportVideo({ src, className = "", preload = "none" }: Viewpor
     void video.play().catch(() => {
       // Muted autoplay can still be blocked by browser or device policy.
     });
-  }, [isNearViewport, prefersReducedMotion, shouldLoad]);
+  }, [isMobile, isNearViewport, prefersReducedMotion, shouldLoad]);
 
   return (
     <video
       ref={videoRef}
       src={shouldLoad ? src : undefined}
-      autoPlay
       loop
       muted
       playsInline
-      preload={preload}
+      poster={poster}
+      preload="none"
       controls={false}
       disablePictureInPicture
       aria-hidden="true"

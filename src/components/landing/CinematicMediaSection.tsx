@@ -1,7 +1,7 @@
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { CheckCircle2, Rocket, ShieldCheck } from "lucide-react";
-import { useRef } from "react";
 import { useLanguage, type Language } from "@/i18n/translations";
+import { ViewportVideo } from "@/components/landing/ViewportVideo";
 
 type CinematicMediaSectionProps = {
   variant: "process" | "trust";
@@ -71,15 +71,12 @@ function textFor(values: Record<Language, string>, language: Language) {
 export function CinematicMediaSection({ variant }: CinematicMediaSectionProps) {
   const { language, dir } = useLanguage();
   const section = copy[variant];
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "280px" });
   const Icon = variant === "process" ? Rocket : ShieldCheck;
 
   return (
     <section className="relative overflow-hidden py-12 md:py-24" dir={dir}>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(14_165_233_/_0.14),transparent_34%),radial-gradient(circle_at_82%_76%,rgb(124_58_237_/_0.16),transparent_38%)]" />
       <motion.div
-        ref={ref}
         initial={{ opacity: 0, y: 34 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.28 }}
@@ -89,18 +86,7 @@ export function CinematicMediaSection({ variant }: CinematicMediaSectionProps) {
         <div className="relative overflow-hidden rounded-[2rem] border border-sky-300/20 bg-card/45 p-2 shadow-[0_34px_120px_rgb(2_6_23_/_0.72),0_0_80px_rgb(14_165_233_/_0.18),0_0_56px_rgb(124_58_237_/_0.16)] backdrop-blur-2xl sm:p-3">
           <div className="pointer-events-none absolute inset-x-12 top-0 z-20 h-px bg-gradient-to-r from-transparent via-cyan/80 to-transparent" />
           <div className="relative min-h-[520px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[radial-gradient(circle_at_22%_22%,rgb(56_189_248_/_0.16),transparent_34%),radial-gradient(circle_at_82%_78%,rgb(124_58_237_/_0.18),transparent_38%),linear-gradient(135deg,#020617,#070A16_54%,#111827)] lg:min-h-[600px]">
-            {inView ? (
-              <video
-                className="absolute inset-0 h-full w-full object-cover"
-                src={section.videoSrc}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                aria-label={textFor(section.title, language)}
-              />
-            ) : null}
+            <ViewportVideo src={section.videoSrc} className="absolute inset-0" />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(2_6_23_/_0.90),rgb(2_6_23_/_0.58)_42%,rgb(2_6_23_/_0.18)),linear-gradient(180deg,rgb(2_6_23_/_0.24),transparent_42%,rgb(2_6_23_/_0.68))] rtl:bg-[linear-gradient(270deg,rgb(2_6_23_/_0.90),rgb(2_6_23_/_0.58)_42%,rgb(2_6_23_/_0.18)),linear-gradient(180deg,rgb(2_6_23_/_0.24),transparent_42%,rgb(2_6_23_/_0.68))]" />
             <div
               className={`relative z-10 flex min-h-[520px] max-w-2xl flex-col justify-end p-6 sm:p-8 lg:min-h-[600px] lg:p-12 ${dir === "rtl" ? "mr-auto text-right" : "text-left"}`}

@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { usePrefersReducedMotion, useViewportActivity } from "@/hooks/use-viewport-activity";
@@ -8,20 +8,46 @@ import { VisitorCounter } from "@/components/landing/VisitorCounter";
 type CinematicHeroProps = { onStartProject: () => void };
 
 const HERO_VIDEO_SRC = "/videos/astronaut-hero.mp4";
+const HERO_POSTER_SRC = "/images/cinematic/hero-robot-poster.webp";
 
 export function CinematicHero({ onStartProject }: CinematicHeroProps) {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].hero;
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  // Start conservatively so a mobile browser never begins the large video request
+  // before the media query effect has run.
+  const [isMobile, setIsMobile] = useState(true);
   const { targetRef: primaryCtaRef, isActive: isPrimaryCtaActive } =
     useViewportActivity<HTMLButtonElement>({ rootMargin: "96px 0px", threshold: 0.1 });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || isMobile) return;
+    const loadVideo = () => setShouldLoadVideo(true);
+    const idle =
+      "requestIdleCallback" in window
+        ? window.requestIdleCallback(loadVideo, { timeout: 3500 })
+        : window.setTimeout(loadVideo, 1800);
+    return () => {
+      if ("cancelIdleCallback" in window) window.cancelIdleCallback(idle as number);
+      else window.clearTimeout(idle as number);
+    };
+  }, [isMobile, prefersReducedMotion]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || isMobile || !shouldLoadVideo) {
       video.pause();
       return;
     }
@@ -29,7 +55,7 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
     void video.play().catch(() => {
       // Muted autoplay can still be blocked by browser or device policy.
     });
-  }, [prefersReducedMotion]);
+  }, [isMobile, prefersReducedMotion, shouldLoadVideo]);
 
   return (
     <section
@@ -38,18 +64,27 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
       dir={dir}
     >
       <div className="absolute inset-0 z-0 overflow-hidden bg-[#071020]">
+        <img
+          src={HERO_POSTER_SRC}
+          width={1280}
+          height={720}
+          fetchPriority="high"
+          decoding="async"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
         <video
           ref={videoRef}
-          src={HERO_VIDEO_SRC}
-          autoPlay
+          src={shouldLoadVideo ? HERO_VIDEO_SRC : undefined}
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="none"
           controls={false}
           disablePictureInPicture
           aria-hidden="true"
-          className="hero-video absolute inset-0 h-full w-full object-cover"
+          className={`hero-video absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${shouldLoadVideo ? "opacity-100" : "opacity-0"}`}
         />
       </div>
 
