@@ -1,32 +1,14 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
+import { ViewportVideo } from "@/components/landing/ViewportVideo";
 
 export function QualityStatement() {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].quality;
-  const ref = useRef<HTMLElement>(null);
-  const visible = useInView(ref, { once: true, margin: "250px" });
-
   return (
-    <section
-      ref={ref}
-      className="relative min-h-[720px] overflow-hidden py-24 lg:min-h-[84svh]"
-      dir={dir}
-    >
-      {visible ? (
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          src="/videos/astronaut-hero.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-        />
-      ) : null}
+    <section className="relative min-h-[720px] overflow-hidden py-24 lg:min-h-[84svh]" dir={dir}>
+      <ViewportVideo src="/videos/astronaut-hero.mp4" className="absolute inset-0" />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(2_6_23_/_0.96),rgb(2_6_23_/_0.66)_60%,rgb(2_6_23_/_0.38)),linear-gradient(180deg,#020617_0%,transparent_28%,#020617_100%)] rtl:bg-[linear-gradient(270deg,rgb(2_6_23_/_0.96),rgb(2_6_23_/_0.66)_60%,rgb(2_6_23_/_0.38)),linear-gradient(180deg,#020617_0%,transparent_28%,#020617_100%)]" />
       <div className="relative mx-auto flex min-h-[540px] max-w-[96rem] items-center px-5 sm:px-8 lg:px-12">
         <div className="max-w-5xl">

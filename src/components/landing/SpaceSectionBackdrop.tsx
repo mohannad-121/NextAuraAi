@@ -6,7 +6,6 @@ export function SpaceSectionBackdrop() {
       <ViewportVideo
         src="/videos/foundation-services-stars.web.mp4"
         className="space-section-video"
-        preload="metadata"
       />
       <div className="space-section-video-overlay" />
     </div>

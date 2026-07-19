@@ -63,6 +63,7 @@ export function Team() {
                     src={person.image}
                     alt={`${person.name} — ${translated.role}`}
                     loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover grayscale-[0.08] transition-[filter] duration-200 group-hover:grayscale-0"
                     style={{ objectPosition: person.imagePosition }}
                   />

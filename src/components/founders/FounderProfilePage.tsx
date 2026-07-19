@@ -62,6 +62,8 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
                   <img
                     src={profile.image}
                     alt={`${profile.displayName}, ${profile.headline[language]}`}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover"
                     style={{ objectPosition: profile.imagePosition }}
                   />

@@ -38,6 +38,7 @@ export function MediaReels() {
                 src={item.poster}
                 alt=""
                 loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover transition duration-1000 group-hover:scale-[1.055]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#02040d] via-[#02040d]/10 to-transparent" />

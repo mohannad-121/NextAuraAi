@@ -291,6 +291,7 @@ function FoundationSection({ copy }: { copy: FoundationJourneyContent }) {
                   alt=""
                   width={512}
                   height={512}
+                  decoding="async"
                   draggable={false}
                 />
               </span>
