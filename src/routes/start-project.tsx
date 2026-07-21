@@ -26,12 +26,5 @@ export const Route = createFileRoute("/start-project")({
 function StartProjectPage() {
   const navigate = useNavigate();
 
-  return (
-    <ProjectRequestModal
-      open
-      presentation="page"
-      onClose={() => navigate({ to: "/" })}
-      onSubmitted={() => navigate({ to: "/", hash: "contact" })}
-    />
-  );
+  return <ProjectRequestModal open presentation="page" onClose={() => navigate({ to: "/" })} />;
 }

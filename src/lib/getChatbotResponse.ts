@@ -280,7 +280,7 @@ const terms = {
   completePackage: ["database", "login", "advanced admin", "integration", "api", "ai", "complete system", "قاعده بيانات", "تسجيل دخول", "لوحه متقدمه", "تكامل", "نظام متكامل", "base de datos", "inicio de sesion", "admin avanzado", "integracion", "数据库", "登录", "高级后台", "集成", "完整系统"],
   founders: ["founder", "founders", "owner", "team", "who built", "مؤسس", "مؤسسين", "فريق", "اصحاب الشركه", "fundador", "fundadores", "equipo", "创始人", "团队", "老板"],
   mohannad: ["mohannad", "muhannad", "مهند"],
-  moayad: ["moayad", "moayed", "moaiad", "مؤيد", "مويد"],
+  moayad: ["muayid", "moayad", "moayed", "moaiad", "مؤيد", "مويد"],
   products: ["products", "projects", "portfolio", "your work", "what have you built", "منتجاتكم", "برودكت", "برودكتات", "مشاريع", "اعمالكم", "شو عاملين", "portfolio", "proyectos", "productos", "trabajos", "产品", "项目", "案例"],
   fitcoach: ["fitcoach", "fit coach", "fitness coach", "مدرب لياقه", "فيت كوتش", "entrenador fitness", "健身教练", "AI FitCoach"],
   aurawallet: ["aurawallet", "aura wallet", "finance tracker", "محفظه", "اداره ماليه", "finanzas", "cartera", "财务", "钱包"],
@@ -425,10 +425,10 @@ function teamResponse(language: SupportedLanguage) {
 
 function teamCapabilitiesResponse(language: SupportedLanguage) {
   const intro = localized({
-    en: "NextAura AI is founded by Mohannad, Founder & AI/Backend Lead, and Moayad, Founder & Systems Architect. Together they lead:",
+    en: "NextAura AI is founded by Mohannad, Founder & AI/Backend Lead, and Muayid, Founder & Systems Architect. Together they lead:",
     ar: "أسس NextAura AI كل من مهند، مؤسس وقائد AI والباكند، ومؤيد، مؤسس ومهندس أنظمة. ومعًا يقودان تنفيذ:",
-    es: "NextAura AI fue fundada por Mohannad, líder de IA/Backend, y Moayad, arquitecto de sistemas. Juntos dirigen:",
-    zh: "NextAura AI 由 AI/后端负责人 Mohannad 和系统架构师 Moayad 共同创立。他们带领团队提供：",
+    es: "NextAura AI fue fundada por Mohannad, líder de IA/Backend, y Muayid, arquitecto de sistemas. Juntos dirigen:",
+    zh: "NextAura AI 由 AI/后端负责人 Mohannad 和系统架构师 Muayid 共同创立。他们带领团队提供：",
   }, language);
   const serviceNames = siteKnowledge.services.map((service) => localize(service.name, language));
   return answer(`${intro}\n${list(serviceNames, language)}`, language, [

@@ -1,5 +1,15 @@
-import { FormEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { gsap } from "gsap";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -137,6 +147,41 @@ export function ProjectRequestModal({
   const submissionInFlightRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const formSurfaceRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    if (reduceMotion || !formSurfaceRef.current || submission) return;
+
+    const context = gsap.context(() => {
+      gsap.fromTo(
+        ".nxa-project-step-animate",
+        { autoAlpha: 0, y: 14 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.42,
+          ease: "power2.out",
+          stagger: 0.06,
+          clearProps: "transform,opacity,visibility",
+        },
+      );
+    }, formSurfaceRef);
+
+    return () => context.revert();
+  }, [reduceMotion, step, submission]);
+
+  useEffect(() => {
+    if (!submission || !isPage || !formSurfaceRef.current) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      formSurfaceRef.current?.scrollIntoView({
+        block: "start",
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [isPage, reduceMotion, submission]);
 
   const hasData = useMemo(
     () =>
@@ -550,7 +595,7 @@ export function ProjectRequestModal({
                 onSelect={moveToStep}
               />
 
-              <main className="nxa-project-form-surface">
+              <main ref={formSurfaceRef} className="nxa-project-form-surface">
                 {submission ? (
                   <SubmissionState
                     copy={copy}
@@ -582,7 +627,7 @@ export function ProjectRequestModal({
                         </button>
                       </div>
                     ) : null}
-                    <div className="nxa-project-step-heading">
+                    <div className="nxa-project-step-heading nxa-project-step-animate">
                       <span className="nxa-project-step-emoji" aria-hidden="true">
                         {STEP_EMOJIS[step]}
                       </span>
@@ -699,7 +744,7 @@ export function ProjectRequestModal({
                       </motion.div>
                     </AnimatePresence>
 
-                    <div className="nxa-project-actions">
+                    <div className="nxa-project-actions nxa-project-step-animate">
                       <button
                         type="button"
                         className="nxa-project-button nxa-project-button-secondary"
@@ -899,9 +944,12 @@ function ProjectTypeStep({
                 <span className="nxa-project-choice-emoji" aria-hidden="true">
                   {option.emoji}
                 </span>
-                <span>
+                <span className="nxa-project-choice-copy">
                   <strong>{option.label[language]}</strong>
                   <small>{option.description[language]}</small>
+                  <small className="nxa-project-choice-fit">
+                    <b>{copy.project.bestFor}</b> {option.bestFor[language]}
+                  </small>
                 </span>
                 <Check className="nxa-project-choice-check" aria-hidden="true" />
               </label>
@@ -1036,6 +1084,7 @@ function PackageStep({
           {copy.packages.priceLater} {copy.packages.rushRule}
         </span>
       </div>
+      <p className="nxa-project-package-reassurance">{copy.packages.reassurance}</p>
     </div>
   );
 }
@@ -1204,6 +1253,7 @@ function FeatureStep({
           placeholder={copy.features.customPlaceholder}
         />
       </FormField>
+      <p className="nxa-project-custom-prompt">{copy.features.customPrompt}</p>
     </div>
   );
 }
@@ -1397,6 +1447,7 @@ function EstimateStep({
         <span className="nxa-project-estimate-badge">🤖 {copy.estimate.badge}</span>
         <p className="nxa-project-estimate-lead">{copy.estimate.resultLead}</p>
         <div className="nxa-project-estimate-price">{resultRange}</div>
+        <p className="nxa-project-estimate-reassurance">{copy.estimate.reassurance}</p>
         {draft.currency !== "JOD" ? (
           <div className="nxa-project-estimate-jod">
             {formatMoneyRange(estimate.estimatedMinJod, estimate.estimatedMaxJod, "JOD", language)}{" "}

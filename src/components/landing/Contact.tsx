@@ -1,13 +1,12 @@
+import { ArrowUpRight, Mail, MapPin, MessageCircle } from "lucide-react";
 import {
-  ArrowUpRight,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Youtube,
-} from "lucide-react";
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTiktok,
+  FaWhatsapp,
+  FaYoutube,
+} from "react-icons/fa6";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
@@ -106,7 +105,7 @@ export function Contact({ onStartProject }: ContactProps) {
                     "LinkedIn",
                   )}
                 >
-                  <Linkedin className="h-4 w-4" />
+                  <FaLinkedinIn className="h-4 w-4" />
                 </a>
                 <a
                   href="https://www.instagram.com/nextauraai/"
@@ -118,7 +117,7 @@ export function Contact({ onStartProject }: ContactProps) {
                     "Instagram",
                   )}
                 >
-                  <Instagram className="h-4 w-4" />
+                  <FaInstagram className="h-4 w-4" />
                 </a>
                 <a
                   href="https://www.facebook.com/Nextauraai"
@@ -130,7 +129,7 @@ export function Contact({ onStartProject }: ContactProps) {
                     "Facebook",
                   )}
                 >
-                  <Facebook className="h-4 w-4" />
+                  <FaFacebookF className="h-4 w-4" />
                 </a>
                 <a
                   href="https://www.youtube.com/@NextAuraAI-Solutions"
@@ -142,16 +141,16 @@ export function Contact({ onStartProject }: ContactProps) {
                     "YouTube",
                   )}
                 >
-                  <Youtube className="h-4 w-4" />
+                  <FaYoutube className="h-4 w-4" />
                 </a>
                 <a
                   href="http://tiktok.com/@nextaura_ai"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit NextAura AI on TikTok"
-                  className={`${socialBrandClassName("http://tiktok.com/@nextaura_ai", "TikTok")} flex w-auto justify-center px-3 text-[0.65rem] uppercase tracking-[0.08em]`}
+                  className={socialBrandClassName("http://tiktok.com/@nextaura_ai", "TikTok")}
                 >
-                  TikTok
+                  <FaTiktok className="h-4 w-4" />
                 </a>
                 <a
                   href="mailto:info@next-aura-ai.com"

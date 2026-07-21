@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { animate } from "animejs";
 import { Menu, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LanguageSwitcher, useLanguage } from "@/i18n/translations";
 import { homepageContent } from "@/i18n/homepageContent";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
@@ -18,6 +19,7 @@ export function Nav({ onStartProject, internalPage = false }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
+  const shellRef = useRef<HTMLDivElement>(null);
 
   const links = useMemo(
     () => [
@@ -36,6 +38,18 @@ export function Nav({ onStartProject, internalPage = false }: NavProps) {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const entrance = animate(shell, {
+      opacity: [0, 1],
+      y: [-16, 0],
+      duration: 620,
+      ease: "outExpo",
+    });
+    return () => entrance.revert();
   }, []);
 
   useEffect(() => {
@@ -74,7 +88,8 @@ export function Nav({ onStartProject, internalPage = false }: NavProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-[70] px-3 sm:px-5">
       <div
-        className={`mx-auto mt-3 flex max-w-[var(--homepage-container)] items-center justify-between rounded-2xl px-3 py-2.5 transition-[background-color,border-color,box-shadow] duration-200 sm:mt-4 sm:px-4 ${scrolled ? "border border-white/10 bg-[#081123]/92 shadow-[0_14px_40px_rgb(0_0_0_/_0.32)] backdrop-blur-md" : "border border-white/8 bg-[#081123]/32 backdrop-blur-[6px]"}`}
+        ref={shellRef}
+        className={`site-nav-shell mx-auto mt-3 flex max-w-[var(--homepage-container)] items-center justify-between px-3 py-2.5 sm:mt-4 sm:px-4 ${scrolled ? "site-nav-shell-scrolled" : ""}`}
       >
         <a
           href={hrefFor("home")}
@@ -89,7 +104,7 @@ export function Nav({ onStartProject, internalPage = false }: NavProps) {
             <a
               key={link.id}
               href={hrefFor(link.id)}
-              className={`relative rounded-full px-3 py-2 text-[0.78rem] font-medium transition-colors ${active === link.id ? "text-white" : "text-slate-400 hover:text-white"}`}
+              className={`nav-link relative px-3 py-2 text-[0.78rem] font-medium ${active === link.id ? "text-white" : "text-slate-400 hover:text-white"}`}
             >
               {link.label}
               <span

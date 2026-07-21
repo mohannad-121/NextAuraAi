@@ -1,4 +1,5 @@
-import { ArrowUpRight, Facebook, Instagram, Linkedin, MessageCircle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa6";
 import { Link } from "@tanstack/react-router";
 import { CinematicCard } from "@/components/landing/CinematicCard";
 import { SectionHeading } from "@/components/landing/SectionHeading";
@@ -14,27 +15,31 @@ const people = [
     imagePosition: "50% 19%",
     route: "/founders/mohannad" as const,
     socials: [
-      { label: "LinkedIn", href: "https://www.linkedin.com/in/mohannadabuayyash/", icon: Linkedin },
-      { label: "Instagram", href: "https://www.instagram.com/mohannad14_06/", icon: Instagram },
-      { label: "WhatsApp", href: "https://wa.me/962799195498", icon: MessageCircle },
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/mohannadabuayyash/",
+        icon: FaLinkedinIn,
+      },
+      { label: "Instagram", href: "https://www.instagram.com/mohannad14_06/", icon: FaInstagram },
+      { label: "WhatsApp", href: "https://wa.me/962799195498", icon: FaWhatsapp },
       {
         label: "Facebook",
         href: "https://www.facebook.com/mohannad.abuayyash.20/",
-        icon: Facebook,
+        icon: FaFacebookF,
       },
     ],
   },
   {
     key: "moayad" as const,
-    name: "Moayad",
+    name: "Muayid",
     image: "/team/moayad.jpg",
     imagePosition: "50% 28%",
     route: "/founders/moayad" as const,
     socials: [
-      { label: "LinkedIn", href: "https://www.linkedin.com/in/moayad-rabah/", icon: Linkedin },
-      { label: "Instagram", href: "https://www.instagram.com/moayad.rabah/", icon: Instagram },
-      { label: "WhatsApp", href: "https://wa.me/962780467522", icon: MessageCircle },
-      { label: "Facebook", href: "https://www.facebook.com/moayad.rabah.2", icon: Facebook },
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/moayad-rabah/", icon: FaLinkedinIn },
+      { label: "Instagram", href: "https://www.instagram.com/moayad.rabah/", icon: FaInstagram },
+      { label: "WhatsApp", href: "https://wa.me/962780467522", icon: FaWhatsapp },
+      { label: "Facebook", href: "https://www.facebook.com/moayad.rabah.2", icon: FaFacebookF },
     ],
   },
 ];
@@ -76,7 +81,7 @@ export function Team() {
                   </p>
                   <Link
                     to={person.route}
-                    className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-cyan-300/35 bg-cyan-300/5 px-4 text-sm font-semibold text-cyan-100 transition-colors duration-200 hover:border-cyan-200 hover:bg-cyan-300/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
+                    className="premium-button premium-button-secondary premium-button-learn-more mt-5"
                   >
                     {translated.about}
                     <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />

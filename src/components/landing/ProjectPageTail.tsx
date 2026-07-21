@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
+import type { ReactNode } from "react";
+import { ArrowUpRight, Mail, MapPin, MessageCircle } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok, FaYoutube } from "react-icons/fa6";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
@@ -161,15 +163,26 @@ export function ProjectPageTail() {
               <span>NextAura AI</span>
             </a>
             <p>{footer.description}</p>
-            <a
-              href="https://linkedin.com/company/nextaura-ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="NextAura AI on LinkedIn"
-              className={`mt-6 ${socialBrandClassName("https://linkedin.com/company/nextaura-ai", "LinkedIn")}`}
-            >
-              <Linkedin className="h-4 w-4" />
-            </a>
+            <div className="project-page-footer-socials" aria-label="NextAura AI social media">
+              <SocialLink href="https://linkedin.com/company/nextaura-ai" label="LinkedIn">
+                <FaLinkedinIn />
+              </SocialLink>
+              <SocialLink href="https://www.instagram.com/nextauraai/" label="Instagram">
+                <FaInstagram />
+              </SocialLink>
+              <SocialLink href="https://www.facebook.com/Nextauraai" label="Facebook">
+                <FaFacebookF />
+              </SocialLink>
+              <SocialLink href="https://www.youtube.com/@NextAuraAI-Solutions" label="YouTube">
+                <FaYoutube />
+              </SocialLink>
+              <SocialLink href="https://tiktok.com/@nextaura_ai" label="TikTok">
+                <FaTiktok />
+              </SocialLink>
+              <SocialLink href="mailto:info@next-aura-ai.com" label="Email">
+                <Mail />
+              </SocialLink>
+            </div>
           </div>
 
           <FooterLinks title={footer.navigation} items={navigation} />
@@ -220,6 +233,29 @@ export function ProjectPageTail() {
         </div>
       </footer>
     </>
+  );
+}
+
+function SocialLink({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: ReactNode;
+}) {
+  const external = href.startsWith("http");
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      aria-label={`Visit NextAura AI on ${label}`}
+      className={socialBrandClassName(href, label)}
+    >
+      {children}
+    </a>
   );
 }
 
