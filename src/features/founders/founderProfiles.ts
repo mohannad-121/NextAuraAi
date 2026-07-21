@@ -445,7 +445,7 @@ export const founderProfiles: Record<FounderId, FounderProfile> = {
   },
   moayad: {
     id: "moayad",
-    displayName: "Moayad Rabah",
+    displayName: "Muayid Rabah",
     fullName: "Muayid Abduljawad Awadallah Rabah",
     image: "/team/moayad.jpg",
     imagePosition: "50% 28%",
@@ -473,9 +473,9 @@ export const founderProfiles: Record<FounderId, FounderProfile> = {
         "Amán · Presencial / Híbrido",
       ),
       summary: text(
-        "Moayad designs and implements intelligent product capabilities, including RAG systems, LLM integrations, AI agents, computer vision, ML APIs, and production-ready AI workflows.",
+        "Muayid designs and implements intelligent product capabilities, including RAG systems, LLM integrations, AI agents, computer vision, ML APIs, and production-ready AI workflows.",
         "يصمّم مؤيد وينفّذ قدرات المنتجات الذكية، بما فيها أنظمة RAG وتكاملات نماذج اللغة ووكلاء الذكاء الاصطناعي والرؤية الحاسوبية وواجهات ML ومسارات العمل الجاهزة للإنتاج.",
-        "Moayad diseña e implementa capacidades de producto inteligente, incluidos sistemas RAG, integraciones LLM, agentes de IA, visión por computadora, APIs de ML y flujos de IA listos para producción.",
+        "Muayid diseña e implementa capacidades de producto inteligente, incluidos sistemas RAG, integraciones LLM, agentes de IA, visión por computadora, APIs de ML y flujos de IA listos para producción.",
       ),
       responsibilities: list(
         [

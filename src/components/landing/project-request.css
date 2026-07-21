@@ -2111,12 +2111,29 @@ button.nxa-project-feature-card:hover {
   }
 
   .nxa-project-topbar {
+    position: relative;
     min-height: 4.5rem;
   }
 
   .nxa-project-brand span,
   .nxa-project-exit span {
     display: none;
+  }
+
+  .nxa-project-exit {
+    display: none;
+  }
+
+  .nxa-project-top-actions .language-switcher-trigger {
+    min-width: auto;
+    padding-inline: 0.7rem;
+  }
+
+  .nxa-project-top-actions {
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0.85rem;
+    z-index: 2;
   }
 
   .nxa-project-exit {
@@ -2256,4 +2273,265 @@ button.nxa-project-feature-card:hover {
   .nxa-project-button:hover:not(:disabled) {
     transform: none;
   }
+}
+
+/* Project choice guidance and refined interactions for the full-page request flow. */
+.nxa-project-choice-card,
+.nxa-project-timeline-card,
+.nxa-project-feature-card,
+.nxa-project-package-card {
+  border-color: #d5ddea;
+  background: #fff;
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.9);
+}
+
+.nxa-project-choice-card:hover,
+.nxa-project-timeline-card:hover,
+.nxa-project-feature-card:hover,
+.nxa-project-package-card:hover {
+  border-color: #7198eb;
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.9),
+    0 15px 34px rgb(35 67 125 / 0.12),
+    0 0 0 1px rgb(55 120 238 / 0.06);
+}
+
+.nxa-project-choice-card[data-selected="true"],
+.nxa-project-timeline-card[data-selected="true"],
+.nxa-project-feature-card[data-selected="true"],
+.nxa-project-package-card[data-selected="true"] {
+  border-color: #3e83e9;
+  background: linear-gradient(145deg, #f4fbff, #f6f5ff);
+  box-shadow:
+    inset 0 0 0 1px rgb(103 93 235 / 0.22),
+    0 15px 34px rgb(55 120 238 / 0.15);
+}
+
+.nxa-project-choice-card strong,
+.nxa-project-package-card h3,
+.nxa-project-timeline-card strong,
+.nxa-project-feature-card strong {
+  color: #172845;
+}
+
+.nxa-project-choice-card small,
+.nxa-project-package-description,
+.nxa-project-timeline-card small,
+.nxa-project-feature-card small {
+  color: #68758a;
+}
+
+.nxa-project-choice-copy {
+  min-width: 0;
+}
+
+.nxa-project-choice-fit {
+  display: block;
+  margin-top: 0.62rem;
+  padding-top: 0.58rem;
+  border-top: 1px solid #e7ebf2;
+  color: #53647d !important;
+  font-size: 0.63rem !important;
+  line-height: 1.45;
+}
+
+.nxa-project-choice-fit b {
+  color: #087d99;
+  font-weight: 800;
+}
+
+.nxa-project-choice-card {
+  min-height: 8.5rem;
+}
+
+.nxa-project-package-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.nxa-project-package-card::before {
+  position: absolute;
+  top: -5rem;
+  right: -5rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgb(124 58 237 / 0.1), transparent 68%);
+  content: "";
+  pointer-events: none;
+}
+
+.nxa-project-package-card[data-selected="true"] .nxa-project-package-action,
+.nxa-project-button-primary {
+  border-color: transparent;
+  background: linear-gradient(105deg, #7025d6 0%, #4a31d7 45%, #079fc4 100%);
+  background-size: 165% 100%;
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.28),
+    0 10px 26px rgb(72 42 205 / 0.3);
+  transition:
+    background-position 260ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+.nxa-project-button-primary:hover:not(:disabled),
+.nxa-project-package-card[data-selected="true"]:hover .nxa-project-package-action {
+  background-position: 100% 0;
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.35),
+    0 14px 32px rgb(8 145 178 / 0.32);
+}
+
+.nxa-project-button-secondary {
+  border-color: #6bb9d1;
+  color: #23445d;
+  background: #fff;
+}
+
+.nxa-project-button-secondary:hover:not(:disabled) {
+  border-color: #22a5c6;
+  background: #f3fbff;
+  box-shadow: 0 10px 24px rgb(8 145 178 / 0.13);
+}
+
+.nxa-project-package-reassurance,
+.nxa-project-custom-prompt,
+.nxa-project-estimate-reassurance {
+  margin: 0;
+  color: #17695a;
+  font-size: 0.73rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.nxa-project-package-reassurance {
+  padding: 0.82rem 1rem;
+  border: 1px solid rgb(31 167 139 / 0.22);
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, #effcf7, #f5fbff);
+}
+
+.nxa-project-custom-prompt {
+  margin-top: -0.35rem;
+  color: #18798e;
+}
+
+.nxa-project-estimate-reassurance {
+  margin-top: 0.9rem;
+  color: #187860;
+}
+
+.nxa-project-form-surface {
+  border-color: #dce4ef;
+  color: #0b1730;
+  background: radial-gradient(circle at 92% 0%, rgb(88 60 214 / 0.07), transparent 20rem), #f8faff;
+  box-shadow: 0 28px 80px rgb(0 0 0 / 0.18);
+}
+
+.nxa-project-step-heading,
+.nxa-project-actions {
+  border-color: #dce4ef;
+  background: rgb(255 255 255 / 0.88);
+}
+
+.nxa-project-step-heading h2 {
+  color: #0b1730;
+}
+
+.nxa-project-step-heading p,
+.nxa-project-field > label small,
+.nxa-project-helper,
+.nxa-project-legend-help {
+  color: #5c6b84;
+}
+
+.nxa-project-field > label,
+.nxa-project-legend {
+  color: #1c2d4b;
+}
+
+.nxa-project-step-emoji {
+  border-color: #d6e0f2;
+  background: linear-gradient(145deg, #edf7ff, #f0edff);
+}
+
+.nxa-project-control input,
+.nxa-project-control select,
+.nxa-project-control textarea,
+.nxa-project-currency-panel select {
+  border-color: #cbd5e4;
+  color: #101f3a;
+  background: #fff;
+}
+
+.nxa-project-control input::placeholder,
+.nxa-project-control textarea::placeholder {
+  color: #919caf;
+}
+
+.nxa-project-control > svg {
+  color: #75839b;
+}
+
+.nxa-project-control input:focus,
+.nxa-project-control select:focus,
+.nxa-project-control textarea:focus,
+.nxa-project-currency-panel select:focus {
+  border-color: #4386ed;
+  box-shadow: 0 0 0 3px rgb(51 120 238 / 0.12);
+  background: #fff;
+}
+
+.nxa-project-privacy-note,
+.nxa-project-inline-note,
+.nxa-project-review-intro {
+  border-color: #d5e6ef;
+  color: #31536c;
+  background: #f1f9fb;
+}
+
+.nxa-project-privacy-note svg,
+.nxa-project-inline-note svg,
+.nxa-project-review-intro svg {
+  color: #168ca0;
+}
+
+.nxa-project-estimate-hero {
+  border-color: #d4dfef;
+  color: #172845;
+  background:
+    radial-gradient(circle at 85% 10%, rgb(117 87 238 / 0.1), transparent 15rem),
+    radial-gradient(circle at 10% 100%, rgb(29 193 210 / 0.09), transparent 17rem), #fff;
+}
+
+.nxa-project-estimate-hero .nxa-project-estimate-badge {
+  color: #5942be;
+  background: #eee9ff;
+}
+
+.nxa-project-estimate-lead {
+  color: #5d6b80;
+}
+
+.nxa-project-estimate-price {
+  color: #162a4d;
+}
+
+.nxa-project-estimate-jod,
+.nxa-project-package-limit {
+  color: #187f91;
+}
+
+.nxa-project-package-limit,
+.nxa-project-estimate-meta strong {
+  color: #77879c;
+}
+
+.nxa-project-estimate-meta {
+  border-color: #e4eaf2;
+}
+
+.nxa-project-estimate-meta span {
+  color: #263b5c;
 }

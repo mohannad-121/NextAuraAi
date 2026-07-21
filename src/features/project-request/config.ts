@@ -576,9 +576,15 @@ export const PROJECT_TYPE_OPTIONS: Array<{
   emoji: string;
   label: LocalizedText;
   description: LocalizedText;
+  bestFor: LocalizedText;
 }> = [
   {
     id: "businessWebsite",
+    bestFor: localized(
+      "Coffee houses, restaurants, service businesses, and local brands.",
+      "الكافيهات والمطاعم وأعمال الخدمات والعلامات المحلية.",
+      "Cafeterías, restaurantes, negocios de servicios y marcas locales.",
+    ),
     emoji: "🌐",
     label: localized("Business website", "موقع أعمال", "Sitio empresarial"),
     description: localized(
@@ -589,6 +595,11 @@ export const PROJECT_TYPE_OPTIONS: Array<{
   },
   {
     id: "ecommerce",
+    bestFor: localized(
+      "Shops that sell products online.",
+      "المتاجر التي تبيع منتجات أونلاين.",
+      "Tiendas que venden productos en línea.",
+    ),
     emoji: "🛒",
     label: localized("Online store", "متجر إلكتروني", "Tienda en línea"),
     description: localized(
@@ -599,6 +610,11 @@ export const PROJECT_TYPE_OPTIONS: Array<{
   },
   {
     id: "booking",
+    bestFor: localized(
+      "Clinics, salons, studios, and appointment-led businesses.",
+      "العيادات والصالونات والاستوديوهات والأعمال التي تعتمد على المواعيد.",
+      "Clínicas, salones, estudios y negocios que trabajan con citas.",
+    ),
     emoji: "📅",
     label: localized("Booking platform", "منصة حجوزات", "Plataforma de reservas"),
     description: localized(
@@ -609,6 +625,11 @@ export const PROJECT_TYPE_OPTIONS: Array<{
   },
   {
     id: "webApplication",
+    bestFor: localized(
+      "Businesses that need a client portal, dashboard, or internal workflow.",
+      "الأعمال التي تحتاج بوابة عملاء أو لوحة تحكم أو نظاماً داخلياً.",
+      "Negocios que necesitan un portal de clientes, panel o flujo interno.",
+    ),
     emoji: "🧩",
     label: localized("Custom web application", "تطبيق ويب مخصص", "Aplicación web a medida"),
     description: localized(
@@ -619,6 +640,11 @@ export const PROJECT_TYPE_OPTIONS: Array<{
   },
   {
     id: "aiSolution",
+    bestFor: localized(
+      "Teams that want a chatbot, AI assistant, or knowledge automation.",
+      "الفرق التي تريد شات بوت أو مساعد ذكاء اصطناعي أو أتمتة للمعرفة.",
+      "Equipos que quieren un chatbot, asistente de IA o automatización del conocimiento.",
+    ),
     emoji: "🤖",
     label: localized("AI solution", "حل بالذكاء الاصطناعي", "Solución con IA"),
     description: localized(
@@ -629,6 +655,11 @@ export const PROJECT_TYPE_OPTIONS: Array<{
   },
   {
     id: "other",
+    bestFor: localized(
+      "A new idea that does not fit the options above.",
+      "فكرة جديدة لا تناسب الخيارات السابقة.",
+      "Una idea nueva que no encaja en las opciones anteriores.",
+    ),
     emoji: "✨",
     label: localized("Something else", "فكرة أخرى", "Otra idea"),
     description: localized(

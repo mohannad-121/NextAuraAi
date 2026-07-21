@@ -52,6 +52,7 @@ type ProjectRequestCopy = {
   };
   project: {
     chooseType: string;
+    bestFor: string;
     idea: string;
     ideaPlaceholder: string;
     ideaHelp: string;
@@ -64,6 +65,7 @@ type ProjectRequestCopy = {
     selected: string;
     select: string;
     priceLater: string;
+    reassurance: string;
   };
   features: {
     includedTitle: string;
@@ -74,6 +76,7 @@ type ProjectRequestCopy = {
     optional: string;
     advanced: string;
     customTitle: string;
+    customPrompt: string;
     customPlaceholder: string;
     customHelp: string;
     languageCount: string;
@@ -100,6 +103,7 @@ type ProjectRequestCopy = {
     calculatingBody: string;
     stages: string[];
     resultLead: string;
+    reassurance: string;
     allowedRange: string;
     selectedPackage: string;
     selectedTimeline: string;
@@ -253,6 +257,7 @@ export const projectRequestCopy = {
     },
     project: {
       chooseType: "What are you planning to build?",
+      bestFor: "Best for",
       idea: "Describe the project idea",
       ideaPlaceholder:
         "Explain the problem, who the product is for, and the most important outcome.",
@@ -267,6 +272,7 @@ export const projectRequestCopy = {
       selected: "Selected package",
       select: "Choose package",
       priceLater: "Your focused estimate is calculated after features and timeline are selected.",
+      reassurance: "Choose what fits your needs - we will work with you on the price later. ♥",
     },
     features: {
       includedTitle: "Included with your package",
@@ -279,6 +285,7 @@ export const projectRequestCopy = {
       optional: "Optional",
       advanced: "Advanced",
       customTitle: "Describe another feature you need",
+      customPrompt: "Write any other features you would like to add.",
       customPlaceholder: "Example: A custom approval flow for three departments…",
       customHelp:
         "Custom requirements affect complexity but never push an estimate outside the selected package’s allowed range.",
@@ -321,6 +328,7 @@ export const projectRequestCopy = {
       ],
       resultLead:
         "Based on the package, features, integrations, and timeline you selected, your project may cost approximately:",
+      reassurance: "Do not worry about this price - it is only an estimate.",
       allowedRange: "Selected package limit: {range}",
       selectedPackage: "Package",
       selectedTimeline: "Timeline",
@@ -485,6 +493,7 @@ export const projectRequestCopy = {
     },
     project: {
       chooseType: "ما الذي تخطط لبنائه؟",
+      bestFor: "مناسب لـ",
       idea: "صف فكرة المشروع",
       ideaPlaceholder: "اشرح المشكلة، ولمن صُمم المنتج، وما النتيجة الأهم التي تريدها.",
       ideaHelp: "تكفي بضع جمل واضحة، ويمكن تحسين التفاصيل لاحقاً مع فريقنا.",
@@ -498,6 +507,7 @@ export const projectRequestCopy = {
       selected: "الباقة المختارة",
       select: "اختيار الباقة",
       priceLater: "يُحسب التقدير المخصص بعد اختيار الميزات ومدة التسليم.",
+      reassurance: "اختار اللي بناسبك، وبنراعيك بالسعر لاحقاً. ♥",
     },
     features: {
       includedTitle: "مشمول في باقتك",
@@ -510,6 +520,7 @@ export const projectRequestCopy = {
       optional: "اختيارية",
       advanced: "متقدمة",
       customTitle: "صف ميزة أخرى تحتاجها",
+      customPrompt: "اكتب ميزات أخرى حابب تضيفها.",
       customPlaceholder: "مثال: مسار موافقات مخصص لثلاثة أقسام…",
       customHelp:
         "تؤثر المتطلبات المخصصة في التعقيد، لكنها لا ترفع التقدير خارج نطاق الباقة المختارة.",
@@ -550,6 +561,7 @@ export const projectRequestCopy = {
       ],
       resultLead:
         "بناءً على الباقة والميزات والتكاملات والمدة التي اخترتها، قد تبلغ تكلفة مشروعك تقريباً:",
+      reassurance: "ما عليك من السعر، هذا تقديري فقط.",
       allowedRange: "حدود الباقة المختارة: {range}",
       selectedPackage: "الباقة",
       selectedTimeline: "المدة",
@@ -710,6 +722,7 @@ export const projectRequestCopy = {
     },
     project: {
       chooseType: "¿Qué quieres construir?",
+      bestFor: "Ideal para",
       idea: "Describe la idea del proyecto",
       ideaPlaceholder:
         "Explica el problema, para quién es el producto y cuál es el resultado más importante.",
@@ -725,6 +738,7 @@ export const projectRequestCopy = {
       selected: "Paquete seleccionado",
       select: "Elegir paquete",
       priceLater: "La estimación específica se calcula después de elegir funciones y plazo.",
+      reassurance: "Elige lo que necesites; ajustaremos el precio contigo después. ♥",
     },
     features: {
       includedTitle: "Incluido en tu paquete",
@@ -737,6 +751,7 @@ export const projectRequestCopy = {
       optional: "Opcional",
       advanced: "Avanzada",
       customTitle: "Describe otra función que necesites",
+      customPrompt: "Escribe cualquier otra función que te gustaría añadir.",
       customPlaceholder: "Ejemplo: Un flujo de aprobación para tres departamentos…",
       customHelp:
         "Los requisitos personalizados afectan la complejidad, pero nunca sacan la estimación del rango permitido.",
@@ -783,6 +798,7 @@ export const projectRequestCopy = {
       ],
       resultLead:
         "Según el paquete, las funciones, las integraciones y el plazo elegidos, tu proyecto puede costar aproximadamente:",
+      reassurance: "No te preocupes por este precio: es solo una estimación.",
       allowedRange: "Límite del paquete: {range}",
       selectedPackage: "Paquete",
       selectedTimeline: "Plazo",

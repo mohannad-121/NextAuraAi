@@ -123,7 +123,7 @@ const en = {
         role: "Founder & Systems Architect",
         description:
           "AI engineer focused on LLMs, RAG, computer vision, machine-learning systems, and production-ready AI integrations.",
-        about: "About Moayad",
+        about: "About Muayid",
       },
     },
   },
@@ -876,7 +876,7 @@ const es: Widen<typeof en> = {
         role: "Founder & Systems Architect",
         description:
           "Ingeniero de IA centrado en LLM, RAG, visión por computadora, sistemas de aprendizaje automático e integraciones de IA listas para producción.",
-        about: "Sobre Moayad",
+        about: "Sobre Muayid",
       },
     },
   },
