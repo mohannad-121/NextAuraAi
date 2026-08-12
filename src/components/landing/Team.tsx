@@ -76,10 +76,15 @@ export function Team() {
                   <div className="team-profile-content">
                     <h3 className="text-2xl font-semibold text-white">{person.name}</h3>
                     <div className="mt-2 text-sm font-medium text-cyan-300">{translated.role}</div>
-                    <p className="mt-4 text-sm leading-6 text-slate-200">{translated.description}</p>
+                    <p className="mt-4 text-sm leading-6 text-slate-200">
+                      {translated.description}
+                    </p>
                   </div>
                   <div className="team-profile-actions">
-                    <div className="flex flex-wrap gap-2" aria-label={`${person.name}'s social profiles`}>
+                    <div
+                      className="flex flex-wrap gap-2"
+                      aria-label={`${person.name}'s social profiles`}
+                    >
                       {person.socials.map((social) => (
                         <a
                           key={social.label}
