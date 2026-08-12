@@ -34,6 +34,7 @@ import {
   X,
 } from "lucide-react";
 import { LanguageSwitcher, useLanguage } from "@/i18n/translations";
+import type { Language } from "@/i18n/translations";
 import { ProjectPageTail } from "@/components/landing/ProjectPageTail";
 import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 import {
@@ -56,6 +57,7 @@ import {
   preserveFeatureSelections,
 } from "@/features/project-request/pricingEngine";
 import { downloadProjectPdf, generateProjectRequestPdf } from "@/features/project-request/pdf";
+import { sendProjectRequestEmail } from "@/features/project-request/email";
 import { normalizeProjectRequest } from "@/features/project-request/normalizer";
 import {
   buildEstimateExplanation,
@@ -143,6 +145,9 @@ export function ProjectRequestModal({
   const [submittedRequest, setSubmittedRequest] = useState<PersistedProjectRequest | null>(null);
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [fullRequestCopied, setFullRequestCopied] = useState(false);
   const submissionInFlightRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -458,6 +463,9 @@ export function ProjectRequestModal({
     setSubmittedRequest(null);
     setPdfBlob(null);
     setFullRequestCopied(false);
+    setEmailSending(false);
+    setEmailSent(false);
+    setEmailError(null);
     try {
       const saved = await submitProjectRequest(request);
       const persistedRequest: PersistedProjectRequest = {
@@ -507,6 +515,27 @@ export function ProjectRequestModal({
       "noopener,noreferrer",
     );
     if (whatsappWindow && onSubmitted) window.setTimeout(onSubmitted, 1200);
+  };
+
+  const sendDirectEmail = async () => {
+    if (!pdfBlob || !submittedRequest || emailSending || emailSent) return;
+
+    setEmailSending(true);
+    setEmailError(null);
+    try {
+      await sendProjectRequestEmail({ pdf: pdfBlob, requestId: submittedRequest.id });
+      setEmailSent(true);
+    } catch {
+      setEmailError(
+        language === "ar"
+          ? "تعذر إرسال ملف PDF بالبريد الإلكتروني. يرجى المحاولة مرة أخرى."
+          : language === "es"
+            ? "No pudimos enviar el PDF por correo electrónico. Inténtalo de nuevo."
+            : "We couldn't send the PDF by email. Please try again.",
+      );
+    } finally {
+      setEmailSending(false);
+    }
   };
 
   const copyFullRequest = async () => {
@@ -608,6 +637,11 @@ export function ProjectRequestModal({
                         downloadProjectPdf(pdfBlob, submittedRequest.id);
                     }}
                     onWhatsApp={openManualWhatsApp}
+                    onSendDirectEmail={sendDirectEmail}
+                    emailSending={emailSending}
+                    emailSent={emailSent}
+                    emailError={emailError}
+                    language={language}
                     whatsappMessageTooLong={whatsappMessageTooLong}
                     fullRequestCopied={fullRequestCopied}
                     onCopyFullRequest={copyFullRequest}
@@ -1478,19 +1512,21 @@ function EstimateStep({
 
       <section className="nxa-project-currency-panel">
         <label htmlFor="project-currency">💵 {copy.estimate.currency}</label>
-        <select
-          id="project-currency"
-          value={draft.currency}
-          onChange={(event) =>
-            setField("currency", event.target.value as ProjectRequestDraft["currency"])
-          }
-        >
-          {CURRENCIES.map((currency) => (
-            <option key={currency.code} value={currency.code}>
-              {currency.emoji} {currency.code} — {currency.label[language]}
-            </option>
-          ))}
-        </select>
+        <div className="nxa-project-control">
+          <select
+            id="project-currency"
+            value={draft.currency}
+            onChange={(event) =>
+              setField("currency", event.target.value as ProjectRequestDraft["currency"])
+            }
+          >
+            {CURRENCIES.map((currency) => (
+              <option key={currency.code} value={currency.code}>
+                {currency.emoji} {currency.code} — {currency.label[language]}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="nxa-project-rate-note">
           {ratesLoading ? (
             <LoaderCircle className="nxa-project-spinner" />
@@ -1792,6 +1828,11 @@ function SubmissionState({
   request,
   onDownload,
   onWhatsApp,
+  onSendDirectEmail,
+  emailSending,
+  emailSent,
+  emailError,
+  language,
   whatsappMessageTooLong,
   fullRequestCopied,
   onCopyFullRequest,
@@ -1803,10 +1844,58 @@ function SubmissionState({
   request: PersistedProjectRequest | null;
   onDownload: () => void;
   onWhatsApp: () => void;
+  onSendDirectEmail: () => void;
+  emailSending: boolean;
+  emailSent: boolean;
+  emailError: string | null;
+  language: Language;
   whatsappMessageTooLong: boolean;
   fullRequestCopied: boolean;
   onCopyFullRequest: () => void;
 }) {
+  const emailCopy =
+    language === "ar"
+      ? {
+          action: "إرسال مباشرة إلى البريد الإلكتروني",
+          sending: "جارٍ الإرسال إلى البريد الإلكتروني…",
+          sent: "تم الإرسال إلى فريق NextAura AI",
+          confirmation: "تم إرسال ملف PDF الكامل مباشرة إلى فريق NextAura AI.",
+          heading: "أرسل طلب مشروعك",
+          body: "ملف PDF جاهز. أرسله مباشرة إلى بريد فريق NextAura AI أو نزّله لمشاركته يدويًا عبر واتساب.",
+          steps: [
+            "أرسل ملف PDF مباشرة إلى فريق NextAura AI.",
+            "نزّل ملف PDF لنسختك الخاصة.",
+            "افتح واتساب إذا كنت ترغب في إرسال الطلب يدويًا.",
+          ],
+        }
+      : language === "es"
+        ? {
+            action: "Enviar directamente por correo",
+            sending: "Enviando directamente por correo…",
+            sent: "Enviado a NextAura AI",
+            confirmation: "El PDF completo se envió directamente al equipo de NextAura AI.",
+            heading: "Envía tu solicitud de proyecto",
+            body: "Tu PDF está listo. Envíalo directamente al correo de NextAura AI o descárgalo para compartirlo manualmente por WhatsApp.",
+            steps: [
+              "Envía el PDF directamente al equipo de NextAura AI.",
+              "Descarga el PDF para guardar una copia.",
+              "Abre WhatsApp si deseas compartir la solicitud manualmente.",
+            ],
+          }
+        : {
+            action: "Send direct to email",
+            sending: "Sending direct to email…",
+            sent: "Sent to NextAura AI",
+            confirmation: "Your complete PDF was sent directly to the NextAura AI team.",
+            heading: "Send your project request",
+            body: "Your PDF is ready. Send it directly to the NextAura AI inbox or download it to share manually through WhatsApp.",
+            steps: [
+              "Send the PDF directly to the NextAura AI team.",
+              "Download the PDF for your own copy.",
+              "Open WhatsApp if you would like to share the request manually.",
+            ],
+          };
+
   return (
     <div className="nxa-project-submission-state" role="status">
       <div className="nxa-project-success-icon" data-manual="true">
@@ -1815,28 +1904,54 @@ function SubmissionState({
       <span className="nxa-project-estimate-badge">
         ✅ {copy.success.requestId}: {submission.requestId}
       </span>
-      <h2>{copy.success.manualTitle}</h2>
+      <h2>{emailCopy.heading}</h2>
       {error ? (
         <p className="nxa-project-submission-warning">
           <AlertTriangle /> {error}
         </p>
       ) : null}
       {submission.stored ? <p>{copy.success.stored}</p> : null}
+      {emailSent ? (
+        <p className="nxa-project-email-success" role="status">
+          <CheckCircle2 />
+          {emailCopy.confirmation}
+        </p>
+      ) : null}
+      {emailError ? (
+        <p className="nxa-project-submission-warning" role="alert">
+          <AlertTriangle /> {emailError}
+        </p>
+      ) : null}
       {whatsappMessageTooLong ? (
         <p className="nxa-project-submission-warning" role="alert">
           <AlertTriangle /> {copy.success.messageTooLong}
         </p>
       ) : null}
-      <p>{copy.success.manualBody}</p>
+      <p>{emailCopy.body}</p>
       <ol>
-        {copy.success.manualSteps.map((item) => (
+        {emailCopy.steps.map((item, index) => (
           <li key={item}>
-            <span>{copy.success.manualSteps.indexOf(item) + 1}</span>
+            <span>{index + 1}</span>
             {item}
           </li>
         ))}
       </ol>
       <div className="nxa-project-submission-actions">
+        <button
+          type="button"
+          className="nxa-project-button nxa-project-button-primary"
+          onClick={onSendDirectEmail}
+          disabled={!pdfBlob || !submission.pdfStored || emailSending || emailSent}
+        >
+          {emailSent ? (
+            <CheckCircle2 />
+          ) : emailSending ? (
+            <LoaderCircle className="nxa-project-spinner" />
+          ) : (
+            <Mail />
+          )}
+          {emailSent ? emailCopy.sent : emailSending ? emailCopy.sending : emailCopy.action}
+        </button>
         <button
           type="button"
           className="nxa-project-button nxa-project-button-secondary"
