@@ -149,7 +149,7 @@ const pageActions = {
   }),
   process: (language: SupportedLanguage): ChatbotAction => ({
     label: localize(uiText.process, language),
-    href: "/#process",
+    href: "/start-project",
   }),
   start: (language: SupportedLanguage): ChatbotAction => ({
     label: localize(uiText.start, language),
