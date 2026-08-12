@@ -416,16 +416,69 @@
 
 .nxa-project-control {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0.8rem;
+}
+
+.nxa-project-control::before,
+.nxa-project-control::after {
+  position: absolute;
+  pointer-events: none;
+  content: "";
+}
+
+.nxa-project-control::before {
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 220%;
+  height: 1200%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 210deg,
+    #22d3ee,
+    #06b6d4 12%,
+    #7c3aed 36%,
+    #8b5cf6 52%,
+    #d946ef 71%,
+    #ec4899 84%,
+    #22d3ee
+  );
+  opacity: 0.74;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center;
+  animation: nxa-project-control-orbit 9s linear infinite;
+  transition: opacity 200ms ease;
+  will-change: transform;
+}
+
+@keyframes nxa-project-control-orbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
+}
+
+.nxa-project-control::after {
+  z-index: 0;
+  inset: 2px;
+  border-radius: calc(0.8rem - 2px);
+  background: #ffffff;
+  box-shadow: inset 0 1px 2px rgb(15 23 42 / 0.04);
 }
 
 .nxa-project-control > svg {
   position: absolute;
   inset-inline-start: 0.9rem;
   top: 50%;
-  z-index: 1;
+  z-index: 2;
   width: 1rem;
   height: 1rem;
-  color: #75839b;
+  color: #566985;
   pointer-events: none;
   transform: translateY(-50%);
 }
@@ -437,15 +490,16 @@
 
 .nxa-project-control input,
 .nxa-project-control select,
-.nxa-project-control textarea,
-.nxa-project-currency-panel select {
+.nxa-project-control textarea {
+  position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 3.15rem;
-  border: 1px solid #cbd5e4;
+  border: 1px solid transparent;
   border-radius: 0.72rem;
   outline: none;
-  color: #101f3a;
-  background: #fff;
+  color: #14213a;
+  background: transparent;
   font: inherit;
   font-size: 0.84rem;
   transition:
@@ -473,22 +527,41 @@
 
 .nxa-project-control input::placeholder,
 .nxa-project-control textarea::placeholder {
-  color: #919caf;
+  color: #8a96a8;
 }
 
 .nxa-project-control input:focus,
 .nxa-project-control select:focus,
-.nxa-project-control textarea:focus,
-.nxa-project-currency-panel select:focus {
-  border-color: #4386ed;
-  box-shadow: 0 0 0 3px rgb(51 120 238 / 0.12);
+.nxa-project-control textarea:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.nxa-project-control:hover::before {
+  opacity: 0.96;
+}
+
+.nxa-project-control:focus-within::before {
+  opacity: 1;
+}
+
+.nxa-project-control:focus-within {
+  box-shadow: none;
+}
+
+.nxa-project-control:focus-within > svg {
+  color: #0e7490;
 }
 
 .nxa-project-control[data-error="true"] input,
 .nxa-project-control[data-error="true"] select,
 .nxa-project-control[data-error="true"] textarea {
-  border-color: #e6566d;
-  background: #fffafb;
+  color: #14213a;
+}
+
+.nxa-project-control[data-error="true"]::before {
+  background: conic-gradient(from 210deg, #ec4899, #d946ef 28%, #7c3aed 58%, #ec4899 82%);
+  opacity: 1;
 }
 
 .nxa-project-helper,
@@ -1411,6 +1484,11 @@ button.nxa-project-feature-card:hover {
   padding-inline: 0.85rem;
 }
 
+.nxa-project-currency-panel select option {
+  color: #14213a;
+  background: #ffffff;
+}
+
 .nxa-project-rate-note {
   display: flex;
   align-items: center;
@@ -1920,6 +1998,22 @@ button.nxa-project-feature-card:hover {
   flex: 1;
 }
 
+.nxa-project-email-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border: 1px solid #9be4cf;
+  border-radius: 0.65rem;
+  color: #0f6a57 !important;
+  background: #edfff9;
+}
+
+.nxa-project-email-success svg {
+  width: 1rem;
+  flex: none;
+}
+
 .nxa-project-submission-warning .nxa-project-text-button {
   min-height: 2rem;
   margin: 0;
@@ -2247,7 +2341,8 @@ button.nxa-project-feature-card:hover {
   }
 
   .nxa-project-calculation-orb span,
-  .nxa-project-spinner {
+  .nxa-project-spinner,
+  .nxa-project-control::before {
     animation: none;
   }
 

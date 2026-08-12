@@ -25,7 +25,6 @@ export function Contact({ onStartProject }: ContactProps) {
     [nav.home, "#home"],
     [nav.services, "#services"],
     [nav.projects, "#projects"],
-    [nav.process, "#process"],
     [nav.team, "#team"],
     [nav.contact, "#contact"],
   ];

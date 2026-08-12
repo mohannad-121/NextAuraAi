@@ -15,6 +15,7 @@ import { Route as FoundersMohannadRouteImport } from './routes/founders/mohannad
 import { Route as FoundersMoayadRouteImport } from './routes/founders/moayad'
 import { Route as ApiVisitorsRouteImport } from './routes/api/visitors'
 import { Route as ApiProjectRequestsRouteImport } from './routes/api/project-requests'
+import { Route as ApiProjectRequestEmailRouteImport } from './routes/api/project-request-email'
 import { Route as ApiExchangeRatesRouteImport } from './routes/api/exchange-rates'
 import { Route as ApiCustomerReviewsRouteImport } from './routes/api/customer-reviews'
 
@@ -48,6 +49,11 @@ const ApiProjectRequestsRoute = ApiProjectRequestsRouteImport.update({
   path: '/api/project-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiProjectRequestEmailRoute = ApiProjectRequestEmailRouteImport.update({
+  id: '/api/project-request-email',
+  path: '/api/project-request-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiExchangeRatesRoute = ApiExchangeRatesRouteImport.update({
   id: '/api/exchange-rates',
   path: '/api/exchange-rates',
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/start-project': typeof StartProjectRoute
   '/api/customer-reviews': typeof ApiCustomerReviewsRoute
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
+  '/api/project-request-email': typeof ApiProjectRequestEmailRoute
   '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
   '/founders/moayad': typeof FoundersMoayadRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/start-project': typeof StartProjectRoute
   '/api/customer-reviews': typeof ApiCustomerReviewsRoute
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
+  '/api/project-request-email': typeof ApiProjectRequestEmailRoute
   '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
   '/founders/moayad': typeof FoundersMoayadRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/start-project': typeof StartProjectRoute
   '/api/customer-reviews': typeof ApiCustomerReviewsRoute
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
+  '/api/project-request-email': typeof ApiProjectRequestEmailRoute
   '/api/project-requests': typeof ApiProjectRequestsRoute
   '/api/visitors': typeof ApiVisitorsRoute
   '/founders/moayad': typeof FoundersMoayadRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/start-project'
     | '/api/customer-reviews'
     | '/api/exchange-rates'
+    | '/api/project-request-email'
     | '/api/project-requests'
     | '/api/visitors'
     | '/founders/moayad'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/start-project'
     | '/api/customer-reviews'
     | '/api/exchange-rates'
+    | '/api/project-request-email'
     | '/api/project-requests'
     | '/api/visitors'
     | '/founders/moayad'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/start-project'
     | '/api/customer-reviews'
     | '/api/exchange-rates'
+    | '/api/project-request-email'
     | '/api/project-requests'
     | '/api/visitors'
     | '/founders/moayad'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   StartProjectRoute: typeof StartProjectRoute
   ApiCustomerReviewsRoute: typeof ApiCustomerReviewsRoute
   ApiExchangeRatesRoute: typeof ApiExchangeRatesRoute
+  ApiProjectRequestEmailRoute: typeof ApiProjectRequestEmailRoute
   ApiProjectRequestsRoute: typeof ApiProjectRequestsRoute
   ApiVisitorsRoute: typeof ApiVisitorsRoute
   FoundersMoayadRoute: typeof FoundersMoayadRoute
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiProjectRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/project-request-email': {
+      id: '/api/project-request-email'
+      path: '/api/project-request-email'
+      fullPath: '/api/project-request-email'
+      preLoaderRoute: typeof ApiProjectRequestEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/exchange-rates': {
       id: '/api/exchange-rates'
       path: '/api/exchange-rates'
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   StartProjectRoute: StartProjectRoute,
   ApiCustomerReviewsRoute: ApiCustomerReviewsRoute,
   ApiExchangeRatesRoute: ApiExchangeRatesRoute,
+  ApiProjectRequestEmailRoute: ApiProjectRequestEmailRoute,
   ApiProjectRequestsRoute: ApiProjectRequestsRoute,
   ApiVisitorsRoute: ApiVisitorsRoute,
   FoundersMoayadRoute: FoundersMoayadRoute,
