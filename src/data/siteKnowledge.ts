@@ -191,7 +191,7 @@ export const siteKnowledge = {
     },
     {
       id: "moayad",
-      name: "Moayad",
+      name: "Muayid",
       role: {
         en: "Founder & Systems Architect",
         ar: "مؤسس ومهندس أنظمة",
@@ -199,10 +199,10 @@ export const siteKnowledge = {
         zh: "创始人兼系统架构师",
       },
       bio: {
-        en: "Moayad focuses on software development, system architecture, workflows, testing, and technical execution.",
+        en: "Muayid focuses on software development, system architecture, workflows, testing, and technical execution.",
         ar: "مؤيد يركز على تطوير البرمجيات، هيكلة الأنظمة، سير العمل، الاختبار، والتنفيذ التقني.",
-        es: "Moayad se enfoca en desarrollo, arquitectura de sistemas, flujos, pruebas y ejecución técnica.",
-        zh: "Moayad 专注于软件开发、系统架构、工作流程、测试和技术执行。",
+        es: "Muayid se enfoca en desarrollo, arquitectura de sistemas, flujos, pruebas y ejecución técnica.",
+        zh: "Muayid 专注于软件开发、系统架构、工作流程、测试和技术执行。",
       },
       responsibilities: [
         { en: "Software development", ar: "تطوير البرمجيات", es: "Desarrollo de software", zh: "软件开发" },

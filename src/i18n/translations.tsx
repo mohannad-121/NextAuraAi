@@ -180,7 +180,7 @@ export const translations = {
         },
         moayad: {
           role: "Founder & Systems Architect",
-          bio: "On our team, Moayad focuses on system structure, documentation, workflows, testing, and technical planning.",
+          bio: "On our team, Muayid focuses on system structure, documentation, workflows, testing, and technical planning.",
           focus: ["System architecture", "Workflows", "Testing"],
         },
       },
@@ -777,7 +777,7 @@ translations.es = {
       },
       moayad: {
         role: "Founder & Systems Architect",
-        bio: "En nuestro equipo, Moayad se enfoca en arquitectura, documentación, flujos, pruebas y planificación técnica.",
+        bio: "En nuestro equipo, Muayid se enfoca en arquitectura, documentación, flujos, pruebas y planificación técnica.",
         focus: ["Arquitectura", "Flujos", "Pruebas"],
       },
     },
@@ -979,13 +979,13 @@ export function LanguageSwitcher() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="language-switcher relative">
       <button
         type="button"
         aria-label="Language"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex min-h-10 items-center gap-2 rounded-full border border-primary/35 bg-card/75 px-3 text-sm font-semibold text-foreground shadow-[0_0_24px_oklch(0.58_0.24_315_/_0.18)] backdrop-blur-xl transition-all hover:border-cyan/70 hover:shadow-[0_0_32px_oklch(0.68_0.22_28_/_0.25)]"
+        className="language-switcher-trigger inline-flex min-h-10 items-center gap-2 px-3 text-sm font-semibold text-foreground"
       >
         <Globe2 className="h-4 w-4" style={{ color: "var(--cyan)" }} />
         <span>{current.short}</span>
@@ -995,7 +995,7 @@ export function LanguageSwitcher() {
       </button>
 
       {open ? (
-        <div className="absolute end-0 top-12 z-[120] w-44 overflow-hidden rounded-2xl border border-primary/35 bg-background/95 p-1.5 shadow-[0_18px_60px_oklch(0.05_0.04_265_/_0.75),0_0_40px_oklch(0.58_0.24_315_/_0.18)] backdrop-blur-2xl">
+        <div className="language-switcher-menu absolute end-0 top-12 z-[120] w-44 overflow-hidden p-1.5">
           {languageOptions.map((option) => {
             const active = option.code === language;
             return (
@@ -1006,7 +1006,7 @@ export function LanguageSwitcher() {
                   setLanguage(option.code);
                   setOpen(false);
                 }}
-                className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 text-sm font-medium transition-all ${
+                className={`language-switcher-option flex min-h-11 w-full items-center justify-between gap-3 px-3 text-sm font-medium ${
                   active
                     ? "bg-primary/25 text-foreground ring-1 ring-cyan/40"
                     : "text-muted-foreground hover:bg-card/90 hover:text-foreground"

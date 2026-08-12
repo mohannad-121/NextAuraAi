@@ -63,9 +63,11 @@ export function socialBrandClassName(
   label = "",
   variant: SocialLinkVariant = "icon",
 ): string {
+  const platform = getSocialPlatform(href, label);
   return [
     variants[variant],
-    "border transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071020]",
-    platformStyles[getSocialPlatform(href, label)],
+    `social-brand-link social-brand-${platform}`,
+    "border transition-[background-color,border-color,color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071020]",
+    platformStyles[platform],
   ].join(" ");
 }
