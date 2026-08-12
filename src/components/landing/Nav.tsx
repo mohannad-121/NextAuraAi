@@ -11,7 +11,7 @@ type NavProps = {
   internalPage?: boolean;
 };
 
-const ids = ["home", "services", "projects", "process", "team", "contact"];
+const ids = ["home", "services", "projects", "team", "contact"];
 
 export function Nav({ onStartProject, internalPage = false }: NavProps) {
   const { language, dir } = useLanguage();
@@ -26,7 +26,6 @@ export function Nav({ onStartProject, internalPage = false }: NavProps) {
       { id: "home", label: copy.home },
       { id: "services", label: copy.services },
       { id: "projects", label: copy.projects },
-      { id: "process", label: copy.process },
       { id: "team", label: copy.team },
       { id: "contact", label: copy.contact },
     ],

@@ -14,9 +14,6 @@ const FeaturedProject = lazy(() =>
     default: module.FeaturedProject,
   })),
 );
-const Process = lazy(() =>
-  import("@/components/landing/Process").then((module) => ({ default: module.Process })),
-);
 const Team = lazy(() =>
   import("@/components/landing/Team").then((module) => ({ default: module.Team })),
 );
@@ -110,9 +107,6 @@ function LandingPage() {
       </DeferredSection>
       <DeferredSection minHeight="46rem">
         <FeaturedProject onStartProject={startProject} />
-      </DeferredSection>
-      <DeferredSection minHeight="42rem">
-        <Process />
       </DeferredSection>
       <DeferredSection minHeight="34rem">
         <Team />
