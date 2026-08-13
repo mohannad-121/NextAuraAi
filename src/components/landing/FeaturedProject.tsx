@@ -25,6 +25,13 @@ const portfolioProjects = [
     url: "https://let-s-bake-premium-hub.vercel.app/",
     accent: "bake",
   },
+  {
+    id: "arzanaArabia",
+    featured: false,
+    image: "/images/cinematic/saudi.png",
+    url: "https://arzanaco.com/",
+    accent: "arzana",
+  },
 ] as const;
 
 type PortfolioProject = (typeof portfolioProjects)[number];
