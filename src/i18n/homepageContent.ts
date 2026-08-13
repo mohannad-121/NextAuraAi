@@ -208,6 +208,22 @@ const en = {
         externalLabel: "Visit Let’s Bake (opens in a new tab)",
         imageAlt: "Let’s Bake premium baking and e-commerce project",
       },
+      arzanaArabia: {
+        category: "Engineering & Infrastructure",
+        title: "Arzana Arabia — Critical Power & Electrical Solutions",
+        description:
+          "A Saudi engineering company delivering dependable power distribution, critical power, modular infrastructure, and industrial electrical solutions.",
+        featuresLabel: "Arzana Arabia service highlights",
+        features: [
+          "Medium- and low-voltage equipment",
+          "Transformers, UPS and battery systems",
+          "E-Houses, telecom shelters and data-center infrastructure",
+          "Testing, commissioning and after-sales support",
+        ],
+        cta: "Visit Arzana Arabia",
+        externalLabel: "Visit Arzana Arabia (opens in a new tab)",
+        imageAlt: "Arzana Arabia critical power and electrical infrastructure project",
+      },
     },
   },
   work: {
@@ -605,6 +621,22 @@ const ar: Widen<typeof en> = {
         externalLabel: "زيارة مشروع Let’s Bake (يفتح في علامة تبويب جديدة)",
         imageAlt: "مشروع Let’s Bake المتقدم للخَبز والتجارة الإلكترونية",
       },
+      arzanaArabia: {
+        category: "الهندسة والبنية التحتية",
+        title: "أرزانا العربية — حلول الطاقة الحرجة والكهرباء",
+        description:
+          "شركة هندسية سعودية تقدّم حلولاً موثوقة لتوزيع الطاقة والطاقة الحرجة والبنية التحتية المعيارية والحلول الكهربائية الصناعية.",
+        featuresLabel: "أبرز خدمات أرزانا العربية",
+        features: [
+          "معدات الجهد المتوسط والمنخفض",
+          "محولات وأنظمة UPS والبطاريات",
+          "بيوت كهرباء وملاجئ اتصالات وبنية تحتية لمراكز البيانات",
+          "الاختبار والتشغيل ودعم ما بعد البيع",
+        ],
+        cta: "زيارة أرزانا العربية",
+        externalLabel: "زيارة أرزانا العربية (يفتح في علامة تبويب جديدة)",
+        imageAlt: "مشروع أرزانا العربية للطاقة الحرجة والبنية التحتية الكهربائية",
+      },
     },
   },
   work: {
@@ -962,6 +994,22 @@ const es: Widen<typeof en> = {
         cta: "Visitar Let’s Bake",
         externalLabel: "Visitar Let’s Bake (se abre en una pestaña nueva)",
         imageAlt: "Proyecto premium Let’s Bake de repostería y comercio electrónico",
+      },
+      arzanaArabia: {
+        category: "Ingeniería e infraestructura",
+        title: "Arzana Arabia — Soluciones eléctricas y de energía crítica",
+        description:
+          "Empresa de ingeniería saudí que ofrece distribución de energía fiable, energía crítica, infraestructura modular y soluciones eléctricas industriales.",
+        featuresLabel: "Servicios destacados de Arzana Arabia",
+        features: [
+          "Equipos de media y baja tensión",
+          "Transformadores, UPS y sistemas de baterías",
+          "E-Houses, refugios de telecomunicaciones e infraestructura de centros de datos",
+          "Pruebas, puesta en marcha y soporte posventa",
+        ],
+        cta: "Visitar Arzana Arabia",
+        externalLabel: "Visitar Arzana Arabia (se abre en una pestaña nueva)",
+        imageAlt: "Proyecto de infraestructura eléctrica y energía crítica de Arzana Arabia",
       },
     },
   },
