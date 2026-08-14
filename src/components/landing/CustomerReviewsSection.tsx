@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   LoaderCircle,
   MessageSquareText,
+  MessageCircleReply,
   Quote,
   RotateCcw,
   Send,
@@ -12,9 +13,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import type {
   CustomerReview,
+  CustomerReviewReply,
   ReviewListResponse,
   ReviewSubmissionResponse,
 } from "@/features/reviews/types";
+import { containsInappropriateLanguage } from "@/features/reviews/contentModeration";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { getAnonymousVisitorId } from "@/lib/anonymousVisitor";
@@ -23,6 +26,7 @@ import "./customer-reviews.css";
 
 const PAGE_SIZE = 4;
 const MAX_COMMENT_LENGTH = 800;
+const MAX_REPLY_LENGTH = 500;
 const STAR_VALUES = [1, 2, 3, 4, 5] as const;
 
 let initialReviewRequest: Promise<ReviewListResponse> | null = null;
@@ -31,6 +35,14 @@ type ReviewRow = {
   id: string;
   display_name: string | null;
   rating: number;
+  comment: string;
+  created_at: string;
+};
+
+type ReviewReplyRow = {
+  id: string;
+  review_id: string;
+  display_name: string | null;
   comment: string;
   created_at: string;
 };
@@ -60,7 +72,11 @@ async function requestReviewPage(offset: number) {
     logSupabaseError("customer reviews query failed", reviewsResult.error);
     throw new Error(reviewsResult.error.code || "REVIEW_LOAD_FAILED");
   }
-  const reviews = ((reviewsResult.data ?? []) as ReviewRow[]).map(toCustomerReview);
+  const reviewRows = (reviewsResult.data ?? []) as ReviewRow[];
+  const repliesByReviewId = await requestReviewReplies(reviewRows.map((review) => review.id));
+  const reviews = reviewRows.map((review) =>
+    toCustomerReview(review, repliesByReviewId.get(review.id) ?? []),
+  );
 
   return {
     success: true as const,
@@ -92,14 +108,51 @@ async function requestReviewSummary() {
   return { totalCount, averageRating };
 }
 
-function toCustomerReview(row: ReviewRow): CustomerReview {
+function toCustomerReview(row: ReviewRow, replies: CustomerReviewReply[] = []): CustomerReview {
   return {
     id: row.id,
     displayName: row.display_name,
     rating: Number(row.rating),
     comment: row.comment,
     createdAt: row.created_at,
+    replies,
   };
+}
+
+function toCustomerReviewReply(row: ReviewReplyRow): CustomerReviewReply {
+  return {
+    id: row.id,
+    reviewId: row.review_id,
+    displayName: row.display_name,
+    comment: row.comment,
+    createdAt: row.created_at,
+  };
+}
+
+async function requestReviewReplies(reviewIds: string[]) {
+  const repliesByReviewId = new Map<string, CustomerReviewReply[]>();
+  if (!reviewIds.length) return repliesByReviewId;
+
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("SUPABASE_CONFIG_MISSING");
+  const { data, error } = await supabase
+    .from("customer_review_replies")
+    .select("id, review_id, display_name, comment, created_at")
+    .eq("is_visible", true)
+    .in("review_id", reviewIds)
+    .order("created_at", { ascending: true });
+  if (error) {
+    logSupabaseError("customer review replies query failed", error);
+    throw new Error(error.code || "REVIEW_REPLIES_LOAD_FAILED");
+  }
+
+  for (const row of (data ?? []) as ReviewReplyRow[]) {
+    const reply = toCustomerReviewReply(row);
+    const replies = repliesByReviewId.get(reply.reviewId) ?? [];
+    replies.push(reply);
+    repliesByReviewId.set(reply.reviewId, replies);
+  }
+  return repliesByReviewId;
 }
 
 async function submitCustomerReview(input: {
@@ -131,6 +184,33 @@ async function submitCustomerReview(input: {
   return { success: true as const, review: toCustomerReview(row), ...summary };
 }
 
+async function submitCustomerReviewReply(input: {
+  reviewId: string;
+  displayName: string | null;
+  comment: string;
+  visitorId: string;
+}) {
+  const supabase = getSupabaseClient();
+  if (!supabase) throw new Error("SUPABASE_CONFIG_MISSING");
+  const { data, error } = await supabase.rpc("submit_customer_review_reply", {
+    p_review_id: input.reviewId,
+    p_display_name: input.displayName,
+    p_comment: input.comment,
+    p_visitor_id: input.visitorId,
+  });
+  if (error) {
+    logSupabaseError("customer review reply RPC failed", error);
+    const message = `${error.code ?? ""} ${error.message ?? ""}`.toLowerCase();
+    if (message.includes("review_reply_rate_limited")) throw new Error("REVIEW_REPLY_RATE_LIMITED");
+    if (message.includes("review_reply_duplicate")) throw new Error("REVIEW_REPLY_DUPLICATE");
+    if (message.includes("review_text_inappropriate")) throw new Error("REVIEW_TEXT_INAPPROPRIATE");
+    throw new Error(error.code || "REVIEW_REPLY_SUBMIT_FAILED");
+  }
+  const row = (Array.isArray(data) ? data[0] : data) as ReviewReplyRow | null;
+  if (!row) throw new Error("REVIEW_REPLY_RESPONSE_INVALID");
+  return toCustomerReviewReply(row);
+}
+
 function requestInitialReviews(force = false) {
   if (force) initialReviewRequest = null;
   initialReviewRequest ??= requestReviewPage(0);
@@ -153,6 +233,7 @@ export function CustomerReviewsSection() {
   const [previewRating, setPreviewRating] = useState(0);
   const [comment, setComment] = useState("");
   const [website, setWebsite] = useState("");
+  const [nameError, setNameError] = useState("");
   const [ratingError, setRatingError] = useState("");
   const [commentError, setCommentError] = useState("");
   const [submissionState, setSubmissionState] = useState<
@@ -236,6 +317,7 @@ export function CustomerReviewsSection() {
     if (submissionState === "submitting") return;
 
     const cleanComment = comment.trim();
+    const cleanDisplayName = displayName.trim();
     let invalid = false;
     if (rating < 1 || rating > 5) {
       setRatingError(copy.ratingRequired);
@@ -246,6 +328,14 @@ export function CustomerReviewsSection() {
       invalid = true;
     } else if (cleanComment.length > MAX_COMMENT_LENGTH) {
       setCommentError(formatCopy(copy.commentTooLong, { max: MAX_COMMENT_LENGTH }));
+      invalid = true;
+    }
+    if (containsInappropriateLanguage(cleanDisplayName)) {
+      setNameError(copy.inappropriateLanguage);
+      invalid = true;
+    }
+    if (containsInappropriateLanguage(cleanComment)) {
+      setCommentError(copy.inappropriateLanguage);
       invalid = true;
     }
     if (invalid) return;
@@ -271,7 +361,7 @@ export function CustomerReviewsSection() {
     try {
       const payload = await submitCustomerReview({
         visitorId: getAnonymousVisitorId(),
-        displayName: displayName.trim() || null,
+        displayName: cleanDisplayName || null,
         rating,
         comment: cleanComment,
       });
@@ -300,6 +390,8 @@ export function CustomerReviewsSection() {
           ? copy.rateLimited
           : code === "REVIEW_DUPLICATE"
             ? copy.duplicate
+            : code === "REVIEW_TEXT_INAPPROPRIATE"
+              ? copy.inappropriateLanguage
             : copy.submitError,
       );
     }
@@ -381,11 +473,23 @@ export function CustomerReviewsSection() {
                 maxLength={80}
                 autoComplete="name"
                 placeholder={copy.namePlaceholder}
+                aria-invalid={Boolean(nameError)}
+                aria-describedby={nameError ? "customer-review-name-error" : undefined}
                 onChange={(event) => {
                   setDisplayName(event.target.value);
+                  setNameError(
+                    containsInappropriateLanguage(event.target.value)
+                      ? copy.inappropriateLanguage
+                      : "",
+                  );
                   resetFeedback();
                 }}
               />
+              {nameError ? (
+                <p id="customer-review-name-error" className="customer-review-field-error" role="alert">
+                  <AlertCircle aria-hidden="true" /> {nameError}
+                </p>
+              ) : null}
             </div>
 
             <fieldset className="customer-review-rating-field">
@@ -442,7 +546,11 @@ export function CustomerReviewsSection() {
                 aria-describedby="customer-review-comment-counter"
                 onChange={(event) => {
                   setComment(event.target.value);
-                  setCommentError("");
+                  setCommentError(
+                    containsInappropriateLanguage(event.target.value)
+                      ? copy.inappropriateLanguage
+                      : "",
+                  );
                   resetFeedback();
                 }}
               />
@@ -544,6 +652,16 @@ export function CustomerReviewsSection() {
                     anonymous={copy.anonymous}
                     outOfFive={copy.outOfFive}
                     locale={locale}
+                    copy={copy}
+                    onReplySubmitted={(reply) => {
+                      setReviews((current) =>
+                        current.map((currentReview) =>
+                          currentReview.id === reply.reviewId
+                            ? { ...currentReview, replies: [...currentReview.replies, reply] }
+                            : currentReview,
+                        ),
+                      );
+                    }}
                   />
                 ))}
               </div>
@@ -579,11 +697,15 @@ function ReviewCard({
   anonymous,
   outOfFive,
   locale,
+  copy,
+  onReplySubmitted,
 }: {
   review: CustomerReview;
   anonymous: string;
   outOfFive: string;
   locale: string;
+  copy: (typeof homepageContent)["en"]["reviews"];
+  onReplySubmitted: (reply: CustomerReviewReply) => void;
 }) {
   const ratingLabel = formatCopy(outOfFive, { rating: review.rating });
   return (
@@ -609,7 +731,146 @@ function ReviewCard({
       <blockquote>
         <p>{review.comment}</p>
       </blockquote>
+      <div className="customer-review-replies" aria-label={copy.replies}>
+        <div className="customer-review-replies-heading">
+          <span>
+            <MessageCircleReply aria-hidden="true" />
+            {formatCopy(copy.replies, { count: review.replies.length })}
+          </span>
+        </div>
+        {review.replies.map((reply) => (
+          <article key={reply.id} className="customer-review-reply">
+            <div>
+              <strong>{reply.displayName || anonymous}</strong>
+              <time dateTime={reply.createdAt}>
+                {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
+                  new Date(reply.createdAt),
+                )}
+              </time>
+            </div>
+            <p>{reply.comment}</p>
+          </article>
+        ))}
+        <ReplyComposer
+          reviewId={review.id}
+          copy={copy}
+          onReplySubmitted={onReplySubmitted}
+        />
+      </div>
     </article>
+  );
+}
+
+function ReplyComposer({
+  reviewId,
+  copy,
+  onReplySubmitted,
+}: {
+  reviewId: string;
+  copy: (typeof homepageContent)["en"]["reviews"];
+  onReplySubmitted: (reply: CustomerReviewReply) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const submitReply = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submitting) return;
+    const cleanName = displayName.trim();
+    const cleanComment = comment.trim();
+    if (cleanComment.length < 2) {
+      setError(copy.replyRequired);
+      return;
+    }
+    if (cleanComment.length > MAX_REPLY_LENGTH) {
+      setError(formatCopy(copy.replyTooLong, { max: MAX_REPLY_LENGTH }));
+      return;
+    }
+    if (containsInappropriateLanguage(cleanName) || containsInappropriateLanguage(cleanComment)) {
+      setError(copy.inappropriateLanguage);
+      return;
+    }
+
+    setSubmitting(true);
+    setError("");
+    try {
+      const reply = await submitCustomerReviewReply({
+        reviewId,
+        displayName: cleanName || null,
+        comment: cleanComment,
+        visitorId: getAnonymousVisitorId(),
+      });
+      onReplySubmitted(reply);
+      setDisplayName("");
+      setComment("");
+      setExpanded(false);
+    } catch (submissionError) {
+      const code = submissionError instanceof Error ? submissionError.message : "REVIEW_REPLY_SUBMIT_FAILED";
+      setError(
+        code === "REVIEW_REPLY_RATE_LIMITED"
+          ? copy.replyRateLimited
+          : code === "REVIEW_REPLY_DUPLICATE"
+            ? copy.replyDuplicate
+            : code === "REVIEW_TEXT_INAPPROPRIATE"
+              ? copy.inappropriateLanguage
+              : copy.replyError,
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (!expanded) {
+    return (
+      <button className="customer-review-reply-toggle" type="button" onClick={() => setExpanded(true)}>
+        <MessageCircleReply aria-hidden="true" /> {copy.reply}
+      </button>
+    );
+  }
+
+  return (
+    <form className="customer-review-reply-form" onSubmit={submitReply} noValidate>
+      <label htmlFor={`customer-review-reply-name-${reviewId}`}>{copy.nameLabel} <small>{copy.optional}</small></label>
+      <input
+        id={`customer-review-reply-name-${reviewId}`}
+        value={displayName}
+        maxLength={80}
+        placeholder={copy.replyNamePlaceholder}
+        onChange={(event) => {
+          setDisplayName(event.target.value);
+          setError(containsInappropriateLanguage(event.target.value) ? copy.inappropriateLanguage : "");
+        }}
+      />
+      <label htmlFor={`customer-review-reply-${reviewId}`}>{copy.replyToReview}</label>
+      <textarea
+        id={`customer-review-reply-${reviewId}`}
+        rows={3}
+        value={comment}
+        maxLength={MAX_REPLY_LENGTH}
+        placeholder={copy.replyPlaceholder}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `customer-review-reply-error-${reviewId}` : undefined}
+        onChange={(event) => {
+          setComment(event.target.value);
+          setError(containsInappropriateLanguage(event.target.value) ? copy.inappropriateLanguage : "");
+        }}
+      />
+      {error ? (
+        <p id={`customer-review-reply-error-${reviewId}`} className="customer-review-field-error" role="alert">
+          <AlertCircle aria-hidden="true" /> {error}
+        </p>
+      ) : null}
+      <div className="customer-review-reply-actions">
+        <button type="button" onClick={() => setExpanded(false)}>{copy.cancel}</button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? <LoaderCircle className="customer-review-spinner" aria-hidden="true" /> : <Send aria-hidden="true" />}
+          {submitting ? copy.submittingReply : copy.submitReply}
+        </button>
+      </div>
+    </form>
   );
 }
 

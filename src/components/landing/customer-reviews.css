@@ -567,6 +567,169 @@
   white-space: pre-wrap;
 }
 
+.customer-review-field input[aria-invalid="true"],
+.customer-review-field textarea[aria-invalid="true"] {
+  border-color: rgb(248 113 113 / 0.9);
+  box-shadow: 0 0 0 3px rgb(248 113 113 / 0.12);
+}
+
+.customer-review-replies {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(148 163 184 / 0.16);
+}
+
+.customer-review-replies-heading span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.customer-review-replies-heading svg,
+.customer-review-reply-toggle svg,
+.customer-review-reply-actions svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.customer-review-reply {
+  padding: 0.8rem 0.9rem;
+  border-inline-start: 2px solid rgb(124 58 237 / 0.5);
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: rgb(15 23 42 / 0.62);
+}
+
+[dir="rtl"] .customer-review-reply {
+  border-radius: 0.75rem 0 0 0.75rem;
+}
+
+.customer-review-reply > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.customer-review-reply strong {
+  color: #f8fafc;
+  font-size: 0.78rem;
+}
+
+.customer-review-reply time {
+  flex: none;
+  color: #94a3b8;
+  font-size: 0.67rem;
+}
+
+.customer-review-reply p {
+  margin-top: 0.4rem;
+  color: #dbe5f3;
+  font-size: 0.8rem;
+  line-height: 1.58;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.customer-review-reply-toggle,
+.customer-review-reply-actions button {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid rgb(103 232 249 / 0.35);
+  border-radius: 999px;
+  padding: 0.5rem 0.8rem;
+  background: rgb(14 165 233 / 0.08);
+  color: #bae6fd;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.customer-review-reply-toggle:hover,
+.customer-review-reply-actions button:hover:not(:disabled) {
+  border-color: rgb(103 232 249 / 0.75);
+  background: rgb(14 165 233 / 0.17);
+  color: #fff;
+}
+
+.customer-review-reply-form {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  border: 1px solid rgb(103 232 249 / 0.28);
+  border-radius: 0.85rem;
+  background: rgb(3 10 25 / 0.72);
+}
+
+.customer-review-reply-form label {
+  margin-top: 0.15rem;
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.customer-review-reply-form label small {
+  margin-inline-start: 0.25rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.customer-review-reply-form input,
+.customer-review-reply-form textarea {
+  width: 100%;
+  border: 1px solid rgb(148 163 184 / 0.28);
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  background: rgb(2 8 23 / 0.9);
+  color: #f8fafc;
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.customer-review-reply-form textarea {
+  resize: vertical;
+}
+
+.customer-review-reply-form input:focus,
+.customer-review-reply-form textarea:focus {
+  border-color: rgb(103 232 249 / 0.75);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(56 189 248 / 0.12);
+}
+
+.customer-review-reply-form textarea[aria-invalid="true"] {
+  border-color: rgb(248 113 113 / 0.9);
+  box-shadow: 0 0 0 3px rgb(248 113 113 / 0.12);
+}
+
+.customer-review-reply-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.customer-review-reply-actions button:first-child {
+  border-color: rgb(148 163 184 / 0.3);
+  background: transparent;
+  color: #cbd5e1;
+}
+
+.customer-review-reply-actions button:last-child {
+  border-color: rgb(103 232 249 / 0.56);
+  background: linear-gradient(135deg, rgb(124 58 237 / 0.82), rgb(37 99 235 / 0.82));
+  color: #fff;
+}
+
 .customer-review-state {
   display: grid;
   min-height: 18rem;
@@ -766,6 +929,12 @@
 
   .customer-review-card-rating {
     text-align: start;
+  }
+
+  .customer-review-reply > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }
 
