@@ -4,6 +4,15 @@ export type CustomerReview = {
   rating: number;
   comment: string;
   createdAt: string;
+  replies: CustomerReviewReply[];
+};
+
+export type CustomerReviewReply = {
+  id: string;
+  reviewId: string;
+  displayName: string | null;
+  comment: string;
+  createdAt: string;
 };
 
 export type ReviewSummary = {
