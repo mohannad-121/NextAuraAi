@@ -48,7 +48,7 @@ export function Team() {
   const copy = homepageContent[language].team;
 
   return (
-    <section id="team" className="homepage-section homepage-environment-alt relative" dir={dir}>
+    <section className="homepage-section homepage-environment-alt relative" dir={dir}>
       <div className="homepage-container">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-end">
           <SectionHeading eyebrow={copy.eyebrow} title={copy.title} className="max-w-3xl" />

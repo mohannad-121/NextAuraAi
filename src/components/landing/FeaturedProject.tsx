@@ -67,7 +67,6 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
 
   return (
     <section
-      id="projects"
       aria-labelledby="portfolio-showcase-title"
       aria-describedby="portfolio-showcase-description"
       className="portfolio-showcase homepage-section"

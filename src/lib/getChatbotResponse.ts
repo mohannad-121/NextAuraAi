@@ -31,6 +31,29 @@ type ChatbotCopy = {
   };
 };
 
+const replyEmojis = ["🤖", "✨", "🚀", "💡", "🌟", "🎯", "🛠️", "💜"];
+
+/** Adds friendly visual rhythm to assistant messages without touching action labels or links. */
+export function decorateChatbotReply(content: string) {
+  let emojiIndex = 0;
+
+  return content
+    .split("\n")
+    .map((line) => {
+      if (!line.trim()) return line;
+
+      const leadingEmoji = replyEmojis[emojiIndex % replyEmojis.length];
+      const trailingEmoji = replyEmojis[(emojiIndex + 1) % replyEmojis.length];
+      emojiIndex += 1;
+      const listItem = line.match(/^(\s*)[-•]\s*(.*)$/);
+
+      return listItem
+        ? `${listItem[1]}• ${leadingEmoji} ${listItem[2]} ${trailingEmoji}`
+        : `${leadingEmoji} ${line} ${trailingEmoji}`;
+    })
+    .join("\n");
+}
+
 export const chatbotCopy: Record<SupportedLanguage, ChatbotCopy> = {
   en: {
     welcome:
@@ -220,7 +243,7 @@ function answer(
   language: SupportedLanguage,
   actions?: ChatbotAction[],
 ): ChatbotAnswer {
-  return { content, language, actions };
+  return { content: decorateChatbotReply(content), language, actions };
 }
 
 function fuzzyMatch(token: string, keyword: string) {

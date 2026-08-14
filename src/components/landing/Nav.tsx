@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { LanguageSwitcher, useLanguage } from "@/i18n/translations";
 import { homepageContent } from "@/i18n/homepageContent";
 import { BrandSymbol } from "@/components/landing/BrandSymbol";
+import { VoltageButton } from "@/components/landing/VoltageButton";
 
 type NavProps = {
   onStartProject: () => void;
@@ -117,13 +118,13 @@ export function Nav({ onStartProject, internalPage = false }: NavProps) {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
-          <button
+          <VoltageButton
             type="button"
             onClick={startProject}
-            className="nav-desktop-cta premium-button premium-button-primary min-h-11 px-5"
+            containerClassName="nav-voltage-cta"
           >
             {copy.start}
-          </button>
+          </VoltageButton>
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}

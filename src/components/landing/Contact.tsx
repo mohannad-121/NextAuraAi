@@ -31,7 +31,6 @@ export function Contact({ onStartProject }: ContactProps) {
 
   return (
     <section
-      id="contact"
       className="homepage-environment-alt relative overflow-hidden pt-[var(--section-space)]"
       dir={dir}
     >

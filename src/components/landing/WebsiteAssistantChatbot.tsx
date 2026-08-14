@@ -1,8 +1,13 @@
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Bot, MessageCircle, Send, X } from "lucide-react";
+import { ArrowUpRight, Bot, MessageCircle, Search, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/translations";
-import { chatbotCopy, getChatbotResponse, type ChatbotAction } from "@/lib/getChatbotResponse";
+import {
+  chatbotCopy,
+  decorateChatbotReply,
+  getChatbotResponse,
+  type ChatbotAction,
+} from "@/lib/getChatbotResponse";
 import type { SupportedLanguage } from "@/data/siteKnowledge";
 import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 
@@ -27,7 +32,7 @@ export function WebsiteAssistantChatbot() {
     {
       id: 1,
       role: "assistant",
-      content: chatbotCopy[currentLanguage].welcome,
+      content: decorateChatbotReply(chatbotCopy[currentLanguage].welcome),
       language: currentLanguage,
     },
   ]);
@@ -40,7 +45,7 @@ export function WebsiteAssistantChatbot() {
       {
         id: 1,
         role: "assistant",
-        content: chatbotCopy[currentLanguage].welcome,
+        content: decorateChatbotReply(chatbotCopy[currentLanguage].welcome),
         language: currentLanguage,
       },
     ]);
@@ -217,14 +222,23 @@ export function WebsiteAssistantChatbot() {
                 ))}
               </div>
               <form onSubmit={handleSubmit} className="flex gap-2">
-                <input
-                  value={input}
-                  onChange={(event) => setInput(event.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={copy.placeholders.input}
-                  dir={assistantLanguage === "ar" ? "rtl" : "ltr"}
-                  className="min-h-12 min-w-0 flex-1 rounded-2xl border border-border/80 bg-card/72 px-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-cyan/70"
-                />
+                <div className="chatbot-input-shell">
+                  <span className="chatbot-input-grid" aria-hidden="true" />
+                  <span className="chatbot-input-layer chatbot-input-glow" aria-hidden="true" />
+                  <span className="chatbot-input-layer chatbot-input-dark-border" aria-hidden="true" />
+                  <span className="chatbot-input-layer chatbot-input-dark-border chatbot-input-dark-border-offset" aria-hidden="true" />
+                  <span className="chatbot-input-layer chatbot-input-white-border" aria-hidden="true" />
+                  <span className="chatbot-input-layer chatbot-input-border" aria-hidden="true" />
+                  <Search className="chatbot-input-search-icon" aria-hidden="true" />
+                  <input
+                    value={input}
+                    onChange={(event) => setInput(event.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={copy.placeholders.input}
+                    dir={assistantLanguage === "ar" ? "rtl" : "ltr"}
+                    className="chatbot-input"
+                  />
+                </div>
                 <button
                   type="submit"
                   aria-label={copy.placeholders.send}
