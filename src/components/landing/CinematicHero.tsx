@@ -4,6 +4,7 @@ import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 import { usePrefersReducedMotion, useViewportActivity } from "@/hooks/use-viewport-activity";
 import { VisitorCounter } from "@/components/landing/VisitorCounter";
+import { VoltageButton } from "@/components/landing/VoltageButton";
 
 type CinematicHeroProps = { onStartProject: () => void };
 
@@ -219,16 +220,16 @@ export function CinematicHero({ onStartProject }: CinematicHeroProps) {
             {copy.body}
           </p>
           <div className="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-            <button
+            <VoltageButton
               ref={primaryCtaRef}
               type="button"
               onClick={onStartProject}
-              className="hero-start-project premium-button premium-button-primary justify-center"
-              data-motion-active={isPrimaryCtaActive}
+              motionActive={isPrimaryCtaActive}
+              containerClassName="hero-start-project"
             >
               <span>{copy.primary}</span>
               <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" />
-            </button>
+            </VoltageButton>
             <div className="flex max-w-full flex-wrap items-center gap-3">
               <a
                 href="#projects"

@@ -30,7 +30,6 @@ export function ServicesUniverse({ onStartProject }: { onStartProject: () => voi
 
   return (
     <section
-      id="services"
       className="services-universe-section homepage-section homepage-environment relative"
       dir={dir}
     >

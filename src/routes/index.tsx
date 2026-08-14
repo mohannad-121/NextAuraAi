@@ -102,13 +102,13 @@ function LandingPage() {
     <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
       <Nav onStartProject={startProject} />
       <HeroUndergroundJourney onStartProject={startProject} />
-      <DeferredSection minHeight="42rem">
+      <DeferredSection id="services" minHeight="42rem">
         <ServicesUniverse onStartProject={startProject} />
       </DeferredSection>
-      <DeferredSection minHeight="46rem">
+      <DeferredSection id="projects" minHeight="46rem">
         <FeaturedProject onStartProject={startProject} />
       </DeferredSection>
-      <DeferredSection minHeight="34rem">
+      <DeferredSection id="team" minHeight="34rem">
         <Team />
       </DeferredSection>
       <DeferredSection minHeight="36rem">
@@ -117,7 +117,7 @@ function LandingPage() {
       <DeferredSection minHeight="38rem">
         <CustomerReviewsSection />
       </DeferredSection>
-      <DeferredSection minHeight="36rem">
+      <DeferredSection id="contact" minHeight="36rem">
         <Contact onStartProject={startProject} />
       </DeferredSection>
       <DeferredSection minHeight="5rem">
