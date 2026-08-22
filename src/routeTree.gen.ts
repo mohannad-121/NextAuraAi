@@ -18,6 +18,7 @@ import { Route as ApiProjectRequestsRouteImport } from './routes/api/project-req
 import { Route as ApiProjectRequestEmailRouteImport } from './routes/api/project-request-email'
 import { Route as ApiExchangeRatesRouteImport } from './routes/api/exchange-rates'
 import { Route as ApiCustomerReviewsRouteImport } from './routes/api/customer-reviews'
+import { Route as ApiCrmProjectRequestRouteImport } from './routes/api/crm-project-request'
 
 const StartProjectRoute = StartProjectRouteImport.update({
   id: '/start-project',
@@ -64,10 +65,16 @@ const ApiCustomerReviewsRoute = ApiCustomerReviewsRouteImport.update({
   path: '/api/customer-reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCrmProjectRequestRoute = ApiCrmProjectRequestRouteImport.update({
+  id: '/api/crm-project-request',
+  path: '/api/crm-project-request',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/start-project': typeof StartProjectRoute
+  '/api/crm-project-request': typeof ApiCrmProjectRequestRoute
   '/api/customer-reviews': typeof ApiCustomerReviewsRoute
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
   '/api/project-request-email': typeof ApiProjectRequestEmailRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/start-project': typeof StartProjectRoute
+  '/api/crm-project-request': typeof ApiCrmProjectRequestRoute
   '/api/customer-reviews': typeof ApiCustomerReviewsRoute
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
   '/api/project-request-email': typeof ApiProjectRequestEmailRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/start-project': typeof StartProjectRoute
+  '/api/crm-project-request': typeof ApiCrmProjectRequestRoute
   '/api/customer-reviews': typeof ApiCustomerReviewsRoute
   '/api/exchange-rates': typeof ApiExchangeRatesRoute
   '/api/project-request-email': typeof ApiProjectRequestEmailRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/start-project'
+    | '/api/crm-project-request'
     | '/api/customer-reviews'
     | '/api/exchange-rates'
     | '/api/project-request-email'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/start-project'
+    | '/api/crm-project-request'
     | '/api/customer-reviews'
     | '/api/exchange-rates'
     | '/api/project-request-email'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/start-project'
+    | '/api/crm-project-request'
     | '/api/customer-reviews'
     | '/api/exchange-rates'
     | '/api/project-request-email'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   StartProjectRoute: typeof StartProjectRoute
+  ApiCrmProjectRequestRoute: typeof ApiCrmProjectRequestRoute
   ApiCustomerReviewsRoute: typeof ApiCustomerReviewsRoute
   ApiExchangeRatesRoute: typeof ApiExchangeRatesRoute
   ApiProjectRequestEmailRoute: typeof ApiProjectRequestEmailRoute
@@ -212,12 +225,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCustomerReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/crm-project-request': {
+      id: '/api/crm-project-request'
+      path: '/api/crm-project-request'
+      fullPath: '/api/crm-project-request'
+      preLoaderRoute: typeof ApiCrmProjectRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   StartProjectRoute: StartProjectRoute,
+  ApiCrmProjectRequestRoute: ApiCrmProjectRequestRoute,
   ApiCustomerReviewsRoute: ApiCustomerReviewsRoute,
   ApiExchangeRatesRoute: ApiExchangeRatesRoute,
   ApiProjectRequestEmailRoute: ApiProjectRequestEmailRoute,

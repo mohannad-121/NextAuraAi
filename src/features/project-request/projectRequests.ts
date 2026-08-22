@@ -1,5 +1,6 @@
 import { getSupabaseClient, getSupabaseProjectHostname, logSupabaseError } from "@/lib/supabase";
 import type { ProjectRequest, ProjectRequestRecord } from "./types";
+import { syncProjectRequestToCrm } from "./crmSync";
 
 type SubmitProjectRequestRpcResponse = {
   id: string | number;
@@ -188,11 +189,13 @@ export async function submitProjectRequest(request: ProjectRequest): Promise<Sav
     });
   }
 
-  return {
+  const saved = {
     id: String(result.id),
     requestId: result.request_id,
     createdAt: result.created_at,
   };
+  await syncProjectRequestToCrm(request, saved.requestId);
+  return saved;
 }
 
 /**
