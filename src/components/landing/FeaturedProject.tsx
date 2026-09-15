@@ -1,36 +1,37 @@
-import { ArrowUpRight, Check } from "lucide-react";
-import { ViewportVideo } from "@/components/landing/ViewportVideo";
+import { ArrowUpRight } from "lucide-react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
 
 const portfolioProjects = [
   {
     id: "aiFitCoach",
-    featured: true,
     image: "/images/cinematic/ai-fit-coach.png",
     url: "https://aifitcoach.dev/",
     accent: "fitcoach",
   },
   {
     id: "auraWallet",
-    featured: false,
     image: "/images/cinematic/aura-wallet.png",
     url: "https://finance-tracker-aurawallet-eight.vercel.app/",
     accent: "wallet",
   },
   {
     id: "letsBake",
-    featured: false,
     image: "/images/cinematic/lets-bake.png",
     url: "https://let-s-bake-premium-hub.vercel.app/",
     accent: "bake",
   },
   {
     id: "arzanaArabia",
-    featured: false,
     image: "/images/cinematic/saudi.png",
     url: "https://arzanaco.com/",
     accent: "arzana",
+  },
+  {
+    id: "alKamalRestaurant",
+    image: "https://alkamalrestaurant.com/images/storefront.jpg",
+    url: "https://alkamalrestaurant.com/",
+    accent: "kamal",
   },
 ] as const;
 
@@ -62,9 +63,6 @@ function ProjectLink({
 export function FeaturedProject(_: { onStartProject: () => void }) {
   const { language, dir } = useLanguage();
   const content = homepageContent[language].featured;
-  const [featuredProject, ...supportingProjects] = portfolioProjects;
-  const featuredCopy = content.projects[featuredProject.id];
-
   return (
     <section
       aria-labelledby="portfolio-showcase-title"
@@ -72,9 +70,6 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
       className="portfolio-showcase homepage-section"
       dir={dir}
     >
-      <div className="portfolio-media-layer" aria-hidden="true">
-        <ViewportVideo src="/videos/our-websites.mp4" className="portfolio-background-video" />
-      </div>
       <div className="portfolio-readability-layer" aria-hidden="true" />
       <div className="portfolio-atmosphere" aria-hidden="true">
         <span className="portfolio-ambient portfolio-ambient-violet" />
@@ -98,65 +93,16 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
           </p>
         </header>
 
-        <div className="portfolio-projects-reveal mt-10">
-          <article
-            className={`portfolio-project-card portfolio-project-featured portfolio-accent-${featuredProject.accent}`}
-          >
-            <div className="portfolio-project-visual portfolio-fitcoach-visual">
-              <img
-                src={featuredProject.image}
-                alt={featuredCopy.imageAlt}
-                loading="lazy"
-                decoding="async"
-                className="portfolio-fitcoach-image"
-              />
-            </div>
-
-            <div className="portfolio-project-copy portfolio-featured-copy">
-              <div className="flex flex-wrap items-center gap-2.5 text-sm">
-                <span className="portfolio-category">{featuredCopy.category}</span>
-                <span className="portfolio-project-badge">{featuredCopy.badge}</span>
-              </div>
-              <h3 className="mt-5 text-3xl font-semibold leading-tight text-white sm:text-4xl">
-                {featuredCopy.title}
-              </h3>
-              <p className="mt-5 text-base leading-7 text-slate-300">{featuredCopy.description}</p>
-
-              <ul className="portfolio-feature-grid mt-6" aria-label={featuredCopy.featuresLabel}>
-                {featuredCopy.features.map((feature) => (
-                  <li key={feature}>
-                    <Check aria-hidden="true" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 flex flex-wrap gap-2" aria-label={featuredCopy.servicesLabel}>
-                {featuredCopy.tags.map((tag) => (
-                  <span key={tag} className="portfolio-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <ProjectLink
-                project={featuredProject}
-                label={featuredCopy.cta}
-                accessibleLabel={featuredCopy.externalLabel}
-              />
-            </div>
-          </article>
-
-          <div className="portfolio-supporting-grid">
-            {supportingProjects.map((project) => {
+        <div className="portfolio-project-grid mt-10">
+            {portfolioProjects.map((project) => {
               const projectCopy = content.projects[project.id];
 
               return (
                 <article
                   key={project.id}
-                  className={`portfolio-project-card portfolio-project-supporting portfolio-accent-${project.accent}`}
+                  className={`portfolio-project-card portfolio-project-compact portfolio-accent-${project.accent}`}
                 >
-                  <div className="portfolio-project-visual portfolio-supporting-visual">
+                  <div className="portfolio-project-visual portfolio-project-compact-visual">
                     <img
                       src={project.image}
                       alt={projectCopy.imageAlt}
@@ -165,26 +111,14 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
                     />
                   </div>
 
-                  <div className="portfolio-project-copy portfolio-supporting-copy">
+                  <div className="portfolio-project-copy portfolio-project-compact-copy">
                     <div className="portfolio-category text-sm">{projectCopy.category}</div>
-                    <h3 className="mt-3 text-2xl font-semibold leading-tight text-white">
+                    <h3 className="mt-2 text-xl font-semibold leading-tight text-white">
                       {projectCopy.title}
                     </h3>
-                    <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
+                    <p className="mt-3 text-sm leading-6 text-slate-300">
                       {projectCopy.description}
                     </p>
-
-                    <ul
-                      className="portfolio-supporting-features"
-                      aria-label={projectCopy.featuresLabel}
-                    >
-                      {projectCopy.features.map((feature) => (
-                        <li key={feature}>
-                          <Check aria-hidden="true" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
 
                     <ProjectLink
                       project={project}
@@ -195,7 +129,6 @@ export function FeaturedProject(_: { onStartProject: () => void }) {
                 </article>
               );
             })}
-          </div>
         </div>
       </div>
     </section>

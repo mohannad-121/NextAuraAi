@@ -88,26 +88,6 @@ const PLANET_MODELS = [
   },
 ] as const;
 
-const SERVICE_ORBIT_ICONS = [
-  [
-    "/images/service-orbits/web-designing.webp",
-    "/images/service-orbits/social-media-streaming.webp",
-    "/images/service-orbits/website.webp",
-  ],
-  [
-    "/images/service-orbits/ai.webp",
-    "/images/service-orbits/ai-network.webp",
-    "/images/service-orbits/ai-chip.webp",
-  ],
-  [
-    "/images/service-orbits/impact.webp",
-    "/images/service-orbits/web-development.webp",
-    "/images/service-orbits/system-integration.webp",
-  ],
-] as const;
-
-const ORBIT_ANGLES = [-90, 24, 156];
-
 function isMesh(object: unknown): object is DisposableMesh {
   return object instanceof THREE.Mesh;
 }
@@ -292,47 +272,11 @@ function PlanetModel({
   return <div ref={mountRef} className="service-planet-model" aria-hidden="true" />;
 }
 
-function ServicePlanetOrbit({
-  icons,
-}: {
-  icons: readonly string[];
-}) {
-  return (
-    <ul className="service-planet-orbit" aria-hidden="true">
-      {icons.slice(0, 3).map((iconSrc, index) => {
-        const angle = ORBIT_ANGLES[index] ?? index * 120 - 90;
-        const style = {
-          "--orbit-angle": `${angle}deg`,
-          "--orbit-counter-angle": `${-angle}deg`,
-        } as CSSProperties;
-
-        return (
-          <li key={iconSrc} className="service-planet-orbit-item" style={style}>
-            <span className="service-planet-orbit-module">
-              <img
-                className="service-planet-orbit-image"
-                src={iconSrc}
-                alt=""
-                width="320"
-                height="320"
-                loading="lazy"
-                decoding="async"
-              />
-            </span>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
 function ServicePlanetVisual({
   planet,
-  icons,
   active,
 }: {
   planet: ServicePlanet;
-  icons: readonly string[];
   active: boolean;
 }) {
   const [modelReady, setModelReady] = useState(false);
@@ -345,7 +289,6 @@ function ServicePlanetVisual({
   return (
     <div className="service-planet-visual" data-model-ready={modelReady}>
       <PlanetModel src={planet.modelSrc} active={active} onReady={handleReady} />
-      <ServicePlanetOrbit icons={icons} />
     </div>
   );
 }
@@ -515,7 +458,6 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
             >
               <ServicePlanetVisual
                 planet={planet}
-                icons={SERVICE_ORBIT_ICONS[index]}
                 active={isActive}
               />
               <div className="service-planet-copy">

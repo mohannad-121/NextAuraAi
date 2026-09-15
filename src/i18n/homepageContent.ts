@@ -156,6 +156,17 @@ const en = {
     title: "Projects built to solve real business problems.",
     body: "From artificial intelligence and financial management to premium e-commerce, explore platforms designed and developed by NextAura AI.",
     projects: {
+      alKamalRestaurant: {
+        category: "Restaurant Website",
+        title: "Al Kamal Restaurant — Traditional Breakfast & Dining",
+        description:
+          "A welcoming restaurant website for Al Kamal, helping customers explore its popular breakfast dishes, sandwiches, drinks, and location.",
+        featuresLabel: "Al Kamal Restaurant website highlights",
+        features: ["Restaurant menu", "Popular dishes", "Location details", "Mobile-friendly experience"],
+        cta: "Visit Al Kamal Restaurant",
+        externalLabel: "Visit Al Kamal Restaurant (opens in a new tab)",
+        imageAlt: "Al Kamal Restaurant storefront",
+      },
       aiFitCoach: {
         badge: "Flagship project",
         category: "AI Fitness Platform",
@@ -583,6 +594,18 @@ const ar: Widen<typeof en> = {
     title: "مشاريع صُممت لحل تحديات أعمال حقيقية.",
     body: "من الذكاء الاصطناعي وإدارة الأموال إلى التجارة الإلكترونية المتقدمة، تعرّف على منصات صممتها وطورتها NextAura AI.",
     projects: {
+      alKamalRestaurant: {
+        ...en.featured.projects.alKamalRestaurant,
+        category: "موقع مطعم",
+        title: "مطعم الكمال — فطور شعبي ومأكولات مميزة",
+        description:
+          "موقع ترحيبي لمطعم الكمال يسهّل على العملاء استكشاف أطباق الفطور الشعبية والساندويشات والمشروبات وموقع المطعم.",
+        featuresLabel: "أبرز مزايا موقع مطعم الكمال",
+        features: ["قائمة المطعم", "الأطباق الشهيرة", "تفاصيل الموقع", "تجربة متوافقة مع الجوال"],
+        cta: "زيارة مطعم الكمال",
+        externalLabel: "زيارة مطعم الكمال (يفتح في علامة تبويب جديدة)",
+        imageAlt: "واجهة مطعم الكمال",
+      },
       aiFitCoach: {
         badge: "المشروع الرئيسي",
         category: "منصة لياقة بالذكاء الاصطناعي",
@@ -966,6 +989,18 @@ const es: Widen<typeof en> = {
     title: "Proyectos creados para resolver problemas reales de negocio.",
     body: "Desde inteligencia artificial y gestión financiera hasta comercio electrónico premium, descubre plataformas diseñadas y desarrolladas por NextAura AI.",
     projects: {
+      alKamalRestaurant: {
+        ...en.featured.projects.alKamalRestaurant,
+        category: "Sitio web de restaurante",
+        title: "Restaurante Al Kamal — Desayuno tradicional y gastronomía",
+        description:
+          "Un sitio web acogedor para el restaurante Al Kamal, que permite a los clientes explorar desayunos populares, sándwiches, bebidas y su ubicación.",
+        featuresLabel: "Aspectos destacados del sitio web de Al Kamal Restaurant",
+        features: ["Menú del restaurante", "Platos populares", "Detalles de ubicación", "Experiencia adaptable"],
+        cta: "Visitar Al Kamal Restaurant",
+        externalLabel: "Visitar Al Kamal Restaurant (se abre en una pestaña nueva)",
+        imageAlt: "Fachada de Al Kamal Restaurant",
+      },
       aiFitCoach: {
         badge: "Proyecto insignia",
         category: "Plataforma de fitness con IA",

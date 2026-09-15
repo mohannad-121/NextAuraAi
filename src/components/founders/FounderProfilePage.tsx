@@ -2,8 +2,12 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowUpRight,
+  BadgeCheck,
+  BrainCircuit,
   BriefcaseBusiness,
   ExternalLink,
+  FolderKanban,
+  GraduationCap,
   Github,
   Linkedin,
   Mail,
@@ -20,45 +24,62 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
   const navigate = useNavigate();
   const profile = founderProfiles[founderId];
   const copy = founderUi[language];
+  const seenTechnologies = new Set<string>();
+  const expertiseGroups = profile.skills
+    .map((group) => ({
+      ...group,
+      values: group.values.filter((value) => {
+        const key = value.toLocaleLowerCase();
+        if (seenTechnologies.has(key)) return false;
+        seenTechnologies.add(key);
+        return true;
+      }),
+    }))
+    .filter((group) => group.values.length > 0);
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#050b19] text-white" dir={dir}>
+    <div
+      className="founder-profile min-h-screen overflow-x-clip text-white"
+      data-founder={founderId}
+      dir={dir}
+    >
       <Nav internalPage onStartProject={() => navigate({ to: "/start-project" })} />
 
-      <main className="pt-28 sm:pt-32">
-        <section className="relative border-b border-white/10 bg-[radial-gradient(circle_at_85%_15%,rgba(34,211,238,0.14),transparent_28%),radial-gradient(circle_at_10%_22%,rgba(139,92,246,0.16),transparent_30%)]">
-          <div className="homepage-container grid gap-8 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.96fr)_minmax(20rem,0.8fr)] lg:items-center lg:gap-14 lg:py-20">
+      <main className="founder-main pt-28 sm:pt-32">
+        <section className="founder-hero relative">
+          <div className="homepage-container founder-hero-grid grid gap-8 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.96fr)_minmax(20rem,0.8fr)] lg:items-center lg:gap-14 lg:py-20">
             <div className="order-2 lg:order-1">
               <Link
                 to="/"
                 hash="team"
-                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-colors duration-200 hover:border-cyan-200/60 hover:text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
+                className="founder-back inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-200"
               >
                 <ArrowLeft className="h-4 w-4 rtl:rotate-180" aria-hidden="true" />
                 {copy.backToFounders}
               </Link>
-              <p className="mt-8 font-mono text-xs font-semibold tracking-[0.22em] text-cyan-200">
+              <p className="founder-eyebrow mt-8 font-mono text-xs font-semibold tracking-[0.22em]">
                 {copy.profile}
               </p>
-              <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-[-0.045em] text-white sm:text-5xl lg:text-6xl">
+              <h1 className="founder-name mt-4 max-w-3xl text-4xl font-semibold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
                 {profile.displayName}
               </h1>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-cyan-100 sm:text-xl">
+              <p className="founder-headline mt-5 max-w-3xl text-lg leading-8 sm:text-xl">
                 {profile.headline[language]}
               </p>
-              <div className="mt-5 flex items-center gap-2 text-sm text-slate-300">
-                <MapPin className="h-4 w-4 shrink-0 text-cyan-300" aria-hidden="true" />
+              <div className="founder-location mt-5 flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />
                 {profile.location[language]}
               </div>
-              <p className="mt-8 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg">
+              <p className="founder-summary mt-8 max-w-3xl text-base leading-8 sm:text-lg">
                 {profile.summary[language]}
               </p>
               <ProfileLinks profile={profile} labels={copy} />
+              <FounderSnapshot profile={profile} labels={copy} />
             </div>
 
             <div className="order-1 mx-auto w-full max-w-md lg:order-2 lg:max-w-none">
-              <div className="overflow-hidden rounded-[1.75rem] border border-white/12 bg-slate-900/60 p-2 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
-                <div className="aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-slate-900">
+              <div className="founder-portrait-frame overflow-hidden rounded-[1.75rem] p-2">
+                <div className="founder-portrait aspect-[4/5] overflow-hidden rounded-[1.25rem]">
                   <img
                     src={profile.image}
                     alt={`${profile.displayName}, ${profile.headline[language]}`}
@@ -73,8 +94,8 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="homepage-container grid gap-5 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(17rem,0.65fr)] lg:items-stretch">
-          <article className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+        <section className="founder-overview homepage-container grid gap-5 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(17rem,0.65fr)] lg:items-stretch">
+          <article className="founder-card founder-role-card flex h-full flex-col rounded-3xl p-6 sm:p-8">
             <SectionTitle icon={BriefcaseBusiness} title={copy.currentRole} />
             <h2 className="mt-5 text-2xl font-semibold text-white">
               {profile.currentRole.title[language]}
@@ -93,8 +114,8 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
             </ul>
           </article>
 
-          <aside className="h-full rounded-3xl border border-cyan-200/15 bg-cyan-200/[0.045] p-6 sm:p-8">
-            <h2 className="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-200">
+          <aside className="founder-card founder-capabilities-card h-full rounded-3xl p-6 sm:p-8">
+            <h2 className="founder-eyebrow font-mono text-xs font-semibold tracking-[0.18em]">
               {copy.capabilities}
             </h2>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -105,25 +126,28 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </aside>
         </section>
 
-        <section className="border-y border-white/10 bg-[#071226]">
+        <section className="founder-projects-section">
           <div className="homepage-container py-14 sm:py-20">
             <SectionTitle title={copy.projects} />
-            <div className="mt-7 grid auto-rows-fr gap-5 lg:grid-cols-2">
-              {profile.projects.map((project) => (
+            <div className="founder-project-grid mt-7 grid auto-rows-fr gap-5 lg:grid-cols-2">
+              {profile.projects.map((project, index) => (
                 <article
                   key={project.name}
-                  className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.035] p-6 transition-colors duration-200 hover:border-cyan-200/30 sm:p-7"
+                  data-project-index={String(index + 1).padStart(2, "0")}
+                  className="founder-card founder-project-card flex h-full flex-col rounded-3xl p-6 transition-colors duration-200 sm:p-7"
                 >
                   <h3 className="text-xl font-semibold text-white">{project.name}</h3>
                   <p className="mt-4 leading-7 text-slate-300">{project.description[language]}</p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    {project.technologies.map((technology) => (
+                    {project.technologies.slice(0, 6).map((technology) => (
                       <Tag key={technology}>{technology}</Tag>
                     ))}
                   </div>
-                  <h4 className="mt-6 text-sm font-semibold text-cyan-100">{copy.contributions}</h4>
-                  <ul className="mt-3 grid gap-2 text-sm leading-6 text-slate-300">
-                    {project.contributions[language].map((item) => (
+                  <ul
+                    className="mt-5 grid gap-2 text-sm leading-6 text-slate-300"
+                    aria-label={copy.contributions}
+                  >
+                    {project.contributions[language].slice(0, 3).map((item) => (
                       <CheckItem key={item}>{item}</CheckItem>
                     ))}
                   </ul>
@@ -156,15 +180,15 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="homepage-container py-14 sm:py-20">
+        <section className="founder-development-section homepage-container py-14 sm:py-20">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-start">
             <div>
               <SectionTitle title={copy.experience} />
-              <div className="mt-6 grid gap-5">
+              <div className="founder-timeline mt-6 grid gap-5">
                 {profile.experience.map((role) => (
                   <article
                     key={`${role.organization}-${role.period.en}`}
-                    className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
+                    className="founder-card founder-timeline-card rounded-3xl p-6"
                   >
                     <h3 className="text-xl font-semibold text-white">{role.title[language]}</h3>
                     <p className="mt-1 font-medium text-cyan-200">{role.organization}</p>
@@ -174,7 +198,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
                     </p>
                     <p className="mt-4 leading-7 text-slate-300">{role.description[language]}</p>
                     <ul className="mt-5 grid gap-2 text-sm leading-6 text-slate-300">
-                      {role.highlights[language].map((item) => (
+                      {role.highlights[language].slice(0, 4).map((item) => (
                         <CheckItem key={item}>{item}</CheckItem>
                       ))}
                     </ul>
@@ -184,11 +208,11 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
             </div>
             <div>
               <SectionTitle title={copy.skills} />
-              <div className="mt-6 grid auto-rows-fr gap-4 sm:grid-cols-2">
-                {profile.skills.map((group) => (
+              <div className="founder-skill-grid mt-6 grid auto-rows-fr gap-4 sm:grid-cols-2">
+                {expertiseGroups.map((group) => (
                   <article
                     key={group.title.en}
-                    className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-5"
+                    className="founder-card founder-skill-card h-full rounded-3xl p-5"
                   >
                     <h3 className="text-sm font-semibold text-cyan-100">{group.title[language]}</h3>
                     <div className="mt-4 flex flex-wrap gap-2">
@@ -203,9 +227,9 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-[#071226]">
+        <section className="founder-credentials-section">
           <div className="homepage-container grid gap-5 py-14 sm:py-20 lg:grid-cols-2 lg:items-stretch">
-            <article className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+            <article className="founder-card founder-education-card h-full rounded-3xl p-6 sm:p-8">
               <SectionTitle title={copy.education} />
               <h3 className="mt-5 text-2xl font-semibold text-white">
                 {profile.education.degree[language]}
@@ -215,12 +239,12 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
                 {profile.education.period[language]} · {profile.education.result[language]}
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
-                {profile.education.focus[language].map((item) => (
+                {profile.education.focus[language].slice(0, 6).map((item) => (
                   <Tag key={item}>{item}</Tag>
                 ))}
               </div>
             </article>
-            <article className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+            <article className="founder-card founder-achievements-card h-full rounded-3xl p-6 sm:p-8">
               <SectionTitle title={copy.achievements} />
               <ul className="mt-5 grid gap-3 text-sm leading-7 text-slate-300">
                 {profile.achievements[language].map((item) => (
@@ -231,14 +255,14 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="homepage-container grid gap-8 py-14 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+        <section className="founder-learning-section homepage-container grid gap-8 py-14 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
           <article>
             <SectionTitle title={copy.certifications} />
-            <div className="mt-6 grid auto-rows-fr gap-4 sm:grid-cols-2">
+            <div className="founder-certification-grid mt-6 grid auto-rows-fr gap-4 sm:grid-cols-2">
               {profile.certifications.map((certification) => (
                 <article
                   key={certification.provider}
-                  className="h-full rounded-3xl border border-white/10 bg-white/[0.035] p-6"
+                  className="founder-card founder-certification-card h-full rounded-3xl p-6"
                 >
                   <h3 className="font-semibold text-white">{certification.provider}</h3>
                   <ul className="mt-4 grid gap-2 text-sm leading-6 text-slate-300">
@@ -251,7 +275,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
             </div>
           </article>
           <div className="grid content-start gap-5">
-            <article className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
+            <article className="founder-card rounded-3xl p-6">
               <SectionTitle title={copy.languages} />
               <dl className="mt-5 grid gap-3">
                 {profile.languages.map((item) => (
@@ -266,7 +290,7 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
               </dl>
             </article>
             {profile.volunteering ? (
-              <article className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
+              <article className="founder-card rounded-3xl p-6">
                 <SectionTitle title={copy.volunteering} />
                 <div className="mt-5 grid gap-5">
                   {profile.volunteering.map((item) => (
@@ -284,7 +308,24 @@ export function FounderProfilePage({ founderId }: { founderId: FounderId }) {
           </div>
         </section>
 
-        <section className="border-t border-white/10 bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.13),transparent_52%)]">
+        <section className="founder-vision-section">
+          <div className="homepage-container">
+            <p className="founder-eyebrow font-mono text-xs font-semibold tracking-[0.22em]">
+              NEXAURA AI
+            </p>
+            <h2>{profile.currentRole.title[language]}</h2>
+            <div aria-label={copy.capabilities}>
+              {profile.capabilities.map((capability, index) => (
+                <span key={capability}>
+                  {capability}
+                  {index < profile.capabilities.length - 1 ? <i aria-hidden="true" /> : null}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="founder-connect-section">
           <div className="homepage-container flex flex-col items-start justify-between gap-6 py-14 sm:flex-row sm:items-center sm:py-16">
             <div>
               <p className="font-mono text-xs font-semibold tracking-[0.2em] text-cyan-200">
@@ -335,6 +376,37 @@ function ProfileLinks({
         </a>
       ))}
     </div>
+  );
+}
+
+function FounderSnapshot({
+  profile,
+  labels,
+}: {
+  profile: (typeof founderProfiles)[FounderId];
+  labels: Record<string, string>;
+}) {
+  const certificationCount = profile.certifications.reduce(
+    (count, certification) => count + certification.items.length,
+    0,
+  );
+  const stats = [
+    { icon: GraduationCap, value: profile.education.result.en, label: labels.education },
+    { icon: FolderKanban, value: String(profile.projects.length), label: labels.projects },
+    { icon: BrainCircuit, value: String(profile.skills.length), label: labels.skills },
+    { icon: BadgeCheck, value: String(certificationCount), label: labels.certifications },
+  ];
+
+  return (
+    <dl className="founder-snapshot mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {stats.map(({ icon: Icon, value, label }) => (
+        <div key={label} className="founder-stat">
+          <Icon aria-hidden="true" className="h-4 w-4" />
+          <dd>{value}</dd>
+          <dt>{label}</dt>
+        </div>
+      ))}
+    </dl>
   );
 }
 
