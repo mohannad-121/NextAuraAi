@@ -1299,6 +1299,18 @@
     0 0 34px rgb(251 191 36 / 0.1);
 }
 
+.portfolio-accent-tasweq .portfolio-category {
+  color: #facc15;
+}
+
+.portfolio-accent-tasweq:hover {
+  border-color: rgb(250 204 21 / 0.58);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.08),
+    0 28px 72px rgb(2 6 23 / 0.56),
+    0 0 34px rgb(250 204 21 / 0.12);
+}
+
 @media (min-width: 540px) {
   .portfolio-feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

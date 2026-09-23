@@ -167,6 +167,17 @@ const en = {
         externalLabel: "Visit Al Kamal Restaurant (opens in a new tab)",
         imageAlt: "Al Kamal Restaurant storefront",
       },
+      tasweq: {
+        category: "Instagram Growth Storefront",
+        title: "Tasweq — Instagram Growth Services",
+        description:
+          "A focused storefront for Instagram followers, views, and likes, with clear package options and Jordanian pricing.",
+        featuresLabel: "Tasweq website highlights",
+        features: ["Instagram followers", "Views and likes", "Clear package pricing", "Arabic-first experience"],
+        cta: "Visit Tasweq",
+        externalLabel: "Visit Tasweq (opens in a new tab)",
+        imageAlt: "Tasweq Instagram growth services logo",
+      },
       aiFitCoach: {
         badge: "Flagship project",
         category: "AI Fitness Platform",
@@ -606,6 +617,18 @@ const ar: Widen<typeof en> = {
         externalLabel: "زيارة مطعم الكمال (يفتح في علامة تبويب جديدة)",
         imageAlt: "واجهة مطعم الكمال",
       },
+      tasweq: {
+        ...en.featured.projects.tasweq,
+        category: "متجر لنمو حضورك على إنستغرام",
+        title: "تسوّق — خدمات نمو إنستغرام",
+        description:
+          "متجر مخصص لمتابعين ومشاهدات وإعجابات إنستغرام، مع باقات واضحة وأسعار بالدينار الأردني.",
+        featuresLabel: "أبرز مزايا موقع تسوّق",
+        features: ["متابعون إنستغرام", "مشاهدات وإعجابات", "أسعار باقات واضحة", "تجربة عربية أولاً"],
+        cta: "زيارة تسوّق",
+        externalLabel: "زيارة تسوّق (يفتح في علامة تبويب جديدة)",
+        imageAlt: "شعار تسوّق لخدمات نمو إنستغرام",
+      },
       aiFitCoach: {
         badge: "المشروع الرئيسي",
         category: "منصة لياقة بالذكاء الاصطناعي",
@@ -1000,6 +1023,18 @@ const es: Widen<typeof en> = {
         cta: "Visitar Al Kamal Restaurant",
         externalLabel: "Visitar Al Kamal Restaurant (se abre en una pestaña nueva)",
         imageAlt: "Fachada de Al Kamal Restaurant",
+      },
+      tasweq: {
+        ...en.featured.projects.tasweq,
+        category: "Tienda de crecimiento para Instagram",
+        title: "Tasweq — Servicios de crecimiento para Instagram",
+        description:
+          "Una tienda especializada en seguidores, visualizaciones y me gusta de Instagram, con paquetes claros y precios jordanos.",
+        featuresLabel: "Aspectos destacados del sitio web de Tasweq",
+        features: ["Seguidores de Instagram", "Visualizaciones y me gusta", "Precios de paquetes claros", "Experiencia orientada al árabe"],
+        cta: "Visitar Tasweq",
+        externalLabel: "Visitar Tasweq (se abre en una pestaña nueva)",
+        imageAlt: "Logotipo de Tasweq para servicios de crecimiento de Instagram",
       },
       aiFitCoach: {
         badge: "Proyecto insignia",

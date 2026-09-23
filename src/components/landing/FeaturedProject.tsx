@@ -33,6 +33,12 @@ const portfolioProjects = [
     url: "https://alkamalrestaurant.com/",
     accent: "kamal",
   },
+  {
+    id: "tasweq",
+    image: "https://www.tasweq.store/logo.jpg",
+    url: "https://www.tasweq.store/",
+    accent: "tasweq",
+  },
 ] as const;
 
 type PortfolioProject = (typeof portfolioProjects)[number];
