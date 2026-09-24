@@ -39,6 +39,7 @@ import { ProjectPageTail } from "@/components/landing/ProjectPageTail";
 import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 import {
   CURRENCIES,
+  FALLBACK_EXCHANGE_RATES,
   FEATURES,
   FEATURE_CATEGORY_ORDER,
   PACKAGE_LEVEL,
@@ -75,6 +76,7 @@ import {
 import type {
   ContactMethod,
   FeatureId,
+  CurrencyCode,
   PackageId,
   PersistedProjectRequest,
   ProjectRequest,
@@ -324,7 +326,7 @@ export function ProjectRequestModal({
   }, [copy.estimate.stages, estimate, reduceMotion, step]);
 
   useEffect(() => {
-    if (step < 5 || rates || ratesLoading) return;
+    if (step < 2 || rates || ratesLoading) return;
     setRatesLoading(true);
     void loadExchangeRates()
       .then(setRates)
@@ -712,6 +714,8 @@ export function ProjectRequestModal({
                             draft={draft}
                             error={errors.packageId}
                             choosePackage={choosePackage}
+                            setField={setField}
+                            rates={rates}
                             copy={copy}
                             language={language}
                           />
@@ -1021,17 +1025,49 @@ function PackageStep({
   draft,
   error,
   choosePackage,
+  setField,
+  rates,
   copy,
   language,
 }: {
   draft: ProjectRequestDraft;
   error?: string;
   choosePackage: (packageId: PackageId) => void;
+  setField: SetField;
+  rates: Awaited<ReturnType<typeof loadExchangeRates>> | null;
   copy: (typeof projectRequestCopy)["en"];
   language: "ar" | "en" | "es";
 }) {
+  const packageCurrencies: CurrencyCode[] = ["JOD", "USD", "AED", "ILS", "SAR"];
+  const formatPackagePrice = (min: number, max: number) => {
+    const rate = rates?.rates[draft.currency] ?? FALLBACK_EXCHANGE_RATES[draft.currency];
+    return formatMoneyRange(min * rate, max * rate, draft.currency, language);
+  };
+
   return (
     <div className="nxa-project-stack">
+      <fieldset className="nxa-project-package-currency" aria-label={copy.estimate.currency}>
+        <legend>{copy.estimate.currency}</legend>
+        <div className="nxa-project-package-currency-options">
+          {packageCurrencies.map((currencyCode) => {
+            const currency = CURRENCIES.find(({ code }) => code === currencyCode);
+            const selected = draft.currency === currencyCode;
+            return (
+              <button
+                key={currencyCode}
+                type="button"
+                className="nxa-project-package-currency-option"
+                data-selected={selected}
+                aria-pressed={selected}
+                aria-label={`${copy.estimate.currency}: ${currency?.label[language] ?? currencyCode}`}
+                onClick={() => setField("currency", currencyCode)}
+              >
+                {currencyCode}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
       <div className="nxa-project-package-grid">
         {PROJECT_PACKAGES.map((projectPackage) => {
           const selected = draft.packageId === projectPackage.id;
@@ -1070,22 +1106,18 @@ function PackageStep({
                 <div>
                   <span>{copy.packages.normal}</span>
                   <strong>
-                    {formatMoneyRange(
+                    {formatPackagePrice(
                       projectPackage.pricing.normal.min,
                       projectPackage.pricing.normal.max,
-                      "JOD",
-                      language,
                     )}
                   </strong>
                 </div>
                 <div>
                   <span>{copy.packages.rush}</span>
                   <strong>
-                    {formatMoneyRange(
+                    {formatPackagePrice(
                       projectPackage.pricing.rush.min,
                       projectPackage.pricing.rush.max,
-                      "JOD",
-                      language,
                     )}
                   </strong>
                 </div>
