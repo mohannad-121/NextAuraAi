@@ -24,7 +24,9 @@ import { getAnonymousVisitorId } from "@/lib/anonymousVisitor";
 import { getSupabaseClient, logSupabaseError } from "@/lib/supabase";
 import "./customer-reviews.css";
 
-const PAGE_SIZE = 4;
+type SortOption = "newest" | "highest" | "lowest";
+
+const PAGE_SIZE = 6;
 const MAX_COMMENT_LENGTH = 800;
 const MAX_REPLY_LENGTH = 500;
 const STAR_VALUES = [1, 2, 3, 4, 5] as const;
@@ -241,6 +243,29 @@ export function CustomerReviewsSection() {
   >("idle");
   const [submissionMessage, setSubmissionMessage] = useState("");
   const lastSubmission = useRef<{ fingerprint: string; timestamp: number } | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [starFilter, setStarFilter] = useState<number | null>(null);
+
+  const starCounts = reviews.reduce<Record<number, number>>((acc, rev) => {
+    acc[rev.rating] = (acc[rev.rating] || 0) + 1;
+    return acc;
+  }, {});
+
+  const filteredReviews = reviews.filter((review) =>
+    starFilter === null ? true : review.rating === starFilter,
+  );
+
+  const sortedAndFilteredReviews = [...filteredReviews].sort((a, b) => {
+    if (sortBy === "highest") {
+      if (b.rating !== a.rating) return b.rating - a.rating;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+    if (sortBy === "lowest") {
+      if (a.rating !== b.rating) return a.rating - b.rating;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   const locale = language === "ar" ? "ar-JO" : language === "es" ? "es-ES" : "en-JO";
   const numberFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
@@ -618,73 +643,147 @@ export function CustomerReviewsSection() {
             className="customer-review-list-panel"
             aria-labelledby="customer-reviews-list-title"
           >
-            <div className="customer-review-list-heading">
-              <span>
-                <small>{summaryLabel}</small>
-                <h3 id="customer-reviews-list-title">{copy.newest}</h3>
-              </span>
-              <Quote aria-hidden="true" />
+            <div className="customer-review-list-header">
+              <div className="customer-review-list-heading">
+                <span>
+                  <small>{summaryLabel}</small>
+                  <h3 id="customer-reviews-list-title">{copy.newest}</h3>
+                </span>
+                <Quote aria-hidden="true" />
+              </div>
+
+              {reviews.length > 0 ? (
+                <div className="customer-review-toolbar">
+                  <div
+                    className="customer-review-filters"
+                    role="group"
+                    aria-label="Filter reviews by rating"
+                  >
+                    <button
+                      type="button"
+                      className={`customer-review-chip ${starFilter === null ? "is-active" : ""}`}
+                      onClick={() => setStarFilter(null)}
+                    >
+                      <span>{copy.filterAll}</span>
+                      <span className="customer-review-chip-count">{reviews.length}</span>
+                    </button>
+                    {STAR_VALUES.slice().reverse().map((value) => {
+                      const count = starCounts[value] || 0;
+                      if (count === 0 && starFilter !== value) return null;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          className={`customer-review-chip ${starFilter === value ? "is-active" : ""}`}
+                          onClick={() => setStarFilter(starFilter === value ? null : value)}
+                        >
+                          <span className="customer-review-chip-stars">
+                            {value}★
+                          </span>
+                          <span className="customer-review-chip-count">{count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="customer-review-sort">
+                    <label htmlFor="customer-review-sort-select" className="customer-review-sort-label">
+                      <ArrowUpDown className="customer-review-sort-icon" aria-hidden="true" />
+                      <span>{copy.sortBy}</span>
+                    </label>
+                    <div className="customer-review-sort-select-wrapper">
+                      <select
+                        id="customer-review-sort-select"
+                        className="customer-review-sort-select"
+                        value={sortBy}
+                        onChange={(event) => setSortBy(event.target.value as SortOption)}
+                      >
+                        <option value="newest">{copy.sortNewest}</option>
+                        <option value="highest">{copy.sortHighest}</option>
+                        <option value="lowest">{copy.sortLowest}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            {loading ? <ReviewSkeleton /> : null}
-            {!loading && loadError && reviews.length === 0 ? (
-              <div className="customer-review-state" role="alert">
-                <AlertCircle aria-hidden="true" />
-                <p>{copy.databaseError}</p>
-                <button type="button" onClick={() => loadInitial(true)}>
-                  <RotateCcw aria-hidden="true" /> {copy.retry}
-                </button>
-              </div>
-            ) : null}
-            {!loading && !loadError && reviews.length === 0 ? (
-              <div className="customer-review-state customer-review-empty-state">
-                <MessageSquareText aria-hidden="true" />
-                <h4>{copy.emptyTitle}</h4>
-                <p>{copy.emptyBody}</p>
-              </div>
-            ) : null}
-            {reviews.length ? (
-              <div className="customer-review-cards">
-                {reviews.map((review) => (
-                  <ReviewCard
-                    key={review.id}
-                    review={review}
-                    anonymous={copy.anonymous}
-                    outOfFive={copy.outOfFive}
-                    locale={locale}
-                    copy={copy}
-                    onReplySubmitted={(reply) => {
-                      setReviews((current) =>
-                        current.map((currentReview) =>
-                          currentReview.id === reply.reviewId
-                            ? { ...currentReview, replies: [...currentReview.replies, reply] }
-                            : currentReview,
-                        ),
-                      );
-                    }}
-                  />
-                ))}
-              </div>
-            ) : null}
+            <div className="customer-review-cards-scroll">
+              {loading ? <ReviewSkeleton /> : null}
+              {!loading && loadError && reviews.length === 0 ? (
+                <div className="customer-review-state" role="alert">
+                  <AlertCircle aria-hidden="true" />
+                  <p>{copy.databaseError}</p>
+                  <button type="button" onClick={() => loadInitial(true)}>
+                    <RotateCcw aria-hidden="true" /> {copy.retry}
+                  </button>
+                </div>
+              ) : null}
+              {!loading && !loadError && reviews.length === 0 ? (
+                <div className="customer-review-state customer-review-empty-state">
+                  <MessageSquareText aria-hidden="true" />
+                  <h4>{copy.emptyTitle}</h4>
+                  <p>{copy.emptyBody}</p>
+                </div>
+              ) : null}
 
-            {loadError && reviews.length > 0 ? (
-              <p className="customer-review-inline-error" role="alert">
-                <AlertCircle aria-hidden="true" /> {copy.databaseError}
-              </p>
-            ) : null}
-            {hasMore ? (
-              <button
-                type="button"
-                className="customer-review-load-more"
-                disabled={loadingMore}
-                onClick={loadMore}
-              >
-                {loadingMore ? (
-                  <LoaderCircle className="customer-review-spinner" aria-hidden="true" />
-                ) : null}
-                {loadingMore ? copy.loadingMore : copy.loadMore}
-              </button>
-            ) : null}
+              {!loading && reviews.length > 0 && sortedAndFilteredReviews.length === 0 ? (
+                <div className="customer-review-filter-empty" role="status">
+                  <p>{copy.noFilteredReviews}</p>
+                  <button
+                    type="button"
+                    className="customer-review-reset-filter"
+                    onClick={() => setStarFilter(null)}
+                  >
+                    {copy.filterAll}
+                  </button>
+                </div>
+              ) : null}
+
+              {sortedAndFilteredReviews.length > 0 ? (
+                <div className="customer-review-cards">
+                  {sortedAndFilteredReviews.map((review) => (
+                    <ReviewCard
+                      key={review.id}
+                      review={review}
+                      anonymous={copy.anonymous}
+                      outOfFive={copy.outOfFive}
+                      locale={locale}
+                      copy={copy}
+                      onReplySubmitted={(reply) => {
+                        setReviews((current) =>
+                          current.map((currentReview) =>
+                            currentReview.id === reply.reviewId
+                              ? { ...currentReview, replies: [...currentReview.replies, reply] }
+                              : currentReview,
+                          ),
+                        );
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              {loadError && reviews.length > 0 ? (
+                <p className="customer-review-inline-error" role="alert">
+                  <AlertCircle aria-hidden="true" /> {copy.databaseError}
+                </p>
+              ) : null}
+
+              {hasMore ? (
+                <button
+                  type="button"
+                  className="customer-review-load-more"
+                  disabled={loadingMore}
+                  onClick={loadMore}
+                >
+                  {loadingMore ? (
+                    <LoaderCircle className="customer-review-spinner" aria-hidden="true" />
+                  ) : null}
+                  {loadingMore ? copy.loadingMore : copy.loadMore}
+                </button>
+              ) : null}
+            </div>
           </section>
         </motion.div>
       </div>
@@ -707,55 +806,102 @@ function ReviewCard({
   copy: (typeof homepageContent)["en"]["reviews"];
   onReplySubmitted: (reply: CustomerReviewReply) => void;
 }) {
+  const [showReplies, setShowReplies] = useState(false);
   const ratingLabel = formatCopy(outOfFive, { rating: review.rating });
+  const authorName = review.displayName || anonymous;
+  const initial = authorName.trim().charAt(0).toUpperCase();
+
   return (
     <article className="customer-review-card">
       <div className="customer-review-card-topline">
-        <span>
-          <strong>{review.displayName || anonymous}</strong>
-          <time dateTime={review.createdAt}>
-            {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
-              new Date(review.createdAt),
-            )}
-          </time>
-        </span>
-        <span className="customer-review-card-rating" aria-label={ratingLabel}>
-          <span aria-hidden="true">
+        <div className="customer-review-card-author-wrapper">
+          <div className="customer-review-card-avatar" aria-hidden="true">
+            {initial ? <span>{initial}</span> : <User />}
+          </div>
+          <div className="customer-review-card-meta">
+            <strong className="customer-review-card-name">{authorName}</strong>
+            <time dateTime={review.createdAt} className="customer-review-card-date">
+              {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
+                new Date(review.createdAt),
+              )}
+            </time>
+          </div>
+        </div>
+
+        <div className="customer-review-card-rating" aria-label={ratingLabel}>
+          <div className="customer-review-card-stars" aria-hidden="true">
             {STAR_VALUES.map((value) => (
               <Star key={value} data-filled={value <= review.rating} />
             ))}
-          </span>
-          <small>{ratingLabel}</small>
-        </span>
-      </div>
-      <blockquote>
-        <p>{review.comment}</p>
-      </blockquote>
-      <div className="customer-review-replies" aria-label={copy.replies}>
-        <div className="customer-review-replies-heading">
-          <span>
-            <MessageCircleReply aria-hidden="true" />
-            {formatCopy(copy.replies, { count: review.replies.length })}
-          </span>
+          </div>
+          <span className="customer-review-card-rating-num">{review.rating}.0</span>
         </div>
-        {review.replies.map((reply) => (
-          <article key={reply.id} className="customer-review-reply">
-            <div>
-              <strong>{reply.displayName || anonymous}</strong>
-              <time dateTime={reply.createdAt}>
-                {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
-                  new Date(reply.createdAt),
-                )}
-              </time>
-            </div>
-            <p>{reply.comment}</p>
-          </article>
-        ))}
-        <ReplyComposer
-          reviewId={review.id}
-          copy={copy}
-          onReplySubmitted={onReplySubmitted}
-        />
+      </div>
+
+      <div className="customer-review-card-body">
+        <p>{review.comment}</p>
+      </div>
+
+      <div className="customer-review-replies" aria-label={copy.replies}>
+        <div className="customer-review-replies-actions">
+          {review.replies.length > 0 ? (
+            <button
+              type="button"
+              className="customer-review-replies-toggle"
+              onClick={() => setShowReplies((prev) => !prev)}
+              aria-expanded={showReplies}
+            >
+              <MessageCircleReply aria-hidden="true" />
+              <span>
+                {showReplies
+                  ? copy.hideReplies
+                  : formatCopy(copy.showReplies, { count: review.replies.length })}
+              </span>
+              <ChevronDown
+                className={`customer-review-replies-chevron ${showReplies ? "is-open" : ""}`}
+                aria-hidden="true"
+              />
+            </button>
+          ) : null}
+
+          <ReplyComposer
+            reviewId={review.id}
+            copy={copy}
+            onReplySubmitted={(reply) => {
+              onReplySubmitted(reply);
+              setShowReplies(true);
+            }}
+          />
+        </div>
+
+        {showReplies && review.replies.length > 0 ? (
+          <div className="customer-review-replies-thread">
+            {review.replies.map((reply) => {
+              const isTeam =
+                reply.displayName?.toLowerCase().includes("founder") ||
+                reply.displayName?.toLowerCase().includes("nextaura") ||
+                reply.displayName?.includes("مؤسس");
+              return (
+                <article key={reply.id} className={`customer-review-reply ${isTeam ? "is-team" : ""}`}>
+                  <div className="customer-review-reply-topline">
+                    <div className="customer-review-reply-author">
+                      <strong>{reply.displayName || anonymous}</strong>
+                      {isTeam ? (
+                        <span className="customer-review-reply-badge">Team</span>
+                      ) : null}
+                    </div>
+                    <time dateTime={reply.createdAt}>
+                      {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
+                        new Date(reply.createdAt),
+                      )}
+                    </time>
+                  </div>
+                  <p>{reply.comment}</p>
+                </article>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </article>
   );
