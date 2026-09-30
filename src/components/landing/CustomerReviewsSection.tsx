@@ -1,6 +1,8 @@
 import {
   AlertCircle,
+  ArrowUpDown,
   CheckCircle2,
+  ChevronDown,
   LoaderCircle,
   MessageSquareText,
   MessageCircleReply,
@@ -8,6 +10,7 @@ import {
   RotateCcw,
   Send,
   Star,
+  User,
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -807,9 +810,10 @@ function ReviewCard({
   onReplySubmitted: (reply: CustomerReviewReply) => void;
 }) {
   const [showReplies, setShowReplies] = useState(false);
-  const ratingLabel = formatCopy(outOfFive, { rating: review.rating });
-  const authorName = review.displayName || anonymous;
-  const initial = authorName.trim().charAt(0).toUpperCase();
+  const ratingLabel = formatCopy(outOfFive, { rating: review.rating || 5 });
+  const authorName = (review.displayName || anonymous || "Anonymous").trim();
+  const initial = authorName ? authorName.charAt(0).toUpperCase() : "";
+  const replyList = Array.isArray(review.replies) ? review.replies : [];
 
   return (
     <article className="customer-review-card">
@@ -834,7 +838,7 @@ function ReviewCard({
               <Star key={value} data-filled={value <= review.rating} />
             ))}
           </div>
-          <span className="customer-review-card-rating-num">{review.rating}.0</span>
+          <span className="customer-review-card-rating-num">{Number(review.rating || 5).toFixed(1)}</span>
         </div>
       </div>
 
@@ -844,7 +848,7 @@ function ReviewCard({
 
       <div className="customer-review-replies" aria-label={copy.replies}>
         <div className="customer-review-replies-actions">
-          {review.replies.length > 0 ? (
+          {replyList.length > 0 ? (
             <button
               type="button"
               className="customer-review-replies-toggle"
@@ -855,7 +859,7 @@ function ReviewCard({
               <span>
                 {showReplies
                   ? copy.hideReplies
-                  : formatCopy(copy.showReplies, { count: review.replies.length })}
+                  : formatCopy(copy.showReplies, { count: replyList.length })}
               </span>
               <ChevronDown
                 className={`customer-review-replies-chevron ${showReplies ? "is-open" : ""}`}
@@ -874,9 +878,9 @@ function ReviewCard({
           />
         </div>
 
-        {showReplies && review.replies.length > 0 ? (
+        {showReplies && replyList.length > 0 ? (
           <div className="customer-review-replies-thread">
-            {review.replies.map((reply) => {
+            {replyList.map((reply) => {
               const isTeam =
                 reply.displayName?.toLowerCase().includes("founder") ||
                 reply.displayName?.toLowerCase().includes("nextaura") ||
