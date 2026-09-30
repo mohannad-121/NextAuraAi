@@ -214,7 +214,7 @@ export const siteKnowledge = {
   products: [
     {
       id: "fitcoach",
-      name: "AI FitCoach",
+      name: "NextAura FIT",
       url: "https://aifitcoach.dev/",
       description: {
         en: "An intelligent virtual personal trainer that creates personalized workout and nutrition plans, tracks progress, and provides AI-powered coaching.",

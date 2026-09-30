@@ -5,15 +5,9 @@ import { useLanguage } from "@/i18n/translations";
 const portfolioProjects = [
   {
     id: "aiFitCoach",
-    image: "/images/cinematic/ai-fit-coach.png",
+    image: "/images/cinematic/NextAura FIT.jpg",
     url: "https://aifitcoach.dev/",
     accent: "fitcoach",
-  },
-  {
-    id: "auraWallet",
-    image: "/images/cinematic/aura-wallet.png",
-    url: "https://finance-tracker-aurawallet-eight.vercel.app/",
-    accent: "wallet",
   },
   {
     id: "letsBake",

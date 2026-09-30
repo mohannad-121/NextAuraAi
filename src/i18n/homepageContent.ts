@@ -181,10 +181,10 @@ const en = {
       aiFitCoach: {
         badge: "Flagship project",
         category: "AI Fitness Platform",
-        title: "AI FitCoach — Intelligent Virtual Personal Trainer",
+        title: "NextAura FIT",
         description:
           "An intelligent fitness platform that creates personalized workout and nutrition plans, tracks progress, and supports users through AI-powered coaching.",
-        featuresLabel: "AI FitCoach feature highlights",
+        featuresLabel: "NextAura FIT feature highlights",
         features: [
           "Personalized workout plans",
           "Tailored nutrition plans",
@@ -192,11 +192,11 @@ const en = {
           "Progress and schedule tracking",
           "Intelligent recommendations",
         ],
-        servicesLabel: "AI FitCoach technology and service areas",
+        servicesLabel: "NextAura FIT technology and service areas",
         tags: ["Artificial Intelligence", "Fitness Product", "Personalization", "Product Design"],
-        cta: "Visit AI FitCoach",
-        externalLabel: "Visit AI FitCoach (opens in a new tab)",
-        imageAlt: "AI FitCoach intelligent virtual personal trainer project",
+        cta: "Visit NextAura FIT",
+        externalLabel: "Visit NextAura FIT (opens in a new tab)",
+        imageAlt: "NextAura FIT intelligent virtual personal trainer project",
       },
       auraWallet: {
         category: "Financial Dashboard",
@@ -640,10 +640,10 @@ const ar: Widen<typeof en> = {
       aiFitCoach: {
         badge: "المشروع الرئيسي",
         category: "منصة لياقة بالذكاء الاصطناعي",
-        title: "AI FitCoach — مدرب شخصي افتراضي ذكي",
+        title: "NextAura FIT",
         description:
           "منصة لياقة ذكية تنشئ خطط تمارين وتغذية مخصصة، وتتابع التقدم، وتدعم المستخدم من خلال مدرب يعمل بالذكاء الاصطناعي.",
-        featuresLabel: "أبرز مزايا AI FitCoach",
+        featuresLabel: "أبرز مزايا NextAura FIT",
         features: [
           "خطط تمارين مخصصة",
           "خطط تغذية مخصصة",
@@ -651,11 +651,11 @@ const ar: Widen<typeof en> = {
           "متابعة التقدم والجداول",
           "توصيات ذكية",
         ],
-        servicesLabel: "تقنيات ومجالات خدمة AI FitCoach",
+        servicesLabel: "تقنيات ومجالات خدمة NextAura FIT",
         tags: ["ذكاء اصطناعي", "منتج لياقة", "تخصيص", "تصميم المنتج"],
-        cta: "زيارة AI FitCoach",
-        externalLabel: "زيارة مشروع AI FitCoach (يفتح في علامة تبويب جديدة)",
-        imageAlt: "مشروع AI FitCoach للمدرب الشخصي الافتراضي الذكي",
+        cta: "زيارة NextAura FIT",
+        externalLabel: "زيارة مشروع NextAura FIT (يفتح في علامة تبويب جديدة)",
+        imageAlt: "مشروع NextAura FIT للمدرب الشخصي الافتراضي الذكي",
       },
       auraWallet: {
         category: "لوحة تحكم مالية",
@@ -1055,10 +1055,10 @@ const es: Widen<typeof en> = {
       aiFitCoach: {
         badge: "Proyecto insignia",
         category: "Plataforma de fitness con IA",
-        title: "AI FitCoach — Entrenador personal virtual inteligente",
+        title: "NextAura FIT",
         description:
           "Una plataforma inteligente de fitness que crea planes personalizados de entrenamiento y nutrición, registra el progreso y acompaña al usuario con asesoramiento impulsado por IA.",
-        featuresLabel: "Funciones destacadas de AI FitCoach",
+        featuresLabel: "Funciones destacadas de NextAura FIT",
         features: [
           "Planes de entrenamiento personalizados",
           "Planes de nutrición a medida",
@@ -1066,16 +1066,16 @@ const es: Widen<typeof en> = {
           "Seguimiento de progreso y agenda",
           "Recomendaciones inteligentes",
         ],
-        servicesLabel: "Tecnologías y áreas de servicio de AI FitCoach",
+        servicesLabel: "Tecnologías y áreas de servicio de NextAura FIT",
         tags: [
           "Inteligencia artificial",
           "Producto fitness",
           "Personalización",
           "Diseño de producto",
         ],
-        cta: "Visitar AI FitCoach",
-        externalLabel: "Visitar AI FitCoach (se abre en una pestaña nueva)",
-        imageAlt: "Proyecto AI FitCoach de entrenador personal virtual inteligente",
+        cta: "Visitar NextAura FIT",
+        externalLabel: "Visitar NextAura FIT (se abre en una pestaña nueva)",
+        imageAlt: "Proyecto NextAura FIT de entrenador personal virtual inteligente",
       },
       auraWallet: {
         category: "Panel financiero",
