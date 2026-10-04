@@ -31,12 +31,12 @@ export function Contact({ onStartProject }: ContactProps) {
 
   return (
     <section
-      className="homepage-environment-alt relative overflow-hidden pt-[var(--section-space)]"
+      className="relative overflow-hidden pt-[var(--section-space)] bg-transparent"
       dir={dir}
     >
       <div className="homepage-container">
-        <div className="relative overflow-hidden rounded-2xl border border-white/12 px-5 py-12 sm:px-10 sm:py-16 lg:px-14 lg:py-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.3),transparent_36%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.24),transparent_38%),linear-gradient(135deg,#0b1326,#071020)]" />
+        <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-slate-950/60 backdrop-blur-xl px-5 py-12 sm:px-10 sm:py-16 lg:px-14 lg:py-20 shadow-[0_24px_64px_rgba(0,0,0,0.4)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgb(124_58_237_/_0.22),transparent_40%),radial-gradient(circle_at_85%_78%,rgb(14_165_233_/_0.18),transparent_45%)]" />
           <div className="relative grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div>
               <div className="section-eyebrow">{copy.eyebrow}</div>

@@ -25,7 +25,7 @@ export function MobileCTA({ onStartProject }: MobileCTAProps) {
 
   return (
     <div
-      className="fixed left-3 right-3 z-50 rounded-2xl border border-white/12 bg-[#0b1529]/96 p-2.5 shadow-2xl backdrop-blur-md md:hidden"
+      className="fixed left-3 right-3 z-50 rounded-2xl border border-white/12 bg-[#0b1529]/96 p-2.5 text-white shadow-2xl backdrop-blur-md md:hidden"
       style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
       <div className="flex items-center justify-between gap-3">

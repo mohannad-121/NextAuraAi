@@ -11,7 +11,11 @@ export const VoltageButton = forwardRef<HTMLDivElement, VoltageButtonProps>(func
   ref,
 ) {
   return (
-    <div ref={ref} className={`voltage-button ${containerClassName}`} data-motion-active={motionActive}>
+    <div
+      ref={ref}
+      className={`voltage-button ${containerClassName}`}
+      data-motion-active={motionActive}
+    >
       <button {...buttonProps} className={`voltage-button__control ${className ?? ""}`}>
         {children}
       </button>
@@ -28,7 +32,12 @@ export const VoltageButton = forwardRef<HTMLDivElement, VoltageButtonProps>(func
       >
         <filter id="glow">
           <feGaussianBlur className="blur" result="coloredBlur" stdDeviation="2" />
-          <feTurbulence type="fractalNoise" baseFrequency="0.075" numOctaves="0.3" result="turbulence" />
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.075"
+            numOctaves="0.3"
+            result="turbulence"
+          />
           <feDisplacementMap
             in="SourceGraphic"
             in2="turbulence"

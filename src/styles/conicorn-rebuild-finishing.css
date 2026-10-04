@@ -1,0 +1,509 @@
+.nextaura-editorial #reviews {
+  background: #fff;
+}
+.nextaura-editorial .customer-reviews-section {
+  padding: 70px max(24px, calc((100vw - 1280px) / 2)) 90px;
+  background: #fff;
+}
+.nextaura-editorial .customer-reviews-container {
+  max-width: 1280px;
+  padding: 0;
+}
+.nextaura-editorial .customer-reviews-intro {
+  max-width: 1000px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+.nextaura-editorial .customer-reviews-intro h2 {
+  max-width: 1000px;
+  margin: 18px auto 0;
+  font-size: clamp(45px, 5.2vw, 76px);
+  letter-spacing: -0.065em;
+  line-height: 1.02;
+}
+.nextaura-editorial .customer-reviews-intro > p {
+  max-width: 620px;
+  margin: 15px auto 0;
+  color: #666;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.nextaura-editorial .customer-reviews-summary {
+  margin: 25px auto 0;
+  box-shadow: none;
+  border-color: #e6e6e6;
+  background: #f7f7f7;
+}
+.nextaura-editorial .customer-reviews-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.nextaura-editorial .customer-review-list-panel {
+  order: 0;
+  width: 100%;
+  min-height: 340px;
+  border: 0;
+  border-radius: 55px;
+  background: #f5f5f5;
+  padding: 34px;
+  box-shadow: none;
+}
+.nextaura-editorial .customer-review-form {
+  order: 1;
+  width: min(720px, 100%);
+  margin: 0 auto;
+  border: 1px solid #e7e7e8;
+  border-radius: 55px;
+  background: #f5f5f5;
+  box-shadow: none;
+  padding: 34px;
+}
+.nextaura-editorial .customer-review-cards {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.nextaura-editorial .customer-review-card {
+  min-height: 320px;
+  padding: 30px;
+  border: 0;
+  border-radius: 42px;
+  background: #fff;
+  box-shadow: none;
+}
+.nextaura-editorial .customer-review-card:first-child {
+  min-height: 410px;
+  background: linear-gradient(145deg, #eeeeef, #fff);
+}
+.nextaura-editorial .customer-review-card-body p {
+  font-size: 17px;
+  line-height: 1.5;
+}
+.nextaura-editorial .customer-review-empty-state {
+  position: relative;
+  display: flex;
+  min-height: 260px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #e6e6e7;
+  border-radius: 42px;
+  background: radial-gradient(circle at 50% 0, #e1d4f688, #f9f9f9 65%);
+  text-align: center;
+}
+.nextaura-editorial .customer-review-empty-state::before {
+  content: "“";
+  position: absolute;
+  top: -80px;
+  left: 7%;
+  color: #e4e4e4;
+  font-size: 330px;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.nextaura-editorial .customer-review-empty-state h4 {
+  position: relative;
+  font-size: 28px;
+  color: #222;
+}
+.nextaura-editorial .customer-review-empty-state p {
+  position: relative;
+  max-width: 430px;
+  font-size: 16px;
+  color: #666;
+}
+.nextaura-editorial .customer-review-submit {
+  background: #111;
+  border-radius: 999px;
+}
+.nextaura-editorial .customer-review-panel-icon {
+  background: #212121;
+  color: #fff;
+}
+.nextaura-editorial #contact {
+  background: linear-gradient(180deg, #dededf, #202023 70%, #050505 100%);
+}
+.nextaura-editorial #contact > section {
+  padding-top: 120px;
+}
+.nextaura-editorial #contact .homepage-container > div:first-child {
+  border-radius: 90px;
+  background: linear-gradient(145deg, #ffffffc7, #92929695);
+  border: 1px solid #fff7;
+  box-shadow: 0 40px 90px #0003;
+  backdrop-filter: blur(25px);
+}
+.nextaura-editorial #contact footer {
+  margin-top: 90px;
+  color: #fff;
+  border-color: #ffffff35;
+}
+.nextaura-editorial #contact footer h3 {
+  color: #f8f8f8;
+}
+.nextaura-editorial #contact footer p,
+.nextaura-editorial #contact footer li,
+.nextaura-editorial #contact footer a,
+.nextaura-editorial #contact footer span {
+  color: #d0d0d2 !important;
+}
+.nextaura-editorial #contact footer p,
+.nextaura-editorial #contact footer li,
+.nextaura-editorial #contact footer a,
+.nextaura-editorial #contact footer .social-brand-link,
+.nextaura-editorial #contact footer .social-brand-link * {
+  color: #d0d0d2 !important;
+}
+.nextaura-editorial #contact footer::after {
+  content: "NextAura AI";
+  display: block;
+  margin: 72px auto 0;
+  color: #6d6d70;
+  font-size: clamp(70px, 10vw, 160px);
+  line-height: 0.9;
+  font-weight: 750;
+  letter-spacing: -0.09em;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0.62;
+}
+@media (max-width: 1100px) {
+  .con-section {
+    padding: 95px 24px;
+  }
+  .con-service-grid {
+    grid-template-columns: 1.15fr 1fr;
+    grid-template-rows: repeat(3, 310px);
+  }
+  .con-service-card-1 {
+    grid-row: span 2;
+  }
+  .con-service-card-5 {
+    grid-column: span 2;
+  }
+  .con-project-prev {
+    left: -16px;
+  }
+  .con-project-next {
+    right: -16px;
+  }
+  .con-project-feature {
+    margin: 0 30px;
+  }
+  .con-team-grid {
+    max-width: 900px;
+  }
+  .nextaura-editorial .con-team .team-profile-picture {
+    height: 510px;
+  }
+}
+@media (max-width: 767px) {
+  .con-nav {
+    top: 12px;
+  }
+  .con-nav-pill {
+    height: 52px;
+  }
+  .con-nav-brand {
+    width: 42px;
+    height: 42px;
+  }
+  .con-nav-menu {
+    height: 42px;
+  }
+  .con-nav-project {
+    height: 42px;
+    padding: 0 13px;
+    font-size: 11px;
+  }
+  .con-nav-language {
+    display: none;
+  }
+  .con-nav-panel-language {
+    display: block;
+  }
+  .nextaura-editorial .nextaura-organic-form {
+    width: 150vw;
+    height: 115svh;
+    object-fit: cover;
+  }
+  .nextaura-editorial .editorial-hero-content {
+    padding-top: 118px;
+    padding-bottom: 100px;
+  }
+  .nextaura-editorial .editorial-hero-title {
+    font-size: clamp(43px, 10.4vw, 70px);
+    line-height: 1.01;
+  }
+  .nextaura-editorial .editorial-hero-description {
+    font-size: 14px;
+  }
+  .nextaura-editorial .editorial-hero-meta {
+    display: none;
+  }
+  .con-section {
+    padding: 80px 20px;
+  }
+  .con-section-head {
+    margin-bottom: 42px;
+  }
+  .con-section-head h2 {
+    font-size: clamp(40px, 8.8vw, 60px);
+  }
+  .con-section-head p {
+    font-size: 15px;
+  }
+  .con-intro {
+    padding: 100px 20px 65px;
+  }
+  .con-intro h2 {
+    font-size: clamp(31px, 7vw, 46px);
+  }
+  .con-intro p {
+    font-size: 16px;
+  }
+  .con-intro-visual {
+    height: 260px;
+    margin-top: 40px;
+  }
+  .con-intro-image {
+    height: 250px;
+    border-radius: 55px;
+  }
+  .con-intro-word {
+    top: 75px;
+  }
+  .con-service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 9px;
+  }
+  .con-service-card {
+    min-height: 295px;
+    border-radius: 37px;
+  }
+  .con-service-card-1 {
+    grid-column: span 2;
+    grid-row: auto;
+    min-height: 430px;
+  }
+  .con-service-card-5 {
+    grid-column: span 2;
+  }
+  .con-service-copy {
+    padding: 23px;
+  }
+  .con-service-card h3 {
+    font-size: 18px;
+  }
+  .con-service-card p {
+    font-size: 12px;
+  }
+  .con-service-card ul {
+    left: 22px;
+    right: 22px;
+    bottom: 18px;
+  }
+  .con-service-card-1 .con-art {
+    inset: 32% 20px 64px;
+  }
+  .con-service-card:not(.con-service-card-1) .con-art {
+    inset: 55% 8px 5px;
+  }
+  .con-service-card:not(.con-service-card-1) .con-service-copy {
+    padding: 18px;
+  }
+  .con-service-card:not(.con-service-card-1) h3 {
+    font-size: 16px;
+  }
+  .con-why-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .con-why-card {
+    min-height: 330px;
+    border-radius: 36px;
+    padding: 7px;
+  }
+  .con-why-card:last-child {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 210px;
+  }
+  .con-why-art {
+    height: 205px;
+    border-radius: 32px;
+  }
+  .con-why-card:last-child .con-why-art {
+    height: 100%;
+  }
+  .con-why-core {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+  }
+  .con-why-copy {
+    padding: 17px 7px;
+  }
+  .con-why-copy h3 {
+    font-size: 16px;
+  }
+  .con-why-copy p {
+    font-size: 12px;
+  }
+  .con-why-card:last-child .con-why-copy {
+    align-self: center;
+    padding: 15px;
+  }
+  .con-project-feature {
+    display: block;
+    min-height: 0;
+    margin: 0 18px;
+    border-radius: 56px;
+    padding: 7px;
+  }
+  .con-project-image {
+    min-height: 0;
+    height: 330px;
+    border-radius: 50px;
+  }
+  .con-project-info {
+    padding: 26px 25px 32px;
+  }
+  .con-project-info h3 {
+    margin: 23px 0 10px;
+    font-size: 29px;
+  }
+  .con-project-info p {
+    font-size: 14px;
+  }
+  .con-project-facts {
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+  .con-project-arrow {
+    top: 35%;
+    width: 41px;
+    height: 41px;
+  }
+  .con-project-prev {
+    left: 0;
+  }
+  .con-project-next {
+    right: 0;
+  }
+  .con-ecosystem-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+    padding: 10px;
+  }
+  .con-ecosystem-grid > span {
+    min-height: 65px;
+    padding: 10px;
+    border-radius: 19px;
+    font-size: 11px;
+  }
+  .con-ecosystem-grid b {
+    font-size: 16px;
+  }
+  .con-ecosystem-core {
+    width: 100px;
+    height: 100px;
+    font-size: 23px;
+  }
+  .con-ecosystem > p {
+    padding: 0 20px;
+    font-size: 14px;
+  }
+  .con-team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .nextaura-editorial .con-team .team-profile-picture {
+    height: 330px;
+    border-radius: 35px;
+  }
+  .nextaura-editorial .con-team .team-profile-details {
+    padding: 12px 2px;
+  }
+  .nextaura-editorial .con-team .team-profile-content h3 {
+    font-size: 21px;
+  }
+  .nextaura-editorial .con-team .team-profile-content p {
+    font-size: 12px;
+  }
+  .nextaura-editorial .con-team .team-profile-actions {
+    display: block;
+  }
+  .nextaura-editorial .con-team .team-profile-link {
+    margin-top: 10px;
+  }
+  .con-faq-item {
+    border-radius: 25px;
+  }
+  .con-faq-item button {
+    min-height: 75px;
+    padding: 15px;
+    font-size: 16px;
+  }
+  .con-faq-toggle {
+    width: 36px;
+    height: 36px;
+  }
+  .con-faq-answer p {
+    padding: 0 20px 20px;
+    font-size: 14px;
+  }
+  .nextaura-editorial .customer-reviews-section {
+    padding: 80px 20px;
+  }
+  .nextaura-editorial .customer-review-list-panel,
+  .nextaura-editorial .customer-review-form {
+    padding: 20px;
+    border-radius: 35px;
+  }
+  .nextaura-editorial .customer-review-cards {
+    grid-template-columns: 1fr;
+  }
+  .nextaura-editorial .customer-review-card,
+  .nextaura-editorial .customer-review-card:first-child {
+    min-height: 0;
+  }
+}
+@media (max-width: 390px) {
+  .con-nav-project {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .con-service-card:not(.con-service-card-1) {
+    min-height: 315px;
+  }
+  .con-service-card:not(.con-service-card-1) .con-art {
+    inset: 65% 8px 5px;
+  }
+  .con-why-card {
+    min-height: 360px;
+  }
+  .con-team-grid {
+    grid-template-columns: 1fr;
+  }
+  .nextaura-editorial .con-team .team-profile-picture {
+    height: 460px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nextaura-editorial .nextaura-organic-form {
+    animation: none;
+  }
+  .con-service-card,
+  .con-why-card,
+  .con-project-image img,
+  .con-faq-answer {
+    transition: none;
+  }
+}

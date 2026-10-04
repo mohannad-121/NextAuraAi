@@ -2,35 +2,18 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
 import { HeroUndergroundJourney } from "@/components/landing/HeroUndergroundJourney";
-import { DeferredSection } from "@/components/landing/DeferredSection";
-
-const ServicesUniverse = lazy(() =>
-  import("@/components/landing/ServicesUniverse").then((module) => ({
-    default: module.ServicesUniverse,
-  })),
-);
-const FeaturedProject = lazy(() =>
-  import("@/components/landing/FeaturedProject").then((module) => ({
-    default: module.FeaturedProject,
-  })),
-);
-const Team = lazy(() =>
-  import("@/components/landing/Team").then((module) => ({ default: module.Team })),
-);
-const WhyChoose = lazy(() =>
-  import("@/components/landing/WhyChoose").then((module) => ({ default: module.WhyChoose })),
-);
-const CustomerReviewsSection = lazy(() =>
-  import("@/components/landing/CustomerReviewsSection").then((module) => ({
-    default: module.CustomerReviewsSection,
-  })),
-);
-const Contact = lazy(() =>
-  import("@/components/landing/Contact").then((module) => ({ default: module.Contact })),
-);
-const MobileCTA = lazy(() =>
-  import("@/components/landing/MobileCTA").then((module) => ({ default: module.MobileCTA })),
-);
+import { NextAuraWorld } from "@/components/landing/cinematic/NextAuraWorld";
+import { ServicesUniverse } from "@/components/landing/ServicesUniverse";
+import { FeaturedProject } from "@/components/landing/FeaturedProject";
+import { Team } from "@/components/landing/Team";
+import { WhyChoose } from "@/components/landing/WhyChoose";
+import { CustomerReviewsSection } from "@/components/landing/CustomerReviewsSection";
+import { Contact } from "@/components/landing/Contact";
+import { MobileCTA } from "@/components/landing/MobileCTA";
+import { EcosystemChapter, FaqChapter } from "@/components/landing/ReferenceChapters";
+import "@/styles/conicorn-rebuild.css";
+import "@/styles/conicorn-rebuild-finishing.css";
+import "@/styles/conicorn-fidelity.css";
 const WebsiteAssistantChatbot = lazy(() =>
   import("@/components/landing/WebsiteAssistantChatbot").then((module) => ({
     default: module.WebsiteAssistantChatbot,
@@ -89,45 +72,49 @@ function LandingPage() {
   useEffect(() => {
     const ready = () => setChatbotReady(true);
     const idle =
-      "requestIdleCallback" in window
+      typeof window.requestIdleCallback === "function"
         ? window.requestIdleCallback(ready, { timeout: 5000 })
-        : window.setTimeout(ready, 3500);
+        : globalThis.setTimeout(ready, 3500);
     return () => {
-      if ("cancelIdleCallback" in window) window.cancelIdleCallback(idle as number);
-      else window.clearTimeout(idle as number);
+      if (typeof window.cancelIdleCallback === "function")
+        window.cancelIdleCallback(idle as number);
+      else globalThis.clearTimeout(idle);
     };
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
-      <Nav onStartProject={startProject} />
-      <HeroUndergroundJourney onStartProject={startProject} />
-      <DeferredSection id="services" minHeight="42rem">
-        <ServicesUniverse onStartProject={startProject} />
-      </DeferredSection>
-      <DeferredSection id="projects" minHeight="46rem">
-        <FeaturedProject onStartProject={startProject} />
-      </DeferredSection>
-      <DeferredSection id="team" minHeight="34rem">
-        <Team />
-      </DeferredSection>
-      <DeferredSection minHeight="36rem">
-        <WhyChoose />
-      </DeferredSection>
-      <DeferredSection minHeight="38rem">
-        <CustomerReviewsSection />
-      </DeferredSection>
-      <DeferredSection id="contact" minHeight="36rem">
-        <Contact onStartProject={startProject} />
-      </DeferredSection>
-      <DeferredSection minHeight="5rem">
+    <NextAuraWorld>
+      <main className="relative min-h-screen overflow-x-clip pb-24 md:pb-0">
+        <Nav onStartProject={startProject} />
+        <HeroUndergroundJourney onStartProject={startProject}>
+          <div id="why-choose" className="con-anchor">
+            <WhyChoose />
+          </div>
+          <div id="services" className="con-anchor">
+            <ServicesUniverse onStartProject={startProject} />
+          </div>
+          <div id="projects" className="con-anchor">
+            <FeaturedProject onStartProject={startProject} />
+          </div>
+          <EcosystemChapter />
+          <div id="team" className="con-anchor">
+            <Team />
+          </div>
+          <FaqChapter />
+          <div id="reviews" className="con-anchor">
+            <CustomerReviewsSection />
+          </div>
+          <div id="contact" className="con-anchor con-contact-shell">
+            <Contact onStartProject={startProject} />
+          </div>
+        </HeroUndergroundJourney>
         <MobileCTA onStartProject={startProject} />
-      </DeferredSection>
-      {chatbotReady ? (
-        <Suspense fallback={null}>
-          <WebsiteAssistantChatbot />
-        </Suspense>
-      ) : null}
-    </main>
+        {chatbotReady ? (
+          <Suspense fallback={null}>
+            <WebsiteAssistantChatbot />
+          </Suspense>
+        ) : null}
+      </main>
+    </NextAuraWorld>
   );
 }

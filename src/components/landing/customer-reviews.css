@@ -3,7 +3,7 @@
   isolation: isolate;
   overflow: clip;
   padding-block: clamp(5.5rem, 8vw, 8rem);
-  background: #071020;
+  background: transparent;
 }
 
 .customer-reviews-backdrop,

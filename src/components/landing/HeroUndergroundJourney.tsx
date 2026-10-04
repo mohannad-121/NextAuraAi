@@ -1,25 +1,20 @@
-import { lazy } from "react";
 import { CinematicHero } from "@/components/landing/CinematicHero";
-import { DeferredSection } from "@/components/landing/DeferredSection";
+import { DigitalFoundationChapter } from "@/components/landing/cinematic/scenes/DigitalFoundationChapter";
 import { useLanguage } from "@/i18n/translations";
+import type { ReactNode } from "react";
 
-const DigitalFoundationSection = lazy(() =>
-  import("@/components/landing/CinematicDepthJourney").then((module) => ({
-    default: module.DigitalFoundationSection,
-  })),
-);
+type HeroUndergroundJourneyProps = { onStartProject: () => void; children: ReactNode };
 
-type HeroUndergroundJourneyProps = { onStartProject: () => void };
-
-export function HeroUndergroundJourney({ onStartProject }: HeroUndergroundJourneyProps) {
+export function HeroUndergroundJourney({ onStartProject, children }: HeroUndergroundJourneyProps) {
   const { dir } = useLanguage();
 
   return (
-    <div className="relative isolate bg-[var(--page-background)]" dir={dir}>
+    <div className="relative isolate bg-transparent" dir={dir}>
       <CinematicHero onStartProject={onStartProject} />
-      <DeferredSection minHeight="44rem">
-        <DigitalFoundationSection />
-      </DeferredSection>
+      <div className="nextaura-glass-world">
+        <DigitalFoundationChapter />
+        {children}
+      </div>
     </div>
   );
 }

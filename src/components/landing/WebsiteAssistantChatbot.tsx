@@ -225,9 +225,18 @@ export function WebsiteAssistantChatbot() {
                 <div className="chatbot-input-shell">
                   <span className="chatbot-input-grid" aria-hidden="true" />
                   <span className="chatbot-input-layer chatbot-input-glow" aria-hidden="true" />
-                  <span className="chatbot-input-layer chatbot-input-dark-border" aria-hidden="true" />
-                  <span className="chatbot-input-layer chatbot-input-dark-border chatbot-input-dark-border-offset" aria-hidden="true" />
-                  <span className="chatbot-input-layer chatbot-input-white-border" aria-hidden="true" />
+                  <span
+                    className="chatbot-input-layer chatbot-input-dark-border"
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="chatbot-input-layer chatbot-input-dark-border chatbot-input-dark-border-offset"
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="chatbot-input-layer chatbot-input-white-border"
+                    aria-hidden="true"
+                  />
                   <span className="chatbot-input-layer chatbot-input-border" aria-hidden="true" />
                   <Search className="chatbot-input-search-icon" aria-hidden="true" />
                   <input

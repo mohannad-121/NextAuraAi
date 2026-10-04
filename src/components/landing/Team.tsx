@@ -1,10 +1,10 @@
-import { ArrowUpRight } from "lucide-react";
+import { useState, type KeyboardEvent, type MouseEvent } from "react";
+import { ArrowUpRight, Mail } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa6";
 import { Link } from "@tanstack/react-router";
 import { SectionHeading } from "@/components/landing/SectionHeading";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
-import { socialBrandClassName } from "@/components/landing/socialBrandStyles";
 
 const people = [
   {
@@ -13,6 +13,7 @@ const people = [
     image: "/team/mohannad.jpg",
     imagePosition: "50% 19%",
     route: "/founders/mohannad" as const,
+    accent: "violet",
     socials: [
       {
         label: "LinkedIn",
@@ -34,6 +35,7 @@ const people = [
     image: "/team/moayad.jpg",
     imagePosition: "50% 28%",
     route: "/founders/moayad" as const,
+    accent: "blue",
     socials: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/moayad-rabah/", icon: FaLinkedinIn },
       { label: "Instagram", href: "https://www.instagram.com/moayad.rabah/", icon: FaInstagram },
@@ -46,43 +48,75 @@ const people = [
 export function Team() {
   const { language, dir } = useLanguage();
   const copy = homepageContent[language].team;
+  const [openCard, setOpenCard] = useState<string | null>(null);
+
+  const toggleFromCard = (event: MouseEvent<HTMLElement>, key: string) => {
+    if ((event.target as HTMLElement).closest("a, button")) return;
+    setOpenCard((current) => (current === key ? null : key));
+  };
+
+  const toggleFromKeyboard = (event: KeyboardEvent<HTMLElement>, key: string) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    if ((event.target as HTMLElement).closest("a, button")) return;
+    event.preventDefault();
+    setOpenCard((current) => (current === key ? null : key));
+  };
 
   return (
-    <section className="homepage-section homepage-environment-alt relative" dir={dir}>
-      <div className="homepage-container">
-        <div className="grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-end">
+    <section className="con-team con-section" dir={dir}>
+      <div className="con-team-container">
+        <div className="con-team-head">
           <SectionHeading eyebrow={copy.eyebrow} title={copy.title} className="max-w-3xl" />
-          <p className="max-w-xl text-base leading-8 text-[var(--secondary-text)] lg:justify-self-end">
-            {copy.body}
-          </p>
+          <p>{copy.body}</p>
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
+        <div className="con-team-grid">
           {people.map((person) => {
             const translated = copy.members[person.key];
+            const isOpen = openCard === person.key;
             return (
-              <article key={person.name} className="team-profile-card group">
-                <div className="team-profile-picture bg-slate-900">
+              <article
+                key={person.key}
+                className="founder-card"
+                data-accent={person.accent}
+                data-open={isOpen || undefined}
+                tabIndex={0}
+                aria-label={`${person.name}, ${translated.role}`}
+                onClick={(event) => toggleFromCard(event, person.key)}
+                onKeyDown={(event) => toggleFromKeyboard(event, person.key)}
+                onFocusCapture={() => setOpenCard(person.key)}
+                onBlurCapture={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+                    setOpenCard(null);
+                }}
+              >
+                <a
+                  className="founder-mail"
+                  href="mailto:info@next-aura-ai.com"
+                  aria-label={`Email NextAura AI about ${person.name}`}
+                >
+                  <Mail aria-hidden="true" />
+                </a>
+
+                <div className="founder-profile-pic">
                   <img
                     src={person.image}
-                    alt={`${person.name} — ${translated.role}`}
+                    alt={`${person.name}, ${translated.role}`}
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-cover"
                     style={{ objectPosition: person.imagePosition }}
                   />
                 </div>
-                <div className="team-profile-details">
-                  <div className="team-profile-content">
-                    <h3 className="text-2xl font-semibold text-white">{person.name}</h3>
-                    <div className="mt-2 text-sm font-medium text-cyan-300">{translated.role}</div>
-                    <p className="mt-4 text-sm leading-6 text-slate-200">
-                      {translated.description}
-                    </p>
+
+                <div className="founder-bottom">
+                  <div className="founder-content">
+                    <span className="founder-name">{person.name}</span>
+                    <span className="founder-role">{translated.role}</span>
+                    <span className="founder-about">{translated.description}</span>
                   </div>
-                  <div className="team-profile-actions">
+                  <div className="founder-bottom-row">
                     <div
-                      className="flex flex-wrap gap-2"
+                      className="founder-social-links"
                       aria-label={`${person.name}'s social profiles`}
                     >
                       {person.socials.map((social) => (
@@ -93,15 +127,14 @@ export function Team() {
                           rel="noopener noreferrer"
                           aria-label={`${person.name} on ${social.label}`}
                           title={social.label}
-                          className={`${socialBrandClassName(social.href, social.label)} cursor-pointer`}
                         >
-                          <social.icon className="h-4 w-4" />
+                          <social.icon aria-hidden="true" />
                         </a>
                       ))}
                     </div>
-                    <Link to={person.route} className="team-profile-link">
+                    <Link to={person.route} className="founder-button">
                       {translated.about}
-                      <ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
+                      <ArrowUpRight aria-hidden="true" />
                     </Link>
                   </div>
                 </div>

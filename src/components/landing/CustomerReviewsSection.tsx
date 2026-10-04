@@ -420,7 +420,7 @@ export function CustomerReviewsSection() {
             ? copy.duplicate
             : code === "REVIEW_TEXT_INAPPROPRIATE"
               ? copy.inappropriateLanguage
-            : copy.submitError,
+              : copy.submitError,
       );
     }
   };
@@ -431,18 +431,11 @@ export function CustomerReviewsSection() {
     : copy.noRatings;
 
   return (
-    <section id="reviews" className="customer-reviews-section" dir={dir}>
-      <div className="customer-reviews-backdrop" aria-hidden="true">
-        <img
-          src="/images/cinematic/astro-review.png"
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="customer-reviews-backdrop-image"
-        />
-        <div className="customer-reviews-backdrop-overlay" />
-        <div className="customer-reviews-vignette" />
-      </div>
+    <section className="customer-reviews-section relative" dir={dir}>
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_40%,rgb(124_58_237_/_0.15),transparent_60%)]"
+        aria-hidden="true"
+      />
 
       <div className="homepage-container customer-reviews-container">
         <motion.header
@@ -514,7 +507,11 @@ export function CustomerReviewsSection() {
                 }}
               />
               {nameError ? (
-                <p id="customer-review-name-error" className="customer-review-field-error" role="alert">
+                <p
+                  id="customer-review-name-error"
+                  className="customer-review-field-error"
+                  role="alert"
+                >
                   <AlertCircle aria-hidden="true" /> {nameError}
                 </p>
               ) : null}
@@ -670,27 +667,30 @@ export function CustomerReviewsSection() {
                       <span>{copy.filterAll}</span>
                       <span className="customer-review-chip-count">{reviews.length}</span>
                     </button>
-                    {STAR_VALUES.slice().reverse().map((value) => {
-                      const count = starCounts[value] || 0;
-                      if (count === 0 && starFilter !== value) return null;
-                      return (
-                        <button
-                          key={value}
-                          type="button"
-                          className={`customer-review-chip ${starFilter === value ? "is-active" : ""}`}
-                          onClick={() => setStarFilter(starFilter === value ? null : value)}
-                        >
-                          <span className="customer-review-chip-stars">
-                            {value}★
-                          </span>
-                          <span className="customer-review-chip-count">{count}</span>
-                        </button>
-                      );
-                    })}
+                    {STAR_VALUES.slice()
+                      .reverse()
+                      .map((value) => {
+                        const count = starCounts[value] || 0;
+                        if (count === 0 && starFilter !== value) return null;
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            className={`customer-review-chip ${starFilter === value ? "is-active" : ""}`}
+                            onClick={() => setStarFilter(starFilter === value ? null : value)}
+                          >
+                            <span className="customer-review-chip-stars">{value}★</span>
+                            <span className="customer-review-chip-count">{count}</span>
+                          </button>
+                        );
+                      })}
                   </div>
 
                   <div className="customer-review-sort">
-                    <label htmlFor="customer-review-sort-select" className="customer-review-sort-label">
+                    <label
+                      htmlFor="customer-review-sort-select"
+                      className="customer-review-sort-label"
+                    >
                       <ArrowUpDown className="customer-review-sort-icon" aria-hidden="true" />
                       <span>{copy.sortBy}</span>
                     </label>
@@ -838,7 +838,9 @@ function ReviewCard({
               <Star key={value} data-filled={value <= review.rating} />
             ))}
           </div>
-          <span className="customer-review-card-rating-num">{Number(review.rating || 5).toFixed(1)}</span>
+          <span className="customer-review-card-rating-num">
+            {Number(review.rating || 5).toFixed(1)}
+          </span>
         </div>
       </div>
 
@@ -886,13 +888,14 @@ function ReviewCard({
                 reply.displayName?.toLowerCase().includes("nextaura") ||
                 reply.displayName?.includes("مؤسس");
               return (
-                <article key={reply.id} className={`customer-review-reply ${isTeam ? "is-team" : ""}`}>
+                <article
+                  key={reply.id}
+                  className={`customer-review-reply ${isTeam ? "is-team" : ""}`}
+                >
                   <div className="customer-review-reply-topline">
                     <div className="customer-review-reply-author">
                       <strong>{reply.displayName || anonymous}</strong>
-                      {isTeam ? (
-                        <span className="customer-review-reply-badge">Team</span>
-                      ) : null}
+                      {isTeam ? <span className="customer-review-reply-badge">Team</span> : null}
                     </div>
                     <time dateTime={reply.createdAt}>
                       {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(
@@ -958,7 +961,8 @@ function ReplyComposer({
       setComment("");
       setExpanded(false);
     } catch (submissionError) {
-      const code = submissionError instanceof Error ? submissionError.message : "REVIEW_REPLY_SUBMIT_FAILED";
+      const code =
+        submissionError instanceof Error ? submissionError.message : "REVIEW_REPLY_SUBMIT_FAILED";
       setError(
         code === "REVIEW_REPLY_RATE_LIMITED"
           ? copy.replyRateLimited
@@ -975,7 +979,11 @@ function ReplyComposer({
 
   if (!expanded) {
     return (
-      <button className="customer-review-reply-toggle" type="button" onClick={() => setExpanded(true)}>
+      <button
+        className="customer-review-reply-toggle"
+        type="button"
+        onClick={() => setExpanded(true)}
+      >
         <MessageCircleReply aria-hidden="true" /> {copy.reply}
       </button>
     );
@@ -983,7 +991,9 @@ function ReplyComposer({
 
   return (
     <form className="customer-review-reply-form" onSubmit={submitReply} noValidate>
-      <label htmlFor={`customer-review-reply-name-${reviewId}`}>{copy.nameLabel} <small>{copy.optional}</small></label>
+      <label htmlFor={`customer-review-reply-name-${reviewId}`}>
+        {copy.nameLabel} <small>{copy.optional}</small>
+      </label>
       <input
         id={`customer-review-reply-name-${reviewId}`}
         value={displayName}
@@ -991,7 +1001,9 @@ function ReplyComposer({
         placeholder={copy.replyNamePlaceholder}
         onChange={(event) => {
           setDisplayName(event.target.value);
-          setError(containsInappropriateLanguage(event.target.value) ? copy.inappropriateLanguage : "");
+          setError(
+            containsInappropriateLanguage(event.target.value) ? copy.inappropriateLanguage : "",
+          );
         }}
       />
       <label htmlFor={`customer-review-reply-${reviewId}`}>{copy.replyToReview}</label>
@@ -1005,18 +1017,30 @@ function ReplyComposer({
         aria-describedby={error ? `customer-review-reply-error-${reviewId}` : undefined}
         onChange={(event) => {
           setComment(event.target.value);
-          setError(containsInappropriateLanguage(event.target.value) ? copy.inappropriateLanguage : "");
+          setError(
+            containsInappropriateLanguage(event.target.value) ? copy.inappropriateLanguage : "",
+          );
         }}
       />
       {error ? (
-        <p id={`customer-review-reply-error-${reviewId}`} className="customer-review-field-error" role="alert">
+        <p
+          id={`customer-review-reply-error-${reviewId}`}
+          className="customer-review-field-error"
+          role="alert"
+        >
           <AlertCircle aria-hidden="true" /> {error}
         </p>
       ) : null}
       <div className="customer-review-reply-actions">
-        <button type="button" onClick={() => setExpanded(false)}>{copy.cancel}</button>
+        <button type="button" onClick={() => setExpanded(false)}>
+          {copy.cancel}
+        </button>
         <button type="submit" disabled={submitting}>
-          {submitting ? <LoaderCircle className="customer-review-spinner" aria-hidden="true" /> : <Send aria-hidden="true" />}
+          {submitting ? (
+            <LoaderCircle className="customer-review-spinner" aria-hidden="true" />
+          ) : (
+            <Send aria-hidden="true" />
+          )}
           {submitting ? copy.submittingReply : copy.submitReply}
         </button>
       </div>

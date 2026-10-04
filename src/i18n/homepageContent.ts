@@ -162,7 +162,12 @@ const en = {
         description:
           "A welcoming restaurant website for Al Kamal, helping customers explore its popular breakfast dishes, sandwiches, drinks, and location.",
         featuresLabel: "Al Kamal Restaurant website highlights",
-        features: ["Restaurant menu", "Popular dishes", "Location details", "Mobile-friendly experience"],
+        features: [
+          "Restaurant menu",
+          "Popular dishes",
+          "Location details",
+          "Mobile-friendly experience",
+        ],
         cta: "Visit Al Kamal Restaurant",
         externalLabel: "Visit Al Kamal Restaurant (opens in a new tab)",
         imageAlt: "Al Kamal Restaurant storefront",
@@ -173,7 +178,12 @@ const en = {
         description:
           "A focused storefront for Instagram followers, views, and likes, with clear package options and Jordanian pricing.",
         featuresLabel: "Tasweq website highlights",
-        features: ["Instagram followers", "Views and likes", "Clear package pricing", "Arabic-first experience"],
+        features: [
+          "Instagram followers",
+          "Views and likes",
+          "Clear package pricing",
+          "Arabic-first experience",
+        ],
         cta: "Visit Tasweq",
         externalLabel: "Visit Tasweq (opens in a new tab)",
         imageAlt: "Tasweq Instagram growth services logo",
@@ -632,7 +642,12 @@ const ar: Widen<typeof en> = {
         description:
           "متجر مخصص لمتابعين ومشاهدات وإعجابات إنستغرام، مع باقات واضحة وأسعار بالدينار الأردني.",
         featuresLabel: "أبرز مزايا موقع تسوّق",
-        features: ["متابعون إنستغرام", "مشاهدات وإعجابات", "أسعار باقات واضحة", "تجربة عربية أولاً"],
+        features: [
+          "متابعون إنستغرام",
+          "مشاهدات وإعجابات",
+          "أسعار باقات واضحة",
+          "تجربة عربية أولاً",
+        ],
         cta: "زيارة تسوّق",
         externalLabel: "زيارة تسوّق (يفتح في علامة تبويب جديدة)",
         imageAlt: "شعار تسوّق لخدمات نمو إنستغرام",
@@ -1035,7 +1050,12 @@ const es: Widen<typeof en> = {
         description:
           "Un sitio web acogedor para el restaurante Al Kamal, que permite a los clientes explorar desayunos populares, sándwiches, bebidas y su ubicación.",
         featuresLabel: "Aspectos destacados del sitio web de Al Kamal Restaurant",
-        features: ["Menú del restaurante", "Platos populares", "Detalles de ubicación", "Experiencia adaptable"],
+        features: [
+          "Menú del restaurante",
+          "Platos populares",
+          "Detalles de ubicación",
+          "Experiencia adaptable",
+        ],
         cta: "Visitar Al Kamal Restaurant",
         externalLabel: "Visitar Al Kamal Restaurant (se abre en una pestaña nueva)",
         imageAlt: "Fachada de Al Kamal Restaurant",
@@ -1047,7 +1067,12 @@ const es: Widen<typeof en> = {
         description:
           "Una tienda especializada en seguidores, visualizaciones y me gusta de Instagram, con paquetes claros y precios jordanos.",
         featuresLabel: "Aspectos destacados del sitio web de Tasweq",
-        features: ["Seguidores de Instagram", "Visualizaciones y me gusta", "Precios de paquetes claros", "Experiencia orientada al árabe"],
+        features: [
+          "Seguidores de Instagram",
+          "Visualizaciones y me gusta",
+          "Precios de paquetes claros",
+          "Experiencia orientada al árabe",
+        ],
         cta: "Visitar Tasweq",
         externalLabel: "Visitar Tasweq (se abre en una pestaña nueva)",
         imageAlt: "Logotipo de Tasweq para servicios de crecimiento de Instagram",

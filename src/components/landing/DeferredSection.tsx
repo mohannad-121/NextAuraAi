@@ -1,4 +1,4 @@
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { useViewportActivity } from "@/hooks/use-viewport-activity";
 
 type DeferredSectionProps = {
@@ -19,15 +19,19 @@ export function DeferredSection({
     rootMargin,
     threshold: 0.01,
   });
+  const [hasEntered, setHasEntered] = useState(false);
+  useEffect(() => {
+    if (isActive) setHasEntered(true);
+  }, [isActive]);
 
   return (
     <div
       ref={targetRef}
       id={id}
       className={id ? "navigation-target" : undefined}
-      style={{ minHeight: isActive ? undefined : minHeight }}
+      style={{ minHeight: hasEntered ? undefined : minHeight }}
     >
-      {isActive ? <Suspense fallback={<div style={{ minHeight }} />}>{children}</Suspense> : null}
+      {hasEntered ? <Suspense fallback={<div style={{ minHeight }} />}>{children}</Suspense> : null}
     </div>
   );
 }

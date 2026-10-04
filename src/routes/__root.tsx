@@ -179,13 +179,14 @@ function RootComponent() {
   useEffect(() => {
     const activate = () => setAnalyticsReady(true);
     const idle =
-      "requestIdleCallback" in window
+      typeof window.requestIdleCallback === "function"
         ? window.requestIdleCallback(activate, { timeout: 4000 })
-        : window.setTimeout(activate, 2500);
+        : globalThis.setTimeout(activate, 2500);
 
     return () => {
-      if ("cancelIdleCallback" in window) window.cancelIdleCallback(idle as number);
-      else window.clearTimeout(idle as number);
+      if (typeof window.cancelIdleCallback === "function")
+        window.cancelIdleCallback(idle as number);
+      else globalThis.clearTimeout(idle);
     };
   }, []);
 

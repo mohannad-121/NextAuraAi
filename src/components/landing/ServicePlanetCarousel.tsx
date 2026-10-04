@@ -272,13 +272,7 @@ function PlanetModel({
   return <div ref={mountRef} className="service-planet-model" aria-hidden="true" />;
 }
 
-function ServicePlanetVisual({
-  planet,
-  active,
-}: {
-  planet: ServicePlanet;
-  active: boolean;
-}) {
+function ServicePlanetVisual({ planet, active }: { planet: ServicePlanet; active: boolean }) {
   const [modelReady, setModelReady] = useState(false);
   const handleReady = useCallback(() => setModelReady(true), []);
 
@@ -456,10 +450,7 @@ export function ServicePlanetCarousel({ items }: { items: ServiceItem[] }) {
                 transform: `translate3d(calc(-50% + ${horizontalOffset}px), ${verticalOffset}px, 0) scale(${scale})`,
               }}
             >
-              <ServicePlanetVisual
-                planet={planet}
-                active={isActive}
-              />
+              <ServicePlanetVisual planet={planet} active={isActive} />
               <div className="service-planet-copy">
                 <span className="service-planet-kicker">{planet.kicker}</span>
                 <h3 className="service-planet-title">{planet.service.title}</h3>
