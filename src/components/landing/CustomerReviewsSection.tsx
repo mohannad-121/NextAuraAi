@@ -895,7 +895,7 @@ function ReviewCard({
                   <div className="customer-review-reply-topline">
                     <div className="customer-review-reply-author">
                       <strong>{reply.displayName || anonymous}</strong>
-                      {isTeam ? <span className="customer-review-reply-badge">Team</span> : null}
+                      {isTeam ? <span className="customer-review-reply-badge">Founder</span> : null}
                     </div>
                     <time dateTime={reply.createdAt}>
                       {new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(

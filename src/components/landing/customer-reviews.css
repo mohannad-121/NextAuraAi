@@ -599,7 +599,9 @@
   font-weight: 600;
   cursor: pointer;
   outline: none;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .customer-review-sort-select:hover,
@@ -792,10 +794,10 @@
   gap: 0.4rem;
   min-height: 2rem;
   padding: 0.25rem 0.65rem;
-  border: 1px solid rgb(124 58 237 / 0.35);
+  border: 1px solid rgb(124 58 237 / 0.82);
   border-radius: 999px;
-  background: rgb(124 58 237 / 0.1);
-  color: #c4b5fd;
+  background: rgb(168 85 247 / 0.3);
+  color: #111318;
   font-size: 0.73rem;
   font-weight: 650;
   cursor: pointer;
@@ -803,9 +805,9 @@
 }
 
 .customer-review-replies-toggle:hover {
-  border-color: rgb(167 139 250 / 0.7);
-  background: rgb(124 58 237 / 0.22);
-  color: #fff;
+  border-color: rgb(109 40 217 / 0.95);
+  background: rgb(168 85 247 / 0.42);
+  color: #050507;
 }
 
 .customer-review-replies-chevron {
@@ -839,8 +841,8 @@
 }
 
 .customer-review-reply.is-team {
-  background: linear-gradient(135deg, rgb(124 58 237 / 0.15), rgb(37 99 235 / 0.15));
-  border-color: rgb(124 58 237 / 0.32);
+  background: linear-gradient(135deg, rgb(168 85 247 / 0.22), rgb(59 130 246 / 0.2));
+  border-color: rgb(124 58 237 / 0.58);
 }
 
 .customer-review-reply-topline {
@@ -857,7 +859,7 @@
 }
 
 .customer-review-reply-author strong {
-  color: #f8fafc;
+  color: #111318;
   font-size: 0.76rem;
 }
 
@@ -868,19 +870,19 @@
   color: #fff;
   font-size: 0.62rem;
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.04em;
 }
 
 .customer-review-reply time {
   flex: none;
-  color: #94a3b8;
+  color: #4b5563;
   font-size: 0.67rem;
 }
 
 .customer-review-reply p {
   margin-top: 0.35rem;
-  color: #dbe5f3;
+  color: #111318;
   font-size: 0.8rem;
   line-height: 1.58;
   overflow-wrap: anywhere;
@@ -930,7 +932,10 @@
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 .customer-review-reply-toggle:hover,
@@ -938,6 +943,18 @@
   border-color: rgb(103 232 249 / 0.75);
   background: rgb(14 165 233 / 0.17);
   color: #fff;
+}
+
+.customer-review-reply-toggle {
+  border-color: rgb(16 185 129 / 0.88);
+  background: rgb(52 211 153 / 0.3);
+  color: #111318;
+}
+
+.customer-review-reply-toggle:hover {
+  border-color: rgb(5 150 105 / 0.98);
+  background: rgb(52 211 153 / 0.44);
+  color: #050706;
 }
 
 .customer-review-reply-form {
