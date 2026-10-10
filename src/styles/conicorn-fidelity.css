@@ -863,6 +863,15 @@
   -webkit-backdrop-filter: blur(22px);
 }
 
+/* Keep the review workspace distinct from the pale page background. */
+.nextaura-editorial .customer-review-list-panel {
+  background: rgba(214, 216, 225, 0.7);
+}
+
+.nextaura-editorial .customer-review-card {
+  background: rgba(255, 255, 255, 0.78);
+}
+
 /* What we do: visual, title, description, then only real supporting tags. */
 .nextaura-editorial .con-service-card {
   display: flex;
