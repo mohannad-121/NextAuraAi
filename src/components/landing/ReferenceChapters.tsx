@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { homepageContent } from "@/i18n/homepageContent";
 import { useLanguage } from "@/i18n/translations";
+import { BrandSymbol } from "./BrandSymbol";
 
 function FloatingTechnologyField({ labels }: { labels: string[] }) {
   const fieldRef = useRef<HTMLDivElement>(null);
@@ -173,9 +174,7 @@ function FloatingTechnologyField({ labels }: { labels: string[] }) {
         </span>
       ))}
       <div className="con-ecosystem-core" aria-hidden="true">
-        <small>NEXTAURA</small>
-        <strong>NA</strong>
-        <i />
+        <BrandSymbol className="con-ecosystem-logo" imageClassName="con-ecosystem-logo-image" />
       </div>
     </div>
   );
