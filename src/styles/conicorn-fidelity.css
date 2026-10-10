@@ -674,12 +674,12 @@
 
 /* Controlled glass refinement: the hero is isolated; every later chapter shares this surface. */
 .nextaura-editorial {
-  --glass-canvas: #eef0f3;
-  --glass-panel: rgba(255, 255, 255, 0.58);
-  --glass-panel-strong: rgba(255, 255, 255, 0.76);
-  --glass-border: rgba(255, 255, 255, 0.82);
-  --glass-line: rgba(65, 69, 82, 0.12);
-  --glass-shadow: 0 28px 70px rgba(42, 45, 58, 0.09);
+  --glass-canvas: #dfe2e7;
+  --glass-panel: rgba(226, 228, 234, 0.72);
+  --glass-panel-strong: rgba(233, 235, 240, 0.84);
+  --glass-border: rgba(255, 255, 255, 0.68);
+  --glass-line: rgba(65, 69, 82, 0.16);
+  --glass-shadow: 0 28px 70px rgba(42, 45, 58, 0.12);
   --glass-ink: #1b1d22;
   --glass-body: #50545e;
   --glass-muted: #777b85;
@@ -715,8 +715,8 @@
 }
 .editorial-hero-video-overlay {
   background:
-    linear-gradient(180deg, rgba(242, 243, 245, 0.12), rgba(19, 21, 28, 0.16)),
-    radial-gradient(circle at 50% 47%, transparent 28%, rgba(19, 21, 28, 0.12) 100%);
+    linear-gradient(180deg, rgba(18, 20, 26, 0.08), rgba(12, 14, 20, 0.24)),
+    radial-gradient(circle at 50% 47%, transparent 28%, rgba(19, 21, 28, 0.18) 100%);
 }
 .nextaura-editorial .editorial-hero-title {
   color: #f7f7f8;
@@ -737,9 +737,9 @@
   background:
     radial-gradient(circle at 8% 10%, rgba(135, 102, 232, 0.11), transparent 25%),
     radial-gradient(circle at 92% 26%, rgba(75, 145, 232, 0.1), transparent 27%),
-    radial-gradient(circle at 22% 60%, rgba(255, 255, 255, 0.9), transparent 29%),
+    radial-gradient(circle at 22% 60%, rgba(255, 255, 255, 0.58), transparent 29%),
     radial-gradient(circle at 80% 83%, rgba(139, 112, 226, 0.08), transparent 23%),
-    linear-gradient(150deg, #f3f4f6 0%, #e9ebef 48%, #f4f5f7 100%);
+    linear-gradient(150deg, #e4e6ea 0%, #d9dce2 48%, #e5e7eb 100%);
 }
 .nextaura-glass-world::before {
   content: "";
@@ -748,12 +748,12 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(118deg, transparent 0 37%, rgba(255, 255, 255, 0.52) 48%, transparent 60%),
+    linear-gradient(118deg, transparent 0 37%, rgba(255, 255, 255, 0.28) 48%, transparent 60%),
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.32),
+      rgba(255, 255, 255, 0.18),
       transparent 18% 82%,
-      rgba(255, 255, 255, 0.28)
+      rgba(255, 255, 255, 0.16)
     );
 }
 .nextaura-glass-world .con-intro,
@@ -773,8 +773,8 @@
 }
 .nextaura-editorial .con-section-label,
 .nextaura-editorial .section-eyebrow {
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  background: rgba(229, 231, 237, 0.72);
   color: #545965;
   box-shadow: 0 8px 24px rgba(45, 48, 61, 0.05);
   backdrop-filter: blur(14px);
@@ -880,6 +880,23 @@
   background: linear-gradient(135deg, #7657bd, #517cbd);
   color: #fff;
   box-shadow: 0 6px 16px rgba(52, 57, 82, 0.2);
+}
+
+.nextaura-editorial .customer-review-field input,
+.nextaura-editorial .customer-review-field textarea,
+.nextaura-editorial .customer-review-sort-select {
+  border-color: rgba(82, 87, 102, 0.22);
+  background: rgba(232, 234, 239, 0.96);
+}
+
+.nextaura-editorial .customer-review-field input:focus,
+.nextaura-editorial .customer-review-field textarea:focus {
+  background: rgba(226, 228, 234, 0.98);
+}
+
+.nextaura-editorial .customer-review-field input::placeholder,
+.nextaura-editorial .customer-review-field textarea::placeholder {
+  color: #687185;
 }
 
 /* What we do: visual, title, description, then only real supporting tags. */
